@@ -34,8 +34,8 @@ export class ProjetService {
     return this.http.post<any>(`${environment.backendHost}/projet/${userId}/create`, formData);
   }
 
-  deleteProject(idproject:number):Observable<any> {
-    return this.http.delete(`${environment.backendHost}/projet/${idproject}`)
+  deleteProject(idproject:number , userId:number):Observable<any> {
+    return this.http.delete(`${environment.backendHost}/projet/${idproject}/${userId}`)
   }
 
 

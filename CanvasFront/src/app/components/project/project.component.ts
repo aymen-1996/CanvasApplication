@@ -31,9 +31,11 @@ userproject!:User
   showPopupdelte=false
   defaultImage = 'assets/project.jpg'; // Replace with your default image URL
   selectedImage: File | null = null;
-
+  users:any
   constructor(private fb:FormBuilder ,private projectService: ProjetService ,private authService:AuthService){}
    ngOnInit(): void {
+    this.users = JSON.parse(localStorage.getItem('currentUser') as string);
+
     this.projectService.projectUpdated$.subscribe(() => {
       this.getAllProjectByUser();
     });
@@ -157,7 +159,7 @@ getImageSrc(file: File): string {
 onDelete() {
   if (this.projectIdToDelete !== null) {
     // Call the delete function with the project ID
-    this.projectService.deleteProject(this.projectIdToDelete)
+    this.projectService.deleteProject(this.projectIdToDelete, this.users.user.idUser)
       .subscribe(response => {
         console.log('Project deleted successfully:', response);
         // Optionally, you can update the UI to reflect the deletion
@@ -166,15 +168,16 @@ onDelete() {
         this.getAllProjectByUser();
       }, error => {
         console.error('Error deleting project:', error);
-        // Handle error as needed
+        if (error && error.error && error.error.message) {
+          alert('Vous n\'a pas la permission de le supprimer ' );
+        } else {
+          alert('Error deleting project. Please try again later.');
+        }
       });
 
-    // Reset project ID and hide the popup
-  
-    
   }
-
 }
+
 
 projectIdToDelete: number | null = null;
 openDelete(projectId: number){

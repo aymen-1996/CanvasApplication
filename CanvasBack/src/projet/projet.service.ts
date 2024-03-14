@@ -225,12 +225,16 @@ Un segment est une population homogène de consommateurs représentant une ou pl
 
 
       //Delete Projet avec ses invites et ses canvas et blocs
-      async deleteProjectAndRelatedEntities(projectId: number): Promise<void> {
+      async deleteProjectAndRelatedEntities(projectId: number, userId: number): Promise<void> {
         try {
             const project = await this.projectRepository.findOneOrFail({ 
-                where: { idProjet: projectId }, 
+                where: { idProjet: projectId, user: { idUser: userId } }, 
                 relations: ['canvas', 'canvas.block', 'canvas.block.donnees', 'invite']
             });
+    
+            if (!project) {
+                throw new Error("Project not found or user does not have permission to delete it.");
+            }
             
             for (const invite of project.invite) {
                 await this.inviteRepository.remove(invite);
@@ -251,6 +255,8 @@ Un segment est une population homogène de consommateurs représentant une ou pl
             throw error;
         }
     }
+    
+    
     
 //Role selon invite
 async getRoleByUserIdAndCanvasId(

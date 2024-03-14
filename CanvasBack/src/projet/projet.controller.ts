@@ -107,10 +107,10 @@ async serveImage(@Param('projetId') projetId: number, @Res() res: Response) {
 }
 
 //Delete Projet
-@Delete(':projectId')
-async deleteProject(@Param('projectId') projectId: number): Promise<void> {
+@Delete(':projectId/:userId')
+async deleteProject(@Param('projectId') projectId: number , @Param('userId') userId: number): Promise<void> {
   try {
-    await this.projetService.deleteProjectAndRelatedEntities(projectId);
+    await this.projetService.deleteProjectAndRelatedEntities(projectId, userId);
   } catch (error) {
     console.error('Error in deleteProject:', error);
     throw error;
