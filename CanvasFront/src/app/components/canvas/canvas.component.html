@@ -1,0 +1,131 @@
+
+<div class="container">
+  <div class="header">
+    <!-- Contenu de l'en-tête -->
+    <app-header [showFirstDiv]="showFirst" (showFirstDivChange)="onShowFirstChange($event)"></app-header>
+    </div>
+ 
+  <div class="canvas-list">
+    <h4>Canvas</h4>
+    <h4>Liste des canvas</h4>
+    <div class="canvas-items" *ngIf="canvas && canvas.Canvas && canvas.Canvas.length > 0">
+        <div class="canvas-item" *ngIf="shouldDisplayBMC()">
+          <div class="role" [ngClass]="{
+            'gold-color': getCanvasRoleInvite('bmc') === 'editor',
+            'crimson-color': getCanvasRoleInvite('bmc') !== 'editor'
+          }">
+            <span *ngIf="getCanvasRoleInvite('bmc') === 'editor'; else otherRole">
+              Superviseur
+            </span>
+            <ng-template #otherRole>
+              {{ getCanvasRoleInvite('bmc') }}
+            </ng-template>
+          </div>
+          <button routerLink="/bmc/{{getCanvasId('bmc')}}">
+
+            <img src="assets/imgs/bmc.png" height="160" alt="BMC">
+
+            <h3>{{getCanvasName('bmc')}}</h3>
+          </button>
+        </div>
+      
+     <div class="canvas-item" *ngIf="shouldDisplayLean()">
+      <div class="role" [ngClass]="{
+        'gold-color': getCanvasRoleInvite('Lean Canvas') === 'editor',
+        'crimson-color': getCanvasRoleInvite('Lean Canvas') !== 'editor'
+      }">
+        <span *ngIf="getCanvasRoleInvite('Lean Canvas') === 'editor'; else otherRole">
+          Superviseur
+        </span>
+        <ng-template #otherRole>
+          {{ getCanvasRoleInvite('Lean Canvas') }}
+        </ng-template>
+      </div>
+      
+  <button routerLink="/lean/{{getCanvasId('Lean Canvas')}}">
+    <img src="assets/imgs/lean.png" height="160" alt="Lean">
+    <h3>{{getCanvasName('Lean Canvas')}}</h3>
+
+  </button>
+</div>
+
+      
+  
+      <div class="canvas-item" *ngIf="shouldDisplayVP()">
+        <div class="role" [ngClass]="{
+          'gold-color': getCanvasRoleInvite('VP Canvas') === 'editor',
+          'crimson-color': getCanvasRoleInvite('VP Canvas') !== 'editor'
+        }">
+          <span *ngIf="getCanvasRoleInvite('VP Canvas') === 'editor'; else otherRole">
+            Superviseur
+          </span>
+          <ng-template #otherRole>
+            {{ getCanvasRoleInvite('VP Canvas') }}
+          </ng-template>
+        </div>
+        <button routerLink="/vp/{{getCanvasId('VP Canvas')}}">
+          <img src="assets/imgs/vp.png" height="160" alt="VP">
+          <h3>{{getCanvasName('VP Canvas')}}</h3>
+        </button>
+      </div>
+    
+    
+      <div class="canvas-item" *ngIf="shouldDisplaySWOT()">
+        <div class="role" [ngClass]="{
+          'gold-color': getCanvasRoleInvite('swot') === 'editor',
+          'crimson-color': getCanvasRoleInvite('swot') !== 'editor'
+        }">
+          <span *ngIf="getCanvasRoleInvite('swot') === 'editor'; else otherRole">
+            Superviseur
+          </span>
+          <ng-template #otherRole>
+            {{ getCanvasRoleInvite('swot') }}
+          </ng-template>
+        </div>
+        <button [routerLink]="'/swot/' + getCanvasId('swot')">
+          <img src="assets/imgs/swot.png" height="160" alt="SWOT">
+          <h3>{{getCanvasName('swot')}}</h3>
+        </button>
+      </div>
+      
+        <div class="canvas-item" *ngIf="shouldDisplayEmpathie()">
+          <div class="role" [ngClass]="{
+            'gold-color': getCanvasRoleInvite('empathy map canvas') === 'editor',
+            'crimson-color': getCanvasRoleInvite('empathy map canvas') !== 'editor'
+          }">
+            <span *ngIf="getCanvasRoleInvite('empathy map canvas') === 'editor'; else otherRole">
+              Superviseur
+            </span>
+            <ng-template #otherRole>
+              {{ getCanvasRoleInvite('empathy map canvas') }}
+            </ng-template>
+          </div>
+          <button [routerLink]="'/empathie/'+ getCanvasId('empathy map canvas')">
+            <img src="assets/imgs/empathie.png" height="160" alt="Empathie">
+            <h3>{{getCanvasName('empathy map canvas')}}</h3>
+          </button>
+        </div>
+     
+      
+      <div class="canvas-item" *ngIf="shouldDisplayPersona()">
+        <div class="role" [ngClass]="{
+          'gold-color': getCanvasRoleInvite('persona canvas') === 'editor',
+          'crimson-color': getCanvasRoleInvite('persona canvas') !== 'editor'
+        }">
+          <span *ngIf="getCanvasRoleInvite('persona canvas') === 'editor'; else otherRole">
+            Superviseur
+          </span>
+          <ng-template #otherRole>
+            {{ getCanvasRoleInvite('persona canvas') }}
+          </ng-template>
+        </div>
+        <button [routerLink]="'/persona/' + getCanvasId('persona canvas')">
+          <img src="assets/imgs/persona.png" height="160" alt="Persona">
+          <h3>{{getCanvasName('persona canvas')}}</h3>
+        </button>
+      </div>
+      
+          </div>
+    
+    
+</div>

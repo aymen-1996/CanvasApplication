@@ -1,0 +1,36 @@
+
+<div class="container">
+    <button id="closeButton" (click)="closePopup()">X</button>
+  
+    <form [formGroup]="inviteForm" (ngSubmit)="inviteUser()">
+      <h3>Envoyer une invitation</h3>
+
+      <div *ngIf="successMessage" class="success-message">{{ successMessage }}</div>
+      <div *ngIf="errorMessage" class="error-message">{{ errorMessage }}</div>
+
+      <div class="input-group">
+        <label for="emailUser">Email de l'invité :</label>
+        <input type="text" id="emailUser" name="emailUser" formControlName="emailUser" required>
+      </div>
+  
+      <label>Donner un rôle :</label>
+  
+      <div class="radio-group">
+        <div class="radio-option">
+          <input type="radio" id="editor" name="role" formControlName="role" value="editor" required>
+          <label for="editor">Editor</label>
+        </div>
+  
+        <div class="radio-option">
+          <input type="radio" id="moniteur" name="role" formControlName="role" value="moniteur" required>
+          <label for="moniteur">Moniteur</label>
+        </div>
+      </div>
+  
+      <div class="button-container">
+        <button style="width: 150px;" type="submit">Confirmer</button>
+      </div>
+
+          </form>
+  </div>
+  

@@ -1,0 +1,50 @@
+<div class="container">
+    <div class="content">
+        <div class="banner">
+          <a>
+          <a routerLink="/login" class="no-underline">
+            <h2 class="title"><span style="color: rgb(33, 150, 243)">Canvas</span></h2>
+          </a>
+        </a>
+          <div class="intro">
+           <h3> Gérez votre entreprise plus efficacement avec </h3>
+            <h3 class="funder"> CANVAS</h3>
+            </div>
+            <img src="assets/imgs/illustration_register.png" alt="" class="flex-grow-1">
+        </div>
+        <div class="form-content">
+            <h3 class="title" id="titlerej"> Rejoignez CANVAS aujourd'hui.</h3>
+            <h6> Commencez en saisissant vos coordonnées ci-dessous.</h6>
+            <form [formGroup]="signUpForm" (ngSubmit)="onSignup()" >
+                <div class="inputs">
+                  <input type="text" name="nom" placeholder="saisir votre nom " formControlName="nomUser" >
+                  <input  type="text" name="prenom" placeholder="saisir votre prenom " formControlName="prenomUser">
+                <div>
+                  <input  type="email" name="email" placeholder="saisir votre email " formControlName="emailUser" [class.invalid-input]="signUpForm.get('emailUser')!.invalid && signUpForm.get('emailUser')!.touched">
+                  <span class="input-group_error" *ngIf="signUpForm.get('emailUser')!.invalid && signUpForm.get('emailUser')!.touched" >** email est requis</span>
+                </div>
+                <div >
+                  
+                  <ng-select class="select" name="governorat"  formControlName="gov"> 
+                    <ng-option *ngFor="let governorat of governorates" 
+                    [value]="governorat.name" 
+                   >
+                  {{governorat.name}}
+                </ng-option>
+                    </ng-select>
+                  </div>
+                  <div>
+                  <input  type="password" name="password" placeholder="Saisir votre mot de passe " formControlName="passwordUser" [class.invalid-input]="signUpForm.get('passwordUser')!.invalid && signUpForm.get('passwordUser')!.touched">
+                    <span class="input-group_error" *ngIf="signUpForm.get('passwordUser')!.invalid && signUpForm.get('passwordUser')!.touched" >** Mot de passe est requis</span>
+                  </div>
+                  <div>
+                  <input  type="password" name="password" placeholder="Confirmer votre mot de passe " formControlName="passwordUserconfirmed" [class.invalid-input]="signUpForm.get('passwordUserconfirmed')!.invalid && signUpForm.get('passwordUserconfirmed')!.touched">
+           
+                    <span class="input-group_error" *ngIf="signUpForm.get('passwordUserconfirmed')!.invalid && signUpForm.get('passwordUserconfirmed')!.dirty" >** Confirmation de mot de passe est requise</span>
+                  </div>
+                  </div>
+                <button  type="submit" class="signup-btn"> S'inscrire </button>
+            </form>
+        </div>
+    </div>
+  </div>

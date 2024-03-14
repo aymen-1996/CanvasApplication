@@ -1,0 +1,367 @@
+<div class="bloc">
+    <div class="element-bmc">
+      <div class="header">
+      <app-header [showFirstDiv]="showFirst" (showFirstDivChange)="onShowFirstChange($event)"></app-header>     
+      </div>
+    <div class="items-bmc">
+      <div class="item-bmc" *ngIf="blocks  && blocks?.length > 0">
+        <div *ngIf="shouldDisplayMesg()"> <p class="css-tq1709">Enregistré <mat-icon>done</mat-icon></p></div>   
+          <div> <mat-stepper *ngIf="userRole?.roleInvite === 'editor'" #stepper class="demo-stepper"  (selectionChange)="onStepChange($event)" >
+
+            <mat-step>            
+              <p class="css-vgwlcw">Etape 1 </p>
+              <div class="MuiBox-root css-igeghr">
+                {{blocks[0].description}}
+                            </div>
+            </mat-step>
+             <mat-step>            
+              <p class="css-vgwlcw">Etape 2 </p>
+              <div class="MuiBox-root css-igeghr">
+                {{blocks[1].description}}
+              </div>
+            </mat-step>
+             <mat-step>            
+              <p class="css-vgwlcw">Etape 3 </p>
+              <div class="MuiBox-root css-igeghr">
+                {{blocks[2].description}}            
+                </div>
+            </mat-step>
+            <mat-step>            
+              <p class="css-vgwlcw">Etape 4 </p>
+              <div class="MuiBox-root css-igeghr">
+                {{blocks[3].description}}         
+                   </div>
+            </mat-step>
+            <mat-step>            
+              <p class="css-vgwlcw">Etape 5</p>
+              <div class="MuiBox-root css-igeghr">
+                {{blocks[4].description}}      
+                      </div>
+            </mat-step>
+            <mat-step>            
+              <p class="css-vgwlcw">Etape 6</p>
+              <div class="MuiBox-root css-igeghr">
+                {{blocks[5].description}}
+              </div>
+            </mat-step>
+            <mat-step>            
+                <p class="css-vgwlcw">Etape 7</p>
+                <div class="MuiBox-root css-igeghr">
+                    Sommaire
+                </div>
+              </mat-step>
+          </mat-stepper>
+        </div>
+         <div class="css-1tfsht7"> 
+          <div  class="css-9bzmof" *ngIf="!showTable && userRole?.roleInvite === 'editor'">
+            <div class="container" style="margin-right: auto; margin-left: auto; padding-right: 15px; padding-left: 15px; max-height: 350px; overflow-y: auto;">
+              <div class="notes-list" style="width: 112%; display: grid; grid-template-columns: 1fr 1fr 1fr;">
+                <form [formGroup]="donneesForm" *ngIf="showAddButton && donnees?.length < 3">
+                  <div class="MuiBox-root css-4xg6x2" title="Ajouter un post-it" (click)="creatColor()">
+                    <mat-icon>add</mat-icon>
+                  </div>
+                </form>
+                
+                <div [style.backgroundColor]="donnees?.coleur " class="note MuiBox-root css-1sdqa4j" (click)="toggleDeleteButton(donnees)" *ngFor="let donnees of donnees">
+                  <div >
+                    <div *ngIf="showDeleteButton && isSelectedDonnee(donnees)" class="note-action MuiBox-root css-cpm1aj">
+                      <button class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeMedium css-1m32rbj" tabindex="0" type="button">
+                        <svg  style=" position: absolute;top: 0; left: 0;" (click)="toggleFormVisibility(donnees.idDonnees)" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img"
+                          class="MuiBox-root css-3o0h5k iconify iconify--akar-icons" sx="[object Object]" width="1em" height="1em"
+                          preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24">
+                          <g fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="4" cy="12" r="1"></circle>
+                            <circle cx="12" cy="12" r="1"></circle>
+                            <circle cx="20" cy="12" r="1"></circle>
+                          </g>
+                        </svg>
+                        
+                        <form (click)="toggleFormVisibility(donnees.idDonnees)"*ngIf="isFormVisibleForItemId(donnees.idDonnees)" class="color-form">
+
+                        <ng-container  *ngFor="let group of groupColors(generatedColors)">
+                          <div  class="color-group">
+                            <div class="circle" *ngFor="let color of group" [style.background-color]="color"  (click)="updateColor(donnees.idDonnees, color)"></div>
+                          </div>
+                        </ng-container>
+                        <svg (click)="openPopup(donnees.idDonnees)" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash3" viewBox="0 0 16 16">
+                          <path d="M6.5 1h3a.5.5 0 0 1 .5.5v1H6v-1a.5.5 0 0 1 .5-.5M11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3A1.5 1.5 0 0 0 5 1.5v1H2.506a.58.58 0 0 0-.01 0H1.5a.5.5 0 0 0 0 1h.538l.853 10.66A2 2 0 0 0 4.885 16h6.23a2 2 0 0 0 1.994-1.84l.853-10.66h.538a.5.5 0 0 0 0-1h-.995a.59.59 0 0 0-.01 0zm1.958 1-.846 10.58a1 1 0 0 1-.997.92h-6.23a1 1 0 0 1-.997-.92L3.042 3.5zm-7.487 1a.5.5 0 0 1 .528.47l.5 8.5a.5.5 0 0 1-.998.06L5 5.03a.5.5 0 0 1 .47-.53Zm5.058 0a.5.5 0 0 1 .47.53l-.5 8.5a.5.5 0 1 1-.998-.06l.5-8.5a.5.5 0 0 1 .528-.47ZM8 4.5a.5.5 0 0 1 .5.5v8.5a.5.5 0 0 1-1 0V5a.5.5 0 0 1 .5-.5"/>
+                        </svg> 
+                        <span class="MuiTouchRipple-root css-w0pj6f"></span>
+                      </form>
+
+                      </button>
+                    </div>
+                    <form [formGroup]="donneesForms" >
+                      <textarea
+                      (keydown.enter)="onEnterKey($event)"
+                      (input)="updateTicketValue($event)"
+                      (keyup.enter)="updatedonne(donnees.idDonnees)"
+                      (blur)="updatedonne(donnees.idDonnees)"
+
+                      maxlength="150"
+                      style="color: inherit; background: transparent; border: none; outline: none; height: 100%; width: 100%; resize: none; font-family: inherit; font-size: inherit; font-weight: inherit; font-style: inherit; word-break: break-word;"
+                    >{{ donnees.ticket}}</textarea>
+                    
+                    </form>
+                    
+                  </div>
+                  
+                </div>
+                
+                
+                
+              
+              </div>
+          
+            </div>
+              
+                     </div>
+                     <div class="button-container" [ngClass]="{'centerbtn':userRole?.roleInvite === 'moniteur' }">
+                      <button class="download-button" *ngIf="showTable ||userRole?.roleInvite === 'moniteur' " mat-raised-button color="primary" (click)="telechargerPDF()">Télécharger en PDF</button>
+                      <button *ngIf="showTable && userRole?.roleInvite === 'editor'" class="download-button" mat-raised-button color="primary" (click)="openPopupInvite()">Envoyer Invitation</button>
+                    </div>
+            <div class="wrapper" *ngIf="!showTable && userRole?.roleInvite === 'editor'">
+               <div class="canvas">
+                <div class="MuiGrid-root MuiGrid-item MuiGrid-grid-md-7 css-1odkrke">
+                    <div class="MuiBox-root css-1xli2ds">
+                        <div class="MuiBox-root css-1iwfbct">
+                            <div class="MuiBox-root css-1f7kqzk"  >
+                            
+                            </div>
+                            <div class="MuiBox-root css-1h4xcdt">
+                                <div class="MuiBox-root css-19mel1j" (click)="detectedBlockById(blocks[0].idBlock)"   [ngClass]="{ 'selected': isSelected(blocks[0].idBlock) }"
+                                [ngStyle]="{ 'background-color': isSelected(blocks[0].idBlock) ? 'rgb(247, 222, 58)' : '' }"
+                                (click)="toggleSelection(blocks[0].idBlock)">
+
+                                </div>
+                            </div>
+                            <div class="MuiBox-root css-150hu08">
+                                <div class="MuiBox-root css-1lxpb6t" (click)="detectedBlockById(blocks[1].idBlock)"   [ngClass]="{ 'selected': isSelected(blocks[1].idBlock) }"
+                                [ngStyle]="{ 'background-color': isSelected(blocks[1].idBlock) ? 'rgb(247, 222, 58)' : '' }"
+                                (click)="toggleSelection(blocks[1].idBlock)">
+
+                                </div>
+                            </div>
+                                <div class="MuiBox-root css-8zkixo">
+                                    <div class="MuiBox-root css-1nhy4ip" (click)="detectedBlockById(blocks[2].idBlock)"   [ngClass]="{ 'selected': isSelected(blocks[2].idBlock) }"
+                                    [ngStyle]="{ 'background-color': isSelected(blocks[2].idBlock) ? 'rgb(247, 222, 58)' : '' }"
+                                    (click)="toggleSelection(blocks[2].idBlock)">
+                                    </div>
+                                </div>
+                                <div class="MuiBox-root css-ja1rpf">
+                                    <div class="MuiBox-root css-bw4gw7"(click)="detectedBlockById(blocks[3].idBlock)"   [ngClass]="{ 'selected': isSelected(blocks[3].idBlock) }"
+                                    [ngStyle]="{ 'background-color': isSelected(blocks[3].idBlock) ? 'rgb(247, 222, 58)' : '' }"
+                                    (click)="toggleSelection(blocks[3].idBlock)">
+                                    </div>
+                                </div>
+                                <div class="MuiBox-root css-scatei">
+                <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" class="MuiBox-root css-uwwqev iconify iconify--iconoir" sx="[object Object]" width="1em" height="1em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"><path fill="currentColor" d="M15.5 9a.5.5 0 1 0 0-1a.5.5 0 0 0 0 1"></path><path d="M21.542 15A9.997 9.997 0 0 0 22 12c0-5.523-4.477-10-10-10S2 6.477 2 12s4.477 10 10 10c4.478 0 8.268-2.943 9.542-7m0 0H17"></path></g></svg>
+              </div>
+            </div>
+            <div class="MuiBox-root css-164txr8">
+              <div class="MuiBox-root css-3bgeuq" (click)="detectedBlockById(blocks[4].idBlock)"  [ngClass]="{ 'selected': isSelected(blocks[4].idBlock) }" (click)="toggleSelection(blocks[4].idBlock)">
+                <small style="display: flex; justify-content: center;">
+                    <p style="border-top: none; border-right: 1px solid black; border-bottom: 1px solid black; border-left: 1px solid black; border-image: initial; padding: 3px;">PROBLEMES</p></small>
+                    <div class="MuiBox-root css-1xh0ujl">
+
+                   </div>
+                   <div style=" display: flex;">
+                    <div *ngFor="let donnee of blocks[4]?.donnees; let i = index" 
+                         [style.backgroundColor]="donnee?.coleur" 
+                         class="kqsxjs1" 
+                         [style.width]="calculateWidth(blocks[4]?.donnees?.length)"
+                         [style.marginRight]="i < 2 ? '5px' : '0'">
+                      <p>{{donnee.ticket}}</p>
+                    </div>
+                  </div>
+
+                                      
+                </div>
+                <div class="MuiBox-root css-aq3lkq" (click)="detectedBlockById(blocks[5].idBlock)"  [ngClass]="{ 'selected': isSelected(blocks[5].idBlock) }" (click)="toggleSelection(blocks[5].idBlock)">
+                    <small style="display: flex; justify-content: center;">
+                        <p style="border-top: none; border-right: 1px solid black; border-bottom: 1px solid black; border-left: 1px solid black; border-image: initial; padding: 3px;">BESOINS</p>
+                    </small>
+                    <div class="MuiBox-root css-1xh0ujl">
+
+                     
+                    </div>
+                    <div style=" display: flex;">
+                      <div *ngFor="let donnee of blocks[5]?.donnees; let i = index" 
+                           [style.backgroundColor]="donnee?.coleur" 
+                           class="kqsxjs1" 
+                           [style.width]="calculateWidth(blocks[5]?.donnees?.length)"
+                           [style.marginRight]="i < 2 ? '5px' : '0'">
+                        <p>{{donnee.ticket}}</p>
+                      </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+            
+       
+            </div>  
+            </div>
+            <div *ngFor="let donnee of blocks[0].donnees; let i = index">
+              <div [style.backgroundColor]="donnee?.coleur"  class="MuiBox-root css-v04ws1"
+              [ngStyle]="calculatePositionBlock1(i)">
+                <p class="title1">{{donnee?.ticket}}</p>
+              </div>
+            </div>
+      
+      
+            <div *ngFor="let donnee of blocks[1].donnees; let i = index">
+              <div [style.backgroundColor]="donnee?.coleur"  class="MuiBox-root css-1kpke41"
+              [ngStyle]="calculatePositionBlock3(i)">
+                <p class="title1">{{donnee?.ticket}}</p>
+              </div>
+            </div>
+            <div *ngFor="let donnee of blocks[3].donnees; let i = index">
+              <div [style.backgroundColor]="donnee?.coleur"  class="MuiBox-root css-1kpke41"
+              [ngStyle]="calculatePositionBlock2(i)">
+                <p class="title1">{{donnee?.ticket}}</p>
+              </div>
+            </div>
+  
+            <div *ngFor="let donnee of blocks[2].donnees; let i = index">
+              <div [style.backgroundColor]="donnee?.coleur"  class="MuiBox-root css-1kpke41"
+              [ngStyle]="calculatePositionBlock7(i)">
+                <p class="title1">{{donnee?.ticket}}</p>
+              </div>
+            </div>
+          </div>
+        
+          <div  class="wrapper"*ngIf="showTable && userRole?.roleInvite === 'editor' || userRole?.roleInvite === 'moniteur' " >
+            <div id="tableau" class="canvas" >
+             <div  class="MuiGrid-root MuiGrid-item MuiGrid-grid-md-7 css-1odkrke" [ngClass]="{'center':userRole?.roleInvite === 'moniteur' }">
+                 <div class="MuiBox-root css-1xli2ds">
+                     <div class="MuiBox-root css-1iwfbct">
+                         <div class="MuiBox-root css-1f7kqzk"  >
+                         
+                         </div>
+                         <div class="MuiBox-root css-1h4xcdt">
+                             <div class="MuiBox-root css-19mel1j" (click)="detectedBlockById(blocks[0].idBlock)"   [ngClass]="{ 'selected': isSelected(blocks[0].idBlock)&& userRole?.roleInvite !== 'moniteur'}"
+                             (click)="toggleSelection(blocks[0].idBlock)">
+
+                             </div>
+                         </div>
+                         <div class="MuiBox-root css-150hu08">
+                             <div class="MuiBox-root css-1lxpb6t" (click)="detectedBlockById(blocks[1].idBlock)"   [ngClass]="{ 'selected': isSelected(blocks[1].idBlock) }"
+                             [ngStyle]="{ 'background-color': isSelected(blocks[1].idBlock) ? 'rgb(247, 222, 58)' : '' }"
+                             (click)="toggleSelection(blocks[1].idBlock)">
+
+                             </div>
+                         </div>
+                             <div class="MuiBox-root css-8zkixo">
+                                 <div class="MuiBox-root css-1nhy4ip" (click)="detectedBlockById(blocks[2].idBlock)"   [ngClass]="{ 'selected': isSelected(blocks[2].idBlock) }"
+                                 [ngStyle]="{ 'background-color': isSelected(blocks[2].idBlock) ? 'rgb(247, 222, 58)' : '' }"
+                                 (click)="toggleSelection(blocks[2].idBlock)">
+                                 </div>
+                             </div>
+                             <div class="MuiBox-root css-ja1rpf">
+                                 <div class="MuiBox-root css-bw4gw7"(click)="detectedBlockById(blocks[3].idBlock)"   [ngClass]="{ 'selected': isSelected(blocks[3].idBlock) }"
+                                 [ngStyle]="{ 'background-color': isSelected(blocks[3].idBlock) ? 'rgb(247, 222, 58)' : '' }"
+                                 (click)="toggleSelection(blocks[3].idBlock)">
+                                 </div>
+                             </div>
+                             <div class="MuiBox-root css-scatei">
+             <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" class="MuiBox-root css-uwwqev iconify iconify--iconoir" sx="[object Object]" width="1em" height="1em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"><path fill="currentColor" d="M15.5 9a.5.5 0 1 0 0-1a.5.5 0 0 0 0 1"></path><path d="M21.542 15A9.997 9.997 0 0 0 22 12c0-5.523-4.477-10-10-10S2 6.477 2 12s4.477 10 10 10c4.478 0 8.268-2.943 9.542-7m0 0H17"></path></g></svg>
+           </div>
+         </div>
+         <div class="MuiBox-root css-164txr8">
+           <div class="MuiBox-root css-3bgeuq" (click)="detectedBlockById(blocks[4].idBlock)"  [ngClass]="{ 'selected': isSelected(blocks[4].idBlock) }" (click)="toggleSelection(blocks[4].idBlock)">
+             <small style="display: flex; justify-content: center;">
+                 <p style="border-top: none; border-right: 1px solid black; border-bottom: 1px solid black; border-left: 1px solid black; border-image: initial; padding: 3px;">PROBLEMES</p></small>
+                 <div class="MuiBox-root css-1xh0ujl">
+
+                 </div>
+                 <div style=" display: flex;">
+                  <div *ngFor="let donnee of blocks[4]?.donnees; let i = index" 
+                       [style.backgroundColor]="donnee?.coleur" 
+                       class="kqsxjs1" 
+                       [style.width]="calculateWidth(blocks[4]?.donnees?.length)"
+                       [style.marginRight]="i < 2 ? '5px' : '0'">
+                    <p>{{donnee.ticket}}</p>
+                  </div>
+                </div>
+             </div>
+             <div class="MuiBox-root css-aq3lkq" (click)="detectedBlockById(blocks[5].idBlock)"  [ngClass]="{ 'selected': isSelected(blocks[5].idBlock) }" (click)="toggleSelection(blocks[6].idBlock)">
+                 <small style="display: flex; justify-content: center;">
+                     <p style="border-top: none; border-right: 1px solid black; border-bottom: 1px solid black; border-left: 1px solid black; border-image: initial; padding: 3px;">BESOINS</p>
+                 </small>
+                 <div class="MuiBox-root css-1xh0ujl">
+                   
+
+                 </div>
+                 <div style=" display: flex;">
+                  <div *ngFor="let donnee of blocks[5]?.donnees; let i = index" 
+                       [style.backgroundColor]="donnee?.coleur" 
+                       class="kqsxjs1" 
+                       [style.width]="calculateWidth(blocks[5]?.donnees?.length)"
+                       [style.marginRight]="i < 2 ? '5px' : '0'">
+                    <p>{{donnee.ticket}}</p>
+                  </div>
+                </div>
+             </div>
+         </div>
+     </div>
+         
+    
+         </div>  
+         </div>
+         <div *ngFor="let donnee of blocks[0].donnees; let i = index" >
+           <div [ngClass]="{'center-container':userRole?.roleInvite === 'moniteur' }" [style.backgroundColor]="donnee?.coleur"  class="MuiBox-root css-v04ws1"
+           [ngStyle]="calculatePositionBlock4(i)">
+             <p class="title1">{{donnee?.ticket}}</p>
+           </div>
+         </div>
+   
+         <div *ngFor="let donnee of blocks[2].donnees; let i = index">
+          <div [ngClass]="{'center-container':userRole?.roleInvite === 'moniteur' }" [style.backgroundColor]="donnee?.coleur"  class="MuiBox-root css-1kpke41"
+          [ngStyle]="calculatePositionBlock8(i)">
+            <p class="title1">{{donnee?.ticket}}</p>
+          </div>
+        </div>
+         <div *ngFor="let donnee of blocks[3].donnees; let i = index">
+           <div [ngClass]="{'center-container':userRole?.roleInvite === 'moniteur' }" [style.backgroundColor]="donnee?.coleur"  class="MuiBox-root css-1kpke41"
+           [ngStyle]="calculatePositionBlock5(i)">
+             <p class="title1">{{donnee?.ticket}}</p>
+           </div>
+         </div>
+   
+         <div *ngFor="let donnee of blocks[1].donnees; let i = index">
+           <div [ngClass]="{'center-container':userRole?.roleInvite === 'moniteur' }" [style.backgroundColor]="donnee?.coleur"  class="MuiBox-root css-1kpke41"
+           [ngStyle]="calculatePositionBlock6(i)">
+             <p class="title1">{{donnee?.ticket}}</p>
+           </div>
+
+       
+         </div>
+       </div>
+      </div> 
+
+    
+      <div class="css-1xto6kq" >
+        <button class="css-5357ut" *ngIf="shouldDisplayButton()"
+        tabindex="0" 
+        type="button" 
+        (click)="precedent()" 
+        [disabled]="userRole?.roleInvite === 'moniteur' || currentBlockIndex === 0">
+    Précédent
+    <span class="css-w0pj6f"></span>
+    </button>
+            <div class="css-11qjisw" >
+            </div> 
+            <button *ngIf="shouldDisplayButton()"class="css-ivnzlx"  tabindex="0" type="button" (click)="suivant()">
+              {{ currentBlockIndex === 5 ? 'Terminer' : 'Suivant' }}
+              <span class="css-w0pj6f"></span>
+    
+            </button>
+         
+    </div>
+      </div>
+     
+    </div>
+  </div>
+  </div>
+  
+  <button *ngIf="showTable || userRole?.roleInvite === 'moniteur'" class="css-5357ut"  style="position: relative;top: 150px;"(click)="precedent()" >Précédent</button>

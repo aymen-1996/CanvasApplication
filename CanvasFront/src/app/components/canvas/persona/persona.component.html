@@ -1,0 +1,401 @@
+<div class="bloc">
+    <div class="element-bmc">
+      <div class="header">
+      <app-header [showFirstDiv]="showFirst" (showFirstDivChange)="onShowFirstChange($event)"></app-header>     
+      </div>
+    <div class="items-bmc">
+      <div class="item-bmc" *ngIf="blocks  && blocks?.length > 0">
+        <div> <p class="css-tq1709" *ngIf="shouldDisplayMesg()">Enregistré <mat-icon>done</mat-icon></p></div>   
+          <div>
+            <mat-stepper class="demo-stepper" *ngIf="userRole?.roleInvite === 'editor'" class="demo-stepper" (selectionChange)="onStepChange($event)">
+            <mat-step >            
+              <p class="css-vgwlcw">Etape 1</p>
+              <div class="css-igeghr">Profil</div>
+            </mat-step>
+            <mat-step>            
+              <p class="css-vgwlcw">Etape 2</p>
+              <div class="MuiBox-root css-igeghr">Contexte</div>
+            </mat-step>
+            <mat-step>            
+              <p class="css-vgwlcw">Etape 3</p>
+              <div class="MuiBox-root css-igeghr">Attente</div>
+            </mat-step>
+            <mat-step>            
+              <p class="css-vgwlcw">Etape 4.</p>
+              <div class="MuiBox-root css-igeghr">
+                 Sentimenst</div>
+            </mat-step>
+             <mat-step>            
+              <p class="css-vgwlcw">Etape 5</p>
+              <div class="MuiBox-root css-igeghr">Probléme</div>
+            </mat-step>
+             <mat-step>            
+              <p class="css-vgwlcw">Etape 6</p>
+              <div class="MuiBox-root css-igeghr">Outils</div>
+            </mat-step>
+            <mat-step>            
+              <p class="css-vgwlcw">Etape 7.</p>
+              <div class="MuiBox-root css-igeghr">Ressources</div>
+            </mat-step>
+            <mat-step>            
+              <p class="css-vgwlcw">Etape 8</p>
+              <div class="MuiBox-root css-igeghr">Sommaire</div>
+            </mat-step>
+      
+          </mat-stepper>
+        </div>
+         <div class="css-1tfsht7"> 
+          <div class="css-9bzmof" *ngIf="!showTable && userRole?.roleInvite === 'editor'">
+            <div class="container" style="margin-right: auto; margin-left: auto; padding-right: 15px; padding-left: 15px; max-height: 350px; overflow-y: auto;">
+              <div class="notes-list" style="width: 112%; display: grid; grid-template-columns: 1fr 1fr 1fr;">
+                <form [formGroup]="donneesForm" *ngIf="showAddButton && donnees?.length < 6">
+
+                <div  class="MuiBox-root css-4xg6x2" title="Ajouter un post-it"  (click)="creatColor()">
+                  <mat-icon>add</mat-icon>
+                </div>
+                </form>
+                <div [style.backgroundColor]="donnees?.coleur " class="note MuiBox-root css-t4333k" (click)="toggleDeleteButton(donnees)" *ngFor="let donnees of donnees">
+                  <div >
+                    <div *ngIf="showDeleteButton && isSelectedDonnee(donnees)" class="note-action MuiBox-root css-cpm1aj">
+                      <button class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeMedium css-1m32rbj" tabindex="0" type="button">
+                        <svg  style=" position: absolute;top: 0; left: 0;" (click)="toggleFormVisibility(donnees.idDonnees)" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img"
+                          class="MuiBox-root css-3o0h5k iconify iconify--akar-icons" sx="[object Object]" width="1em" height="1em"
+                          preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24">
+                          <g fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="4" cy="12" r="1"></circle>
+                            <circle cx="12" cy="12" r="1"></circle>
+                            <circle cx="20" cy="12" r="1"></circle>
+                          </g>
+                        </svg>
+                        
+                        <form (click)="toggleFormVisibility(donnees.idDonnees)"*ngIf="isFormVisibleForItemId(donnees.idDonnees)" class="color-form">
+
+                        <ng-container  *ngFor="let group of groupColors(generatedColors)">
+                          <div  class="color-group">
+                            <div class="circle" *ngFor="let color of group" [style.background-color]="color"  (click)="updateColor(donnees.idDonnees, color)"></div>
+                          </div>
+                        </ng-container>
+                        <svg (click)="openPopup(donnees.idDonnees)" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash3" viewBox="0 0 16 16">
+                          <path d="M6.5 1h3a.5.5 0 0 1 .5.5v1H6v-1a.5.5 0 0 1 .5-.5M11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3A1.5 1.5 0 0 0 5 1.5v1H2.506a.58.58 0 0 0-.01 0H1.5a.5.5 0 0 0 0 1h.538l.853 10.66A2 2 0 0 0 4.885 16h6.23a2 2 0 0 0 1.994-1.84l.853-10.66h.538a.5.5 0 0 0 0-1h-.995a.59.59 0 0 0-.01 0zm1.958 1-.846 10.58a1 1 0 0 1-.997.92h-6.23a1 1 0 0 1-.997-.92L3.042 3.5zm-7.487 1a.5.5 0 0 1 .528.47l.5 8.5a.5.5 0 0 1-.998.06L5 5.03a.5.5 0 0 1 .47-.53Zm5.058 0a.5.5 0 0 1 .47.53l-.5 8.5a.5.5 0 1 1-.998-.06l.5-8.5a.5.5 0 0 1 .528-.47ZM8 4.5a.5.5 0 0 1 .5.5v8.5a.5.5 0 0 1-1 0V5a.5.5 0 0 1 .5-.5"/>
+                        </svg> 
+                        <span class="MuiTouchRipple-root css-w0pj6f"></span>
+                      </form>
+
+                      </button>
+                    </div>
+                    <form [formGroup]="donneesForms" >
+                      <textarea
+                      (keydown.enter)="onEnterKey($event)"
+                      (input)="updateTicketValue($event)"
+                      (keyup.enter)="updatedonne(donnees.idDonnees)"
+                      (blur)="updatedonne(donnees.idDonnees)"
+
+                      maxlength="150"
+                      style="color: inherit; background: transparent; border: none; outline: none; height: 100%; width: 100%; resize: none; font-family: inherit; font-size: inherit; font-weight: inherit; font-style: inherit; word-break: break-word;"
+                    >{{ donnees.ticket}}</textarea>
+                    
+                    </form>
+                    
+                  </div>
+                  
+                </div>
+              </div>
+         
+            </div>
+
+          
+          </div>
+         
+            <div *ngIf="!showTable && userRole?.roleInvite === 'editor'" class="MuiGrid-root MuiGrid-item MuiGrid-grid-md-7 css-1odkrke">
+              <div class="MuiGrid-root MuiGrid-container css-1d3bbye">
+                <div class="MuiGrid-root MuiGrid-item MuiGrid-grid-md-1 css-yl6yy2">
+                  <div class="MuiBox-root css-gk17v2"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" class="MuiBox-root css-7f50zt iconify iconify--iconoir" sx="[object Object]" width="1em" height="1em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"><path d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10s10-4.477 10-10S17.523 2 12 2"></path><path d="M4.271 18.346S6.5 15.5 12 15.5s7.73 2.846 7.73 2.846M12 12a3 3 0 1 0 0-6a3 3 0 0 0 0 6"></path></g></svg>
+                  </div>
+                </div>
+                <div class="MuiGrid-root MuiGrid-item MuiGrid-grid-md-5 css-9bzmof">
+                  <div (click)="detectedBlockById(blocks[0].idBlock)" [ngClass]="{ 'selected': isSelected(blocks[0].idBlock) }" (click)="toggleSelection(blocks[0].idBlock)" class="MuiGrid-root css-rfnosa">
+                    <div style="height: 135px; position: relative; z-index: 20; border-top: 1px solid black; border-right: 1px solid black; border-bottom: none; border-left: none; border-image: initial; overflow: hidden auto; cursor: pointer;"
+                    ><div style="padding: 15px; background: transparent; font-size: 10px; font-weight: bold; fill: rgb(0, 0, 0); display: flex; justify-content: space-between; align-items: center;"><span style="color: rgb(169, 169, 169);">
+                    Profil</span>
+                  </div>
+                
+                    <div style="padding: 5px 10px; display: flex;">
+                      <div *ngFor="let donnee of blocks[0]?.donnees?.slice(0, 3); let i = index" 
+                           [style.backgroundColor]="donnee?.coleur" 
+                           class="kqsxjs1" 
+                           [style.width]="calculateWidth(blocks[0]?.donnees?.length)"
+                           [style.marginRight]="i < 2 ? '5px' : '0'">
+                        <p>{{donnee.ticket}}</p>
+                      </div>
+                    
+                      <div *ngIf="blocks[0]?.donnees?.length > 3" class="additional-section">
+                        <p>+{{ blocks[0]?.donnees?.length - 3 }} </p>
+                      </div>
+                    </div>                
+                   
+                </div>
+              </div>
+            </div>
+            <div class="MuiGrid-root MuiGrid-item MuiGrid-grid-md-6 css-8pdr4s">
+              <div class="MuiGrid-root css-rfnosa" (click)="detectedBlockById(blocks[1].idBlock)" [ngClass]="{ 'selected': isSelected(blocks[1].idBlock) }" (click)="toggleSelection(blocks[1].idBlock)">
+                <div style="height: 135px; box-shadow: none; position: relative; z-index: 1; border-top: 1px solid black; border-right: 1px solid black; border-bottom: 1px solid black; border-left: none; border-image: initial; overflow: hidden auto; cursor: pointer;">
+                  <div style="padding: 5px; background: transparent; font-size: 10px; font-weight: bold; fill: rgb(0, 0, 0); display: flex; justify-content: space-between; align-items: center;">
+                    <span style="color: rgb(169, 169, 169);">Contexte</span>
+                  </div>
+                  <div style="padding: 5px 10px; display: flex;">
+                    <div *ngFor="let donnee of blocks[1]?.donnees?.slice(0, 3); let i = index" 
+                         [style.backgroundColor]="donnee?.coleur" 
+                         class="kqsxjs1" 
+                         [style.width]="calculateWidth(blocks[1]?.donnees?.length)"
+                         [style.marginRight]="i < 2 ? '5px' : '0'">
+                      <p>{{donnee.ticket}}</p>
+                    </div>
+                  
+                    <div *ngIf="blocks[1]?.donnees?.length > 3" class="additional-section">
+                      <p>+{{ blocks[1]?.donnees?.length - 3 }} </p>
+                    </div>
+                  </div> </div></div></div><div class="MuiGrid-root MuiGrid-item MuiGrid-grid-md-3 css-wfj9yb">
+                    <div class="MuiGrid-root css-rfnosa" (click)="detectedBlockById(blocks[2].idBlock)" [ngClass]="{ 'selected': isSelected(blocks[2].idBlock) }" (click)="toggleSelection(blocks[2].idBlock)">
+                      <div style="height: 135px; box-shadow: none; position: relative; z-index: 1; border-top: 1px solid black; border-right: 1px solid black; border-bottom: none; border-left: 1px solid black; border-image: initial; overflow: hidden auto; cursor: pointer;">
+                      <div style="padding: 5px; background: transparent; font-size: 10px; font-weight: bold; fill: rgb(0, 0, 0); display: flex; justify-content: space-between; align-items: center;">
+                        <span style="color: rgb(169, 169, 169);">Attentes</span>
+                      </div>
+                      <div style="padding: 5px 10px; display: flex;">
+                        <div *ngFor="let donnee of blocks[2]?.donnees?.slice(0, 3); let i = index" 
+                             [style.backgroundColor]="donnee?.coleur" 
+                             class="kqsxjs1" 
+                             [style.width]="calculateWidth(blocks[2]?.donnees?.length)"
+                             [style.marginRight]="i < 2 ? '5px' : '0'">
+                          <p>{{donnee.ticket}}</p>
+                        </div>
+                      
+                        <div *ngIf="blocks[2]?.donnees?.length > 3" class="additional-section">
+                          <p>+{{ blocks[2]?.donnees?.length - 3 }} </p>
+                        </div>
+                      </div>
+                     </div></div></div>
+                      <div class="MuiGrid-root MuiGrid-item MuiGrid-grid-md-3 css-wfj9yb">
+                        <div (click)="detectedBlockById(blocks[3].idBlock)" [ngClass]="{ 'selected': isSelected(blocks[3].idBlock) }" (click)="toggleSelection(blocks[3].idBlock)"class="MuiGrid-root css-rfnosa">
+                          <div style="height: 135px; box-shadow: none; position: relative; z-index: 1; border-top: 1px solid black; border-right: 1px solid black; border-bottom: none; border-left: none; border-image: initial; overflow: hidden auto; cursor: pointer;">
+                            <div style="padding: 5px; background: transparent; font-size: 10px; font-weight: bold; fill: rgb(0, 0, 0); display: flex; justify-content: space-between; align-items: center;">
+                              <span style="color: rgb(169, 169, 169);">Sentiments</span>
+                            </div>
+                            <div style="padding: 5px 10px; display: flex;">
+                              <div *ngFor="let donnee of blocks[3]?.donnees?.slice(0, 3); let i = index" 
+                                   [style.backgroundColor]="donnee?.coleur" 
+                                   class="kqsxjs1" 
+                                   [style.width]="calculateWidth(blocks[3]?.donnees?.length)"
+                                   [style.marginRight]="i < 2 ? '5px' : '0'">
+                                <p>{{donnee.ticket}}</p>
+                              </div>
+                            
+                              <div *ngIf="blocks[3]?.donnees?.length > 3" class="additional-section">
+                                <p>+{{ blocks[3]?.donnees?.length - 3 }} </p>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="MuiGrid-root MuiGrid-item MuiGrid-grid-md-6 css-8pdr4s">
+                        <div class="MuiGrid-root css-rfnosa" (click)="detectedBlockById(blocks[5].idBlock)" [ngClass]="{ 'selected': isSelected(blocks[5].idBlock) }" (click)="toggleSelection(blocks[5].idBlock)">
+                          <div style="height: 135px; box-shadow: none; position: relative; z-index: 1; border-top: none; border-right: 1px solid black; border-bottom: none; border-left: none; border-image: initial; overflow: hidden auto; cursor: pointer;">
+                            <div style="padding: 5px; background: transparent; font-size: 10px; font-weight: bold; fill: rgb(0, 0, 0); display: flex; justify-content: space-between; align-items: center;">
+                              <span style="color: rgb(169, 169, 169);">Outils</span>
+                            </div>
+                            <div style="padding: 5px 10px; display: flex;">
+                              <div *ngFor="let donnee of blocks[5]?.donnees?.slice(0, 3); let i = index" 
+                                   [style.backgroundColor]="donnee?.coleur" 
+                                   class="kqsxjs1" 
+                                   [style.width]="calculateWidth(blocks[5]?.donnees?.length)"
+                                   [style.marginRight]="i < 2 ? '5px' : '0'">
+                                <p>{{donnee.ticket}}</p>
+                              </div>
+                            
+                              <div *ngIf="blocks[5]?.donnees?.length > 3" class="additional-section">
+                                <p>+{{ blocks[5]?.donnees?.length - 3 }} </p>
+                              </div>
+                            </div></div></div></div><div class="MuiGrid-root MuiGrid-item MuiGrid-grid-md-6 css-8pdr4s">
+                              <div class="MuiGrid-root css-rfnosa" (click)="detectedBlockById(blocks[4].idBlock)" [ngClass]="{ 'selected': isSelected(blocks[4].idBlock) }" (click)="toggleSelection(blocks[4].idBlock)">
+                                <div style="height: 135px; box-shadow: none; position: relative; z-index: 1; border: 1px solid black; overflow: hidden auto; cursor: pointer;">
+                                  <div style="padding: 5px; background: transparent; font-size: 10px; font-weight: bold; fill: rgb(0, 0, 0); display: flex; justify-content: space-between; align-items: center;">
+                                    <span style="color: rgb(169, 169, 169);">
+                                  Problèmes</span></div>
+                                  <div style="padding: 5px 10px; display: flex;">
+                                    <div *ngFor="let donnee of blocks[4]?.donnees?.slice(0, 3); let i = index" 
+                                         [style.backgroundColor]="donnee?.coleur" 
+                                         class="kqsxjs1" 
+                                         [style.width]="calculateWidth(blocks[4]?.donnees?.length)"
+                                         [style.marginRight]="i < 2 ? '5px' : '0'">
+                                      <p>{{donnee.ticket}}</p>
+                                    </div>
+                                  
+                                    <div *ngIf="blocks[4]?.donnees?.length > 3" class="additional-section">
+                                      <p>+{{ blocks[4]?.donnees?.length - 3 }} </p>
+                                    </div>
+                                  </div></div></div></div>
+                                  <div class="MuiGrid-root MuiGrid-item MuiGrid-grid-md-6 css-8pdr4s">
+                                    <div class="MuiGrid-root css-rfnosa" (click)="detectedBlockById(blocks[6].idBlock)" [ngClass]="{ 'selected': isSelected(blocks[6].idBlock) }" (click)="toggleSelection(blocks[6].idBlock)">
+                                      <div style="height: 135px; box-shadow: none; position: relative; z-index: 1; border-top: 1px solid black; border-right: 1px solid black; border-bottom: 1px solid black; border-left: none; border-image: initial; overflow: hidden auto; cursor: pointer;">
+                                        <div style="padding: 5px; background: transparent; font-size: 10px; font-weight: bold; fill: rgb(0, 0, 0); display: flex; justify-content: space-between; align-items: center;">
+                                          <span style="color: rgb(169, 169, 169);">Ressources</span></div>
+                                          <div style="padding: 5px 10px; display: flex;">
+                                            <div *ngFor="let donnee of blocks[6]?.donnees?.slice(0, 3); let i = index" 
+                                                 [style.backgroundColor]="donnee?.coleur" 
+                                                 class="kqsxjs1" 
+                                                 [style.width]="calculateWidth(blocks[6]?.donnees?.length)"
+                                                 [style.marginRight]="i < 2 ? '5px' : '0'">
+                                              <p>{{donnee.ticket}}</p>
+                                            </div>
+                                          
+                                            <div *ngIf="blocks[6]?.donnees?.length > 3" class="additional-section">
+                                              <p>+{{ blocks[6]?.donnees?.length - 3 }} </p>
+                                            </div>
+                                          </div></div></div></div></div></div>
+
+         <div class="button-container">
+       <button class="download-button" *ngIf="showTable ||userRole?.roleInvite === 'moniteur' " mat-raised-button color="primary" (click)="telechargerPDF()">Télécharger en PDF</button>
+       <button *ngIf="showTable && userRole?.roleInvite === 'editor'" class="download-button" mat-raised-button color="primary" (click)="openPopupInvite()">Envoyer Invitation</button>
+        </div>
+
+       <div  *ngIf="showTable && userRole?.roleInvite === 'editor' || userRole?.roleInvite === 'moniteur' " class="MuiGrid-root MuiGrid-item MuiGrid-grid-md-7 css-1odkrke">
+                                            <div id="tableau" style="width: 1100px; position: relative;top: 40px; display: flex; align-items: center; justify-content: center;" class="MuiGrid-root MuiGrid-container css-1d3bbye"  [ngClass]="{'center-container': userRole?.roleInvite === 'editor' }">
+                                              <div class="MuiGrid-root MuiGrid-item MuiGrid-grid-md-1 css-yl6yy2">
+                                                <div class="MuiBox-root css-gk17v2"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" class="MuiBox-root css-7f50zt iconify iconify--iconoir" sx="[object Object]" width="1em" height="1em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"><path d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10s10-4.477 10-10S17.523 2 12 2"></path><path d="M4.271 18.346S6.5 15.5 12 15.5s7.73 2.846 7.73 2.846M12 12a3 3 0 1 0 0-6a3 3 0 0 0 0 6"></path></g></svg>
+                                                </div>
+                                              </div>
+                                              <div class="MuiGrid-root MuiGrid-item MuiGrid-grid-md-5 css-9bzmof" >
+                                                <div (click)="detectedBlockById(blocks[0].idBlock)" (click)="toggleSelection(blocks[0].idBlock)" class="MuiGrid-root css-rfnosa">
+                                                  <div style="height: 135px; position: relative; z-index: 20; border-top: 1px solid black; border-right: 1px solid black; border-bottom: none; border-left: none; border-image: initial; overflow: hidden auto; cursor: pointer;"
+                                                  ><div style="padding: 15px; background: transparent; font-size: 10px; font-weight: bold; fill: rgb(0, 0, 0); display: flex; justify-content: space-between; align-items: center;"><span style="color: rgb(169, 169, 169);">
+                                                  Profil</span>
+                                                </div>
+                                              
+                                                  <div style="padding: 5px 10px; display: flex;">
+                                                    <div *ngFor="let donnee of blocks[0]?.donnees; let i = index" 
+                                                         [style.backgroundColor]="donnee?.coleur" 
+                                                         class="kqsxjs1" 
+                                                         [style.width]="calculateWidth2(blocks[0]?.donnees?.length)"
+                                                         [style.marginRight]="i < 5 ? '5px' : '0'">
+                                                      <p class="title1">{{donnee.ticket}}</p>
+                                                  </div>
+                                                  </div>                
+                                                 
+                                              </div>
+                                            </div>
+                                          </div>
+                                          <div class="MuiGrid-root MuiGrid-item MuiGrid-grid-md-6 css-8pdr4s">
+                                            <div class="MuiGrid-root css-rfnosa" (click)="detectedBlockById(blocks[1].idBlock)" [ngClass]="{ 'selected': isSelected(blocks[1].idBlock) }" (click)="toggleSelection(blocks[1].idBlock)">
+                                              <div style="height: 135px; box-shadow: none; position: relative; z-index: 1; border-top: 1px solid black; border-right: 1px solid black; border-bottom: 1px solid black; border-left: none; border-image: initial; overflow: hidden auto; cursor: pointer;">
+                                                <div style="padding: 5px; background: transparent; font-size: 10px; font-weight: bold; fill: rgb(0, 0, 0); display: flex; justify-content: space-between; align-items: center;">
+                                                  <span style="color: rgb(169, 169, 169);">Contexte</span>
+                                                </div>
+                                                <div style="padding: 5px 10px; display: flex;">
+                                                  <div *ngFor="let donnee of blocks[1]?.donnees; let i = index" 
+                                                       [style.backgroundColor]="donnee?.coleur" 
+                                                       class="kqsxjs1" 
+                                                       [style.width]="calculateWidth2(blocks[1]?.donnees?.length)"
+                                                       [style.marginRight]="i < 5 ? '5px' : '0'">
+                                                    <p class="title1">{{donnee.ticket}}</p>
+                                                </div>
+                                                </div> </div></div></div><div class="MuiGrid-root MuiGrid-item MuiGrid-grid-md-3 css-wfj9yb">
+                                                  <div class="MuiGrid-root css-rfnosa" (click)="detectedBlockById(blocks[2].idBlock)" [ngClass]="{ 'selected': isSelected(blocks[2].idBlock) }" (click)="toggleSelection(blocks[2].idBlock)">
+                                                    <div style="height: 135px; box-shadow: none; position: relative; z-index: 1; border-top: 1px solid black; border-right: 1px solid black; border-bottom: none; border-left: 1px solid black; border-image: initial; overflow: hidden auto; cursor: pointer;">
+                                                    <div style="padding: 5px; background: transparent; font-size: 10px; font-weight: bold; fill: rgb(0, 0, 0); display: flex; justify-content: space-between; align-items: center;">
+                                                      <span style="color: rgb(169, 169, 169);">Attentes</span>
+                                                    </div>
+                                                    <div style="padding: 5px 10px; display: flex;">
+                                                      <div *ngFor="let donnee of blocks[2]?.donnees.slice(0,4); let i = index" 
+                                                           [style.backgroundColor]="donnee?.coleur" 
+                                                           class="kqsxjs1" 
+                                                           [style.width]="calculateWidth2(blocks[2]?.donnees?.length)"
+                                                           [style.marginRight]="i < 5 ? '5px' : '0'">
+                                                        <p class="title1">{{donnee.ticket}}</p>
+                                                    </div>
+                                                    </div> </div></div></div>
+                                                    <div class="MuiGrid-root MuiGrid-item MuiGrid-grid-md-3 css-wfj9yb">
+                                                      <div (click)="detectedBlockById(blocks[3].idBlock)" [ngClass]="{ 'selected': isSelected(blocks[3].idBlock) }" (click)="toggleSelection(blocks[3].idBlock)"class="MuiGrid-root css-rfnosa">
+                                                        <div style="height: 135px; box-shadow: none; position: relative; z-index: 1; border-top: 1px solid black; border-right: 1px solid black; border-bottom: none; border-left: none; border-image: initial; overflow: hidden auto; cursor: pointer;">
+                                                          <div style="padding: 5px; background: transparent; font-size: 10px; font-weight: bold; fill: rgb(0, 0, 0); display: flex; justify-content: space-between; align-items: center;">
+                                                            <span style="color: rgb(169, 169, 169);">Sentiments</span>
+                                                          </div>
+                                                          <div style="padding: 5px 10px; display: flex;">
+                                                            <div *ngFor="let donnee of blocks[3]?.donnees.slice(0,4); let i = index" 
+                                                                 [style.backgroundColor]="donnee?.coleur" 
+                                                                 class="kqsxjs1" 
+                                                                 [style.width]="calculateWidth2(blocks[3]?.donnees?.length)"
+                                                                 [style.marginRight]="i < 5 ? '5px' : '0'">
+                                                              <p class="title1">{{donnee.ticket}}</p>
+                                                          </div>
+                                                          </div> 
+                                                        </div>
+                                                      </div>
+                                                    </div>
+                                                    <div class="MuiGrid-root MuiGrid-item MuiGrid-grid-md-6 css-8pdr4s">
+                                                      <div class="MuiGrid-root css-rfnosa" (click)="detectedBlockById(blocks[5].idBlock)" [ngClass]="{ 'selected': isSelected(blocks[5].idBlock) }" (click)="toggleSelection(blocks[5].idBlock)">
+                                                        <div style="height: 135px; box-shadow: none; position: relative; z-index: 1; border-top: none; border-right: 1px solid black; border-bottom: none; border-left: none; border-image: initial; overflow: hidden auto; cursor: pointer;">
+                                                          <div style="padding: 5px; background: transparent; font-size: 10px; font-weight: bold; fill: rgb(0, 0, 0); display: flex; justify-content: space-between; align-items: center;">
+                                                            <span style="color: rgb(169, 169, 169);">Outils</span>
+                                                          </div>
+                                                          <div style="padding: 5px 10px; display: flex;">
+                                                            <div *ngFor="let donnee of blocks[5]?.donnees; let i = index" 
+                                                                 [style.backgroundColor]="donnee?.coleur" 
+                                                                 class="kqsxjs1" 
+                                                                 [style.width]="calculateWidth2(blocks[5]?.donnees?.length)"
+                                                                 [style.marginRight]="i < 5 ? '5px' : '0'">
+                                                              <p class="title1">{{donnee.ticket}}</p>
+                                                          </div>
+                                                          </div> </div></div></div><div class="MuiGrid-root MuiGrid-item MuiGrid-grid-md-6 css-8pdr4s">
+                                                            <div class="MuiGrid-root css-rfnosa" (click)="detectedBlockById(blocks[4].idBlock)" [ngClass]="{ 'selected': isSelected(blocks[4].idBlock) }" (click)="toggleSelection(blocks[4].idBlock)">
+                                                              <div style="height: 135px; box-shadow: none; position: relative; z-index: 1; border: 1px solid black; overflow: hidden auto; cursor: pointer;">
+                                                                <div style="padding: 5px; background: transparent; font-size: 10px; font-weight: bold; fill: rgb(0, 0, 0); display: flex; justify-content: space-between; align-items: center;">
+                                                                  <span style="color: rgb(169, 169, 169);">
+                                                                Problèmes</span></div>
+                                                                <div style="padding: 5px 10px; display: flex;">
+                                                                  <div *ngFor="let donnee of blocks[4]?.donnees; let i = index" 
+                                                                       [style.backgroundColor]="donnee?.coleur" 
+                                                                       class="kqsxjs1" 
+                                                                       [style.width]="calculateWidth2(blocks[4]?.donnees?.length)"
+                                                                       [style.marginRight]="i < 5 ? '5px' : '0'">
+                                                                    <p class="title1">{{donnee.ticket}}</p>
+                                                                </div>
+                                                                </div> </div></div></div>
+                                                                <div class="MuiGrid-root MuiGrid-item MuiGrid-grid-md-6 css-8pdr4s">
+                                                                  <div class="MuiGrid-root css-rfnosa" (click)="detectedBlockById(blocks[6].idBlock)" [ngClass]="{ 'selected': isSelected(blocks[6].idBlock) }" (click)="toggleSelection(blocks[6].idBlock)">
+                                                                    <div style="height: 135px; box-shadow: none; position: relative; z-index: 1; border-top: 1px solid black; border-right: 1px solid black; border-bottom: 1px solid black; border-left: none; border-image: initial; overflow: hidden auto; cursor: pointer;">
+                                                                      <div style="padding: 5px; background: transparent; font-size: 10px; font-weight: bold; fill: rgb(0, 0, 0); display: flex; justify-content: space-between; align-items: center;">
+                                                                        <span style="color: rgb(169, 169, 169);">Ressources</span></div>
+                                                                        <div style="padding: 5px 10px; display: flex;">
+                                                                          <div *ngFor="let donnee of blocks[6]?.donnees; let i = index" 
+                                                                               [style.backgroundColor]="donnee?.coleur" 
+                                                                               class="kqsxjs1" 
+                                                                               [style.width]="calculateWidth2(blocks[6]?.donnees?.length)"
+                                                                               [style.marginRight]="i < 5 ? '5px' : '0'">
+                                                                            <p class="title1">{{donnee.ticket}}</p>
+                                                                        </div>
+                                                                        </div> 
+                                                                      </div></div></div></div></div>                         
+       
+      </div>
+      <div class="css-1xto6kq">
+        <button class="css-5357ut" 
+        tabindex="0" 
+        type="button" 
+        (click)="precedent()" 
+        [disabled]="userRole?.roleInvite === 'moniteur' || currentBlockIndex === 0"
+        [ngClass]="{'show-table-style': userRole?.roleInvite === 'moniteur'}">
+    Précédent
+    <span class="css-w0pj6f"></span>
+</button>
+            <div class="css-11qjisw">
+            </div> 
+            <button *ngIf="shouldDisplayButton()"class="css-ivnzlx"  tabindex="0" type="button" (click)="suivant()">
+              {{ currentBlockIndex === 5 ? 'Terminer' : 'Suivant' }}
+              <span class="css-w0pj6f"></span>
+    
+            </button>
+         
+    </div>
+    </div>
+  </div>
+  </div>
+  

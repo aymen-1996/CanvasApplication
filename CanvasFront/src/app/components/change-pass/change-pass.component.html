@@ -1,0 +1,40 @@
+<div *ngIf="responseMessage" class="response-message">
+    <p>{{ responseMessage }}</p>
+  </div>
+
+<div class="container" *ngIf="!responseMessage">
+  
+    <div class="content">
+        <div class="content-one" >
+          <a routerLink="/login" class="no-underline">
+            <h2><span style="color: rgb(33, 150, 243)">Canvas</span></h2>
+          </a>
+            <h3 class="css-w29fpn"> Changer Mot de passe </h3>
+        
+           <img src="assets/imgs/login.png" alt="" class="flex-grow-1">
+        </div>
+        <div class="col md-6 mt-3 mt-md-0" id="form">
+          <h3 class="intro2" >Changer votre mot de passe de votre compte <span style="color:  rgb(33, 150, 243)">Canvas</span></h3>
+
+   
+      
+          <form [formGroup]="resetForm" (ngSubmit)="resetPassword()">
+            <div *ngIf="errorMessage" class="error-message">
+                {{ errorMessage }}
+              </div>
+
+            <div *ngIf="successMessage" class="success-message">
+                {{ successMessage }}
+              </div>
+        <div class="inputs">
+          <input type="password" formControlName="newpwd" placeholder="Nouveau Mot de passe">
+          <input type="password" formControlName="comfpwd" placeholder="Confirmer Mot de pass ">
+
+        </div>
+        <button type="submit" class="signup-btn">Confirmer</button>
+      </form>
+      
+        </div>
+    </div>
+  </div>
+  

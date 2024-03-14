@@ -1,0 +1,90 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  
+  .canvas-list {
+    margin-top: 9%; // Augmentez le padding-top
+  }
+  
+  .canvas-list h4 {
+    margin: 0;
+    font-size: 18px;
+  }
+
+  .canvas-list .canvas-items {
+    display: flex;
+    flex-wrap: wrap;
+    min-width: 500px;
+    justify-content: space-around; 
+  }
+  
+  .canvas-list .canvas-items .canvas-item {
+    margin: 20px 0; 
+    text-align: center;
+    width: 360px;
+    background-color: rgb(255, 255, 255);
+    color: rgb(33, 43, 54);
+    transition: box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+    background-image: none;
+    overflow: hidden;
+    box-shadow: rgba(145, 158, 171, 0.2) 0px 3px 1px -2px, rgba(145, 158, 171, 0.14) 0px 2px 2px 0px, rgba(145, 158, 171, 0.12) 0px 1px 5px 0px;
+    border-radius: 16px;
+    position: relative;
+    z-index: 0;
+    height: 100%;
+  }
+  
+  .canvas-list .canvas-items .canvas-item button {
+    border: none;
+    background: none;
+    cursor: pointer;
+
+    &:hover {
+      div {
+        background-color: gray; 
+      }
+    }
+  }
+  
+  .canvas-list .canvas-items .canvas-item button img {
+    display: block;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center center;
+    width: 100%;
+    object-fit: contain;
+    padding: 16px;
+  }
+  
+  .canvas-list .canvas-items .canvas-item button h3 {
+    margin-top: 10px;
+    font-size: 16px;
+  }
+
+  
+  .role{
+    background-color: rgb(33, 150, 243);
+    color:white;
+    width:30%;
+    left: 10px;
+    position: relative;
+    align-items: center;
+    align-content: center;
+    text-align: center;
+    font-weight: 500;
+    border-radius: 20px;
+    
+}
+  
+.crimson-color {
+  background-color: crimson;
+}
+
+.gold-color {
+  background-color: rgba(230, 203, 53, 0.897);
+}
+
+

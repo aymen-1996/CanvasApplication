@@ -1,0 +1,22 @@
+<button id="closeButton" class="closeButton1" (click)="closePopup()">X</button>
+
+<div class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation0 MuiCard-root css-1n2smzb">
+
+    <div class="MuiCardContent-root css-18mhetb">
+        <p class="MuiTypography-root MuiTypography-p css-11nhzn5">Voulez-vous accepter cette invitation ?</p>
+
+        <div class="success-message" *ngIf="successMessage">
+            {{ successMessage }}
+          </div>
+          
+        <div class="MuiBox-root css-ckyhk3">
+            <button (click)="delete()" class="MuiButton-root MuiButton-outlined MuiButton-outlinedSecondary MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButtonBase-root css-19jm1wx" tabindex="0" type="button">
+                Refuser<span class="MuiTouchRipple-root css-w0pj6f"></span>
+            </button>
+            
+            <button (click)="updateInvite()" class="MuiLoadingButton-root MuiButton-root MuiButton-contained MuiButton-containedError MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButtonBase-root css-1i5vt19" tabindex="0" type="submit" id="mui-2">
+                Accepter<span class="MuiTouchRipple-root css-w0pj6f"></span>
+            </button>
+        </div>
+    </div>
+</div>
