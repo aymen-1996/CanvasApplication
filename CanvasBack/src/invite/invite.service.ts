@@ -28,6 +28,10 @@ export class InviteService {
         throw new Error(`Utilisateur avec l'adresse e-mail ${emailUser} non trouvé.`);
     }
 
+    if (!role) {
+      throw new Error("Veuillez choisir un rôle pour l'invitation.");
+  }
+
     const projet = await this.projetRepository.findOne({ where: { idProjet } });
     const canvas = await this.canvasRepository.findOne({ where: { idCanvas } });
 

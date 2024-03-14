@@ -185,7 +185,7 @@ updateInviteState(userId: number, idInvite: number): void {
 
         this.pendingInvites = this.pendingInvites.filter(invite => invite.id !== idInvite);
         this.pendingInvitesCount = this.pendingInvites.length;
-        
+        this.getAllProjectByUser()
         this.projectService.updateProject(); 
         this.projectService.updateCanvas(); 
 
@@ -213,7 +213,6 @@ delete(idInvite: number,userId: number): void {
       (response) => {
         this.pendingInvites = this.pendingInvites.filter(invite => invite.id !== idInvite);
         this.pendingInvitesCount = this.pendingInvites.length;
-
         setTimeout(() => {
           this.getPendingInvites().subscribe(
             (response: { pendingInvites: any[]; }) => {
