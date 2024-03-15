@@ -535,35 +535,35 @@ telechargerPDF(): void {
       html2canvas(DATA, options).then((canvas) => {
         const FILEURI = canvas.toDataURL('image/png');
 
-        let PDF = new jsPDF('l', 'mm', 'a3');
+        let PDF = new jsPDF('l', 'mm', 'a3'); 
 
-        let imgWidth = 380;
-        let imgHeight = 230;
-        let marginY = 30;
+        let imgWidth = PDF.internal.pageSize.getWidth();
+        let imgHeight = (canvas.height * imgWidth) / canvas.width;
+        let marginY = 10;
 
-        let centerPositionX = (PDF.internal.pageSize.getWidth() - imgWidth) / 2;
+        let centerPositionX = 0;
         let topPositionY = marginY;
 
-        let titleText = 'Tableau vp';
-        let titleFontSize = 22;
-        let titlePositionX =
-          (PDF.internal.pageSize.getWidth() - PDF.getStringUnitWidth(titleText) * titleFontSize) / 2;
+        let titleText = 'Tableau Empthie';
+        let titleFontSize = 20;
+        let titlePositionX = (PDF.internal.pageSize.getWidth() - PDF.getStringUnitWidth(titleText) * titleFontSize) / 2;
 
         PDF.addImage(FILEURI, 'PNG', centerPositionX, topPositionY + titleFontSize, imgWidth, imgHeight);
 
         PDF.setFontSize(titleFontSize);
-
         PDF.setTextColor(0, 0, 255);
-
         PDF.text(titleText, titlePositionX, topPositionY);
 
-        PDF.save('vp.pdf');
+        PDF.save('empathie.pdf');
       });
     } else {
-      console.error("L'élément avec l'ID 'tableau' n'a pas été trouvé.");
+      console.error("L'élément avec l'ID spécifié n'a pas été trouvé.");
     }
   }, 100);
 }
+
+
+
 
 
 calculatePositionBlock1(index: number): { top: string, left: string } {

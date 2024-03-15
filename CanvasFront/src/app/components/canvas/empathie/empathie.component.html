@@ -230,8 +230,8 @@
             </div>
           </div>
         
-          <div  class="wrapper"*ngIf="showTable && userRole?.roleInvite === 'editor' || userRole?.roleInvite === 'moniteur' " >
-            <div id="tableau" class="canvas" >
+          <div id="tableau"  class="canvas" *ngIf="showTable && userRole?.roleInvite === 'editor' || userRole?.roleInvite === 'moniteur' " class="user" >
+            <div  >
              <div  class="MuiGrid-root MuiGrid-item MuiGrid-grid-md-7 css-1odkrke" [ngClass]="{'center':userRole?.roleInvite === 'moniteur' }">
                  <div class="MuiBox-root css-1xli2ds">
                      <div class="MuiBox-root css-1iwfbct">
@@ -307,41 +307,42 @@
          
     
          </div>  
-         </div>
-         <div *ngFor="let donnee of blocks[0].donnees; let i = index" >
-           <div [ngClass]="{'center-container':userRole?.roleInvite === 'moniteur' }" [style.backgroundColor]="donnee?.coleur"  class="MuiBox-root css-v04ws1"
-           [ngStyle]="calculatePositionBlock4(i)">
-             <p class="title1">{{donnee?.ticket}}</p>
-           </div>
-         </div>
-   
-         <div *ngFor="let donnee of blocks[2].donnees; let i = index">
-          <div [ngClass]="{'center-container':userRole?.roleInvite === 'moniteur' }" [style.backgroundColor]="donnee?.coleur"  class="MuiBox-root css-1kpke41"
-          [ngStyle]="calculatePositionBlock8(i)">
+         
+        </div>
+        <div *ngFor="let donnee of blocks[0].donnees; let i = index" >
+          <div [ngClass]="{'center-container':userRole?.roleInvite === 'moniteur' }" [style.backgroundColor]="donnee?.coleur"  class="MuiBox-root css-v04ws1"
+          [ngStyle]="calculatePositionBlock4(i)">
             <p class="title1">{{donnee?.ticket}}</p>
           </div>
         </div>
-         <div *ngFor="let donnee of blocks[3].donnees; let i = index">
-           <div [ngClass]="{'center-container':userRole?.roleInvite === 'moniteur' }" [style.backgroundColor]="donnee?.coleur"  class="MuiBox-root css-1kpke41"
-           [ngStyle]="calculatePositionBlock5(i)">
-             <p class="title1">{{donnee?.ticket}}</p>
-           </div>
+  
+        <div *ngFor="let donnee of blocks[2].donnees; let i = index">
+         <div [ngClass]="{'center-container':userRole?.roleInvite === 'moniteur' }" [style.backgroundColor]="donnee?.coleur"  class="MuiBox-root css-1kpke41"
+         [ngStyle]="calculatePositionBlock8(i)">
+           <p class="title1">{{donnee?.ticket}}</p>
          </div>
-   
-         <div *ngFor="let donnee of blocks[1].donnees; let i = index">
-           <div [ngClass]="{'center-container':userRole?.roleInvite === 'moniteur' }" [style.backgroundColor]="donnee?.coleur"  class="MuiBox-root css-1kpke41"
-           [ngStyle]="calculatePositionBlock6(i)">
-             <p class="title1">{{donnee?.ticket}}</p>
-           </div>
+       </div>
+        <div *ngFor="let donnee of blocks[3].donnees; let i = index">
+          <div [ngClass]="{'center-container':userRole?.roleInvite === 'moniteur' }" [style.backgroundColor]="donnee?.coleur"  class="MuiBox-root css-1kpke41"
+          [ngStyle]="calculatePositionBlock5(i)">
+            <p class="title1">{{donnee?.ticket}}</p>
+          </div>
+        </div>
+  
+        <div *ngFor="let donnee of blocks[1].donnees; let i = index">
+          <div [ngClass]="{'center-container':userRole?.roleInvite === 'moniteur' }" [style.backgroundColor]="donnee?.coleur"  class="MuiBox-root css-1kpke41"
+          [ngStyle]="calculatePositionBlock6(i)">
+            <p class="title1">{{donnee?.ticket}}</p>
+          </div>
 
-       
-         </div>
+      
+        </div>
        </div>
       </div> 
 
     
       <div class="css-1xto6kq" >
-        <button class="css-5357ut" *ngIf="shouldDisplayButton()"
+        <button class="css-5357ut"  [ngClass]="{'btn-container':showTable || userRole?.roleInvite === 'moniteur' }"
         tabindex="0" 
         type="button" 
         (click)="precedent()" 
@@ -364,4 +365,3 @@
   </div>
   </div>
   
-  <button *ngIf="showTable || userRole?.roleInvite === 'moniteur'" class="css-5357ut"  style="position: relative;top: 150px;"(click)="precedent()" >Précédent</button>
