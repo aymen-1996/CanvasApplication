@@ -253,7 +253,7 @@ Un segment est une population homogène de consommateurs représentant une ou pl
         } catch (error) {
             console.error('Error in deleteProjectAndRelatedEntities:', error);
             throw error;
-        }
+        }   
     }
     
     

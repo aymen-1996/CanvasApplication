@@ -10,6 +10,7 @@ import { PopupAcceptedComponent } from '../popup/popup-accepted/popup-accepted.c
 import { Subscription, interval, switchMap } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
+import { CanvasComponent } from '../canvas/canvas.component';
 
 @Component({
   selector: 'app-header',
@@ -81,13 +82,16 @@ export class HeaderComponent implements OnInit {
     this.showFirstDiv2 = !this.showFirstDiv2;
     this.showFirstDiv2Change.emit(this.showFirstDiv2);
   }
-
+  getProjectName(projectId: any): string {
+    const project = this.projects.find(project => project.idProjet === projectId);
+    return project ? project.nomProjet : 'Projet inconnu';
+}
+  
   navigateToProject(projectId: number) {
     this.router.navigate(['/canvas', projectId]);
-    setTimeout(() => {
+    if (this.router.url.includes('/canvas')) {
       window.location.reload();
-    }, 100);
-    
+    }
   }
   getAllProjectByUser(){
     const userIdObject = this.authService.getStoredUserId();

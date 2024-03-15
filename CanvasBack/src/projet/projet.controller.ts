@@ -50,8 +50,6 @@ async getProjectsByUserId(@Param('userId') userId: number) {
     }
 }
 
-
-
 //liste canvas par id projet et id user selon class invite 
 @Get(':userId/:projetId')
 async getCanvasesByUserIdAndProjetId(
