@@ -82,10 +82,7 @@ export class HeaderComponent implements OnInit {
     this.showFirstDiv2 = !this.showFirstDiv2;
     this.showFirstDiv2Change.emit(this.showFirstDiv2);
   }
-  getProjectName(projectId: any): string {
-    const project = this.projects.find(project => project.idProjet === projectId);
-    return project ? project.nomProjet : 'Projet inconnu';
-}
+
   
   navigateToProject(projectId: number) {
     this.router.navigate(['/canvas', projectId]);

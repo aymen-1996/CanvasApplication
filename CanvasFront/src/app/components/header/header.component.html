@@ -9,20 +9,16 @@
       <mat-icon>info</mat-icon>
       <mat-form-field class="custom-select">
         <mat-label>Projet actuel</mat-label>
-        <mat-select [(value)]="selectedProjectId">
-            <mat-option >
-                Mes projets
-            </mat-option>
-            <mat-option *ngFor="let project of projects" [value]="project.idProjet" (click)="navigateToProject(project.idProjet)">
-                {{ project.nomProjet }}
-                {{ getProjectName(project.nomProjet ) }}
-
-            </mat-option>
+        <mat-select >
+          <mat-option >
+        Mes projets
+          </mat-option>
+          <mat-option *ngFor="let project of projects" [value]="project.idProjet" (click)="navigateToProject(project.idProjet)">
+            {{ project.nomProjet }}
+          </mat-option>
+          
         </mat-select>
-    </mat-form-field>
-    <div >
-    </div>
-    
+      </mat-form-field>
 
 <div class="dropdown-container">
   <mat-icon class="maticons" (click)="togglePendingInvitesDropdown()">email</mat-icon>
