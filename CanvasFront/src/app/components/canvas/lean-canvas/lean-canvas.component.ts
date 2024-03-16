@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { BlocksService } from 'src/app/services/blocks.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
@@ -9,6 +9,13 @@ import {  MatStepper } from '@angular/material/stepper';
 import { PopupInviteComponent } from '../../popup/popup-invite/popup-invite.component';
 import html2canvas from 'html2canvas';
 import { jsPDF } from "jspdf";
+import { Subscription, interval, switchMap } from 'rxjs';
+import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
+import { UserService } from 'src/app/services/user.service';
+import { ProjetService } from 'src/app/services/projet.service';
+import { HttpClient } from '@angular/common/http';
+import { PopupAcceptedComponent } from '../../popup/popup-accepted/popup-accepted.component';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-lean-canvas',
@@ -16,6 +23,14 @@ import { jsPDF } from "jspdf";
   styleUrls: ['./lean-canvas.component.css']
 })
 export class LeanCanvasComponent implements OnInit {
+  userId!:number
+  pendingInvites: any[] = [];
+  pendingInvitesCount: number = 0;
+  pollSubscription!: Subscription;
+  projectImages: { [key: number]: string } = {}; 
+  projects:any
+  selectedProjectId: string | null = null; 
+  userPhotoUrl!: SafeUrl | string; 
   showFirst:boolean=true;
   selectedId: string | null = null;
   blocks:any;
@@ -37,7 +52,7 @@ export class LeanCanvasComponent implements OnInit {
   userRole:any
   @ViewChild(MatStepper) stepper!: MatStepper;
 
-    constructor(private blockService:BlocksService , private dialog: MatDialog, private activatedRoute:ActivatedRoute ,private formBuilder: FormBuilder){
+    constructor(private dialogue: MatDialog ,private http: HttpClient,private projetService:ProjetService,private sanitizer: DomSanitizer,private userService:UserService ,private router: Router,private blockService:BlocksService , private dialog: MatDialog, private activatedRoute:ActivatedRoute ,private formBuilder: FormBuilder){
     this.idBloc = this.activatedRoute.snapshot.params['id'];
 
   }
@@ -45,7 +60,32 @@ export class LeanCanvasComponent implements OnInit {
     this.users = JSON.parse(localStorage.getItem('currentUser') as string);
     this.getBlocksByCanvasId()
     this.GetRole()
-
+    this.getUserPhoto()
+    this.ListProjectsAndCanvas()
+    this.pollSubscription = interval(1000)
+    .pipe(
+      switchMap(() => this.getPendingInvites())
+    )
+    .subscribe(
+      (response) => {
+        this.pendingInvites = response.pendingInvites;
+        this.pendingInvitesCount = this.pendingInvites.length;
+      },
+      (error) => {
+        console.error('Une erreur s\'est produite :', error);
+      }
+    );
+    
+  this.getPendingInvites().subscribe(
+    (response: { pendingInvites: any[]; }) => {
+      this.pendingInvites = response.pendingInvites;
+      this.pendingInvitesCount = this.pendingInvites.length;
+    },
+    (error: any) => {
+      console.error('Une erreur s\'est produite :', error);
+    }
+  );
+    this.getPendingInvites()
     this.donneesForm = this.formBuilder.group({
       coleur: ''
     });
@@ -583,4 +623,154 @@ telechargerPDF(): void {
 }
 
 
+//partie header
+showPendingInvitesDropdown: boolean = false;
+
+togglePendingInvitesDropdown() {
+  this.showPendingInvitesDropdown = !this.showPendingInvitesDropdown;
 }
+
+showDropdown: boolean = false;
+
+toggleDropdown() {
+  this.showDropdown = !this.showDropdown;
+}
+
+logout() {
+  localStorage.removeItem('currentUser');
+
+  this.router.navigateByUrl('/login')
+}
+
+getUserPhoto(): void {
+  this.userService.getUserPhotoUrl(this.users.user.idUser).subscribe(
+    (res: Blob) => {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        this.userPhotoUrl = this.sanitizer.bypassSecurityTrustUrl(reader.result as string);
+      };
+      reader.readAsDataURL(res);
+    },
+    error => {
+      console.error('Error getting user photo:', error);
+    }
+  );
+}
+
+ListProjectsAndCanvas() {
+  this.projetService.getProjectsCanvasByUserId(this.users.user.idUser)
+    .subscribe(
+      response => {
+        this.projects = response.projects
+        console.log("aaaapprrroje", this.projects)
+      },
+      error => {
+        console.error('Une erreur est survenue lors du chargement des projets :', error);
+      }
+    );
+}
+getCanvasId(projectId: string, type: string): string | undefined {
+  const project = this.projects.find((p: { idProjet: string; }) => p.idProjet === projectId);
+  if (project) {
+    const canvas = project.canvas.find((c: { nomCanvas: string; }) => c.nomCanvas.toLowerCase() === type.toLowerCase());
+    return canvas?.idCanvas;
+  }
+  return undefined;
+}
+
+//routerlink
+navigateToBmc(project: any): void {
+  const idCanvas = this.getCanvasId(project.idProjet, 'Lean Canvas');
+  if (idCanvas) {
+    this.router.navigateByUrl(`/lean/${idCanvas}`)
+    .then(() => {
+      window.location.reload();
+    });
+  } else {
+    console.error('Canvas de type "lean" non trouvé pour le projet donné.');
+  }
+}
+
+getPendingInvites() {
+  return this.http.get<any>(`${environment.backendHost}/projet/invites/${this.users.user.idUser}/etat`);
+}
+
+
+
+openPopup1(idInvite: number): void {
+  const confirmationMessage = 'Êtes-vous sûr de vouloir supprimer cette Post-it ?';
+  const dialogRef = this.dialogue.open(PopupAcceptedComponent, {
+    width: '600px',
+    data: { confirmationMessage, idInvite },
+  });
+
+  dialogRef.afterClosed().subscribe((result) => {
+    if (result && result.action === 'delete') {
+      console.log('Suppression confirmée');
+      this.delete(idInvite, this.users.user.idUser);
+    } else if (result && result.action === 'accept') {
+      console.log('Accepter');
+      this.updateInviteState(this.users.user.idUser, idInvite);
+    } else {
+      console.log('Opération annulée');
+    }
+  });
+}
+
+
+
+updateInviteState(userId: number, idInvite: number): void {
+  this.projetService.updateInviteState(userId, idInvite)
+    .subscribe(
+      (response) => {
+        console.log('Invitation state updated successfully:', response);
+
+        this.pendingInvites = this.pendingInvites.filter(invite => invite.id !== idInvite);
+        this.pendingInvitesCount = this.pendingInvites.length;
+        this.projetService.updateProject(); 
+        this.projetService.updateCanvas(); 
+
+        setTimeout(() => {
+          this.getPendingInvites().subscribe(
+            (response: { pendingInvites: any[]; }) => {
+              this.pendingInvites = response.pendingInvites;
+              this.pendingInvitesCount = this.pendingInvites.length;
+            },
+            (error: any) => {
+              console.error('Une erreur s\'est produite :', error);
+            }
+          );
+        }, 100); 
+      },
+      (error) => {
+        console.error('Failed to update invitation state:', error);
+      }
+    );
+}
+
+delete(idInvite: number,userId: number): void {
+  this.projetService.deleteInviteByIdAndUserId(idInvite,userId )
+    .subscribe(
+      (response) => {
+        this.pendingInvites = this.pendingInvites.filter(invite => invite.id !== idInvite);
+        this.pendingInvitesCount = this.pendingInvites.length;
+        setTimeout(() => {
+          this.getPendingInvites().subscribe(
+            (response: { pendingInvites: any[]; }) => {
+              this.pendingInvites = response.pendingInvites;
+              this.pendingInvitesCount = this.pendingInvites.length;
+            },
+            (error: any) => {
+              console.error('Une erreur s\'est produite :', error);
+            }
+          );
+        }, 100); 
+      },
+      (error) => {
+        console.error('Failed to update invitation state:', error);
+      }
+    );
+}
+}
+
+

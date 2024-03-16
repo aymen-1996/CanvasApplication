@@ -359,7 +359,19 @@ async updateInviteState(userId: number, inviteId: number): Promise<void> {
 }
 
 
-  
+async getProjectCanvassByUserId(userId: number): Promise<invite[]> {
+  try {
+      const invitations = await this.inviteRepository.find({
+          where: { user: { idUser: userId } },
+          relations: ['projet', 'projet.canvas'], // Ajout de la relation avec l'entité canvas
+      });
+
+      return invitations;
+  } catch (error) {
+      console.error('Erreur lors de la récupération des projets par utilisateur:', error);
+      throw error;
+  }
+}
   
   
   

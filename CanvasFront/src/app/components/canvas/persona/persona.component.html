@@ -1,8 +1,75 @@
 <div class="bloc">
     <div class="element-bmc">
       <div class="header">
-      <app-header [showFirstDiv]="showFirst" (showFirstDivChange)="onShowFirstChange($event)"></app-header>     
-      </div>
+
+        <div class="navbar">
+          <div class="css-1ir47a1">
+            <a routerLink="/projects" class="no-underline">
+              <h2 class="logo"><span style="color: rgb(33, 150, 243)">Canvas</span></h2>
+            </a>    <div class="MuiBox-root css-i9gxme"></div>
+            <div class="css-1x4nai">
+              <mat-icon>menu</mat-icon>
+              <mat-icon>info</mat-icon>
+              <mat-form-field class="custom-select">
+                <mat-label>Projet actuel</mat-label>
+                <mat-select >
+                  <mat-option >
+                Mes projets
+                  </mat-option>
+                  <mat-option *ngFor="let project of projects" [value]="project.idProjet"(click)="navigateToBmc(project)">
+                    {{ project.nomProjet }}
+                  </mat-option>
+                  
+                  
+                  
+                </mat-select>
+              </mat-form-field>
+        
+        <div class="dropdown-container">
+          <mat-icon class="maticons" (click)="togglePendingInvitesDropdown()">email</mat-icon>
+        
+          <div *ngIf="pendingInvitesCount > 0" class="badge">{{ pendingInvitesCount }}</div>
+        
+          <div class="dropdown-content" *ngIf="showPendingInvitesDropdown">
+            <ng-container *ngIf="pendingInvites && pendingInvites.length > 0; else noInvites">
+              <div *ngFor="let invite of pendingInvites" class="dropdown-item" (click)="openPopup1(invite.idInvite)">
+                <p class="invite">Vous avez une Invitation dans <br><strong>{{ invite.canvas.nomCanvas}}</strong> de projet <strong>{{ invite.projet.nomProjet }}</strong></p>
+              </div>
+            </ng-container>
+            <ng-template #noInvites>
+              <div class="dropdown-item">
+                <p class="no-invite">Aucune invitation en attente.</p>
+              </div>
+            </ng-template>
+          
+           
+          </div>
+        </div>
+        
+              <div class="dropdown-container">
+                <mat-icon class="circular-image" (click)="toggleDropdown()">
+                  <img [src]="userPhotoUrl" alt="User Photo">
+                </mat-icon>
+              
+                <div class="dropdown-content" *ngIf="showDropdown">
+                  <div (click)="logout()" class="dropdown-item">
+                    <mat-icon>logout</mat-icon> <p class="mat">Deconnexion</p>
+                  </div>
+                  <div routerLink="/profil"  class="dropdown-item">
+                    <mat-icon>settings</mat-icon> <p class="mat">Paramétre</p>
+                  </div>
+                </div>
+              </div>
+              
+              
+              
+                  </div>
+           
+        
+          </div>  
+        
+        </div>
+            </div>
     <div class="items-bmc">
       <div class="item-bmc" *ngIf="blocks  && blocks?.length > 0">
         <div> <p class="css-tq1709" *ngIf="shouldDisplayMesg()">Enregistré <mat-icon>done</mat-icon></p></div>   

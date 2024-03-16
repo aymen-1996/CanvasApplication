@@ -86,11 +86,12 @@ height: 65px;
     object-fit: cover; 
   }
   
-.dropdown-container {
+  .dropdown-container {
     position: relative;
     right: 15px;
     display: inline-block;
-  }
+    margin: 0 12px; 
+}
   .dropdown-content {
     display: none;
     position: absolute;

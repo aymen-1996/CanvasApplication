@@ -84,11 +84,13 @@ export class HeaderComponent implements OnInit {
   }
 
   
-  navigateToProject(projectId: number) {
-    this.router.navigate(['/canvas', projectId]);
-    if (this.router.url.includes('/canvas')) {
-      window.location.reload();
-    }
+  navigateToProject(projectId: number): void {
+    this.router.navigate(['/canvas', projectId])
+      .then(() => {
+        if (this.router.url.includes('/canvas')) {
+          window.location.reload();
+        }
+      });
   }
   getAllProjectByUser(){
     const userIdObject = this.authService.getStoredUserId();

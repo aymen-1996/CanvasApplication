@@ -170,5 +170,29 @@ async getInvitesProgressPercentageByProjectId(@Param('projectId') projectId: num
     throw new Error('Error retrieving invites progress percentage by project ID.'); 
   }
 }
+
+
+@Get('proj/:userId/canvas')
+async getProjectsCanvasByUserId(@Param('userId') userId: number) {
+    try {
+        const invites = await this.projetService.getProjectCanvassByUserId(userId);
+
+        const uniqueProjectIds = new Set();
+        const uniqueProjects = [];
+
+        invites.forEach(invite => {
+            const projectId = invite.projet.idProjet.toString();
+            
+            if (!uniqueProjectIds.has(projectId) && invite.etat === 'accepted') {
+                uniqueProjectIds.add(projectId);
+                uniqueProjects.push(invite.projet);
+            }
+        });
+
+        return { projects: uniqueProjects };
+    } catch (error) {
+        return { success: false, error: error.message };
+    }
+}
 }
 

@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, map } from 'rxjs';
+import { BehaviorSubject, Observable, catchError, map } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { project } from '../models/project';
 
@@ -65,4 +65,9 @@ export class ProjetService {
   getInvitesByUserId(userId: number): Observable<any> {
     return this.http.get<any>(`${environment.backendHost}/projet/progress/${userId}/invites`);
   }
+
+  getProjectsCanvasByUserId(userId: number): Observable<any> {
+    return this.http.get<any>(`${environment.backendHost}/projet/proj/${userId}/canvas`);
+
+}
 }
