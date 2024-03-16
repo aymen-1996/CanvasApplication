@@ -40,7 +40,13 @@
                       
                       <div class="nomproject">{{project.nomProjet}}</div></div>
   <div >
-      <span class="css-3dxw8r" role="progressbar" aria-valuenow="32" aria-valuemin="0" aria-valuemax="100"><span class="MuiLinearProgress-bar MuiLinearProgress-barColorError MuiLinearProgress-bar1Determinate css-zu4g2a" style="transform: translateX(-68.1818%);"></span></span>
+    <div class="progress-container">
+        <div class="progress-bar" [style.width.%]="projectProgress[project.idProjet]">
+        </div>
+    </div>
+    
+    
+    
   </div>
   </div>         
                   <div class="buttons">

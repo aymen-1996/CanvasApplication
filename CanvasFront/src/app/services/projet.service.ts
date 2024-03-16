@@ -61,4 +61,8 @@ export class ProjetService {
     const url = `${environment.backendHost}/invite/${idInvite}/${idUser}`;
     return this.http.delete<string>(url);
   }
+
+  getInvitesByUserId(userId: number): Observable<any> {
+    return this.http.get<any>(`${environment.backendHost}/projet/progress/${userId}/invites`);
+  }
 }

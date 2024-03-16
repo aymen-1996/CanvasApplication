@@ -4,7 +4,10 @@ import { project } from 'src/app/models/project';
 import { User } from 'src/app/models/user';
 import { AuthService } from 'src/app/services/auth.service';
 import { ProjetService } from 'src/app/services/projet.service';
-
+interface BlockData {
+  block: any; // Remplacez 'any' par le type approprié pour votre bloc
+  donnees: any[]; // Remplacez 'any' par le type approprié pour vos données
+}
 @Component({
   selector: 'app-project',
   templateUrl: './project.component.html',
@@ -32,12 +35,14 @@ userproject!:User
   defaultImage = 'assets/project.jpg'; // Replace with your default image URL
   selectedImage: File | null = null;
   users:any
+projectProgress: { [key: number]: number } = {};
   constructor(private fb:FormBuilder ,private projectService: ProjetService ,private authService:AuthService){}
    ngOnInit(): void {
     this.users = JSON.parse(localStorage.getItem('currentUser') as string);
 
     this.projectService.projectUpdated$.subscribe(() => {
       this.getAllProjectByUser();
+      this.getInvitesByUserId(5)
     });
     this.projectForm = this.fb.group({
       nomProjet: [''],
@@ -87,31 +92,7 @@ userproject!:User
     
   }
 
-  getAllProjectByUser(){
-    const userIdObject = this.authService.getStoredUserId();
-    if (userIdObject !== null && userIdObject.idUser) {
-      this.userId = userIdObject.idUser;
-      console.log(this.userId);
-      
-      // Now that this.userId is populated, call the project service
-      this.projectService.getallProjectByUser(this.userId).subscribe((response : project[]) => {
-        console.log(response);
-        this.projects=response
 
-        console.log(this.projects)
-
-
-        this.projects.forEach(project => {
-          this.loadImage(project.idProjet);
-        });
-      });
-        // Check if the response is an object and contains a 'projects' property
-    
-    } else {
-      console.error('Error: Unable to retrieve userId.');
-      // Handle the case where userId is not available
-    }
-}
 
 loadImage(projectId: number) {
   this.projectService.getImageForProject(projectId).subscribe(blob => {
@@ -189,6 +170,57 @@ closeDeletePopup() {
   // Hide the popup
   this.showPopupdelte = false;
 }
+
+
+invites: any
+progressPercentage: number = 0;
+totalBlocks: number = 37; // Nombre total de blocs dans votre projet
+filledBlocks: number = 0; // Nombre de blocs remplis par des données
+blocks: any[] = []; // Tableau de blocs
+// TypeScript
+
+
+
+
+getAllProjectByUser() {
+  const userIdObject = this.authService.getStoredUserId();
+  if (userIdObject !== null && userIdObject.idUser) {
+      this.userId = userIdObject.idUser;
+      console.log(this.userId);
+  
+      this.projectService.getallProjectByUser(this.userId).subscribe((response: any[]) => {
+          console.log(response);
+          this.projects = response;
+          
+          console.log(this.projects);
+          
+          this.projects.forEach(project => {
+              this.loadImage(project.idProjet);
+              this.getInvitesByUserId(project.idProjet);
+          });
+      });
+  } else {
+      console.error('Error: Unable to retrieve userId.');
+  }
+}
+
+getInvitesByUserId(projId: number): void {
+  this.projectService.getInvitesByUserId(projId)
+      .subscribe(
+          progressPercentage => {
+              this.projectProgress[projId] = progressPercentage;
+              console.log("Progress percentage for project", projId, ":",  this.projectProgress[projId]);
+
+          },
+          error => {
+              console.error('Error fetching progress percentage:', error);
+          }
+      );
+}
+
+
+
+
 
 }
 

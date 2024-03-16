@@ -6,6 +6,9 @@ import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColum
 
 @Entity({name: 'canvas'})
 export class canvas {
+    forEach(arg0: (canvas: any) => void) {
+      throw new Error('Method not implemented.');
+    }
     @PrimaryGeneratedColumn({ type: 'bigint'})
     idCanvas: number;
 

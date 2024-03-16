@@ -439,22 +439,32 @@
         font-weight: 500;
     }
   }
-
-  .css-3dxw8r {
-    
-    overflow: hidden;
-    display: flex; /* Use flexbox */
-    justify-content: center; /* Center horizontally */
-    align-items: center; /* Center vertically */
-    height: 4px;
-    z-index: 0;
-    background-color: rgb(220, 175, 169);
-    margin-left: 8px;
-    margin-top: 15px;
-    padding-right: 5px;
-    padding-left: 5px;
+  .progress-container {
     width: 95%;
-  }
+    margin-top: 15px;
+    position: relative;
+    height: 4px;
+    background-color: rgb(220, 175, 169); /* Couleur de fond par défaut */
+}
+
+.progress-bar {
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 0;
+    background-color: rgb(177, 25, 25); /* Couleur de remplissage par défaut */
+}
+
+.progress-fill {
+    height: 100%;
+    width: 95%;
+    background-color: rgb(220, 175, 169); /* Couleur de fond par défaut */
+}
+
+
+
+
 
 .meter{
     display: flex;
@@ -463,3 +473,12 @@
     justify-content: center;
     
 }
+
+.progress-bar.white {
+    background-color: white;
+}
+
+.progress-bar.default {
+    background-color: rgb(220, 175, 169);
+}
+  

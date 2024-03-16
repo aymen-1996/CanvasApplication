@@ -313,6 +313,58 @@ async updateInviteState(userId: number, inviteId: number): Promise<void> {
       throw new BadRequestException('Failed to update invite state.');
     }
   }
+
+  async getInvitesByProjectId(projectId: number): Promise<any[]> {
+    const invites = await this.inviteRepository.find({
+        where: { projet: { idProjet: projectId }},
+        relations: ['projet', 'canvas', 'canvas.block', 'canvas.block.donnees'],
+    });
+  
+    const projectsMap = new Map<string, any>();
+  
+    invites.forEach((invite) => {
+        const projectId = invite.projet.idProjet.toString(); // Convert projectId to string
+  
+        if (!projectsMap.has(projectId)) {
+            projectsMap.set(projectId, {
+                projet: invite.projet,
+                canvases: [],
+                totalBlocks: 0,
+                filledBlocksCount: 0, // New property to track filled blocks count
+                progressPercentage: 0, // New property to store progress percentage
+            });
+        }
+  
+        const projectData = projectsMap.get(projectId);
+        projectData.canvases.push({
+            canvas: invite.canvas,
+            blocks: invite.canvas.block.map((block) => ({
+                block,
+                donnees: block.donnees,
+            })),
+        });
+
+        // Increment totalBlocks for each block in the canvas
+        projectData.totalBlocks += invite.canvas.block.length;
+
+        // Increment filledBlocksCount for each filled block
+        invite.canvas.block.forEach(block => {
+            if (block.donnees && block.donnees.length > 0) {
+                projectData.filledBlocksCount++;
+            }
+        });
+
+        // Calculate progress percentage
+        projectData.progressPercentage = (projectData.filledBlocksCount / projectData.totalBlocks) * 100;
+    });
+  
+    return Array.from(projectsMap.values());
+}
+
+
+  
+  
+  
   
 }
 
