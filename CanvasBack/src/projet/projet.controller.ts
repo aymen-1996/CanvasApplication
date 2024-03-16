@@ -160,14 +160,14 @@ async updateInviteState(
 }
 
 
-@Get('/progress/:projectId/invites') // Define the endpoint route
+@Get('/progress/:projectId/invites') 
 async getInvitesProgressPercentageByProjectId(@Param('projectId') projectId: number): Promise<number[]> {
   try {
-    const invites = await this.projetService.getInvitesByProjectId(projectId);
+    const invites = await this.projetService.progress(projectId);
     const progressPercentages = invites.map(invite => invite.progressPercentage);
-    return progressPercentages; // Return only the progressPercentage values
+    return progressPercentages; 
   } catch (error) {
-    throw new Error('Error retrieving invites progress percentage by project ID.'); // Handle error appropriately
+    throw new Error('Error retrieving invites progress percentage by project ID.'); 
   }
 }
 }
