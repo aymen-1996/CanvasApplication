@@ -12,16 +12,11 @@
               <mat-icon class="maticon1">info</mat-icon>
               <mat-form-field class="custom-select">
                 <mat-label>Projet actuel</mat-label>
-                <mat-select >
-                  <mat-option >
-                Mes projets
-                  </mat-option>
-                  <mat-option *ngFor="let project of projects" [value]="project.idProjet"(click)="navigateToBmc(project)">
+                <mat-select [(ngModel)]="currentProject">
+                  <mat-option>Mes projet</mat-option>
+                  <mat-option *ngFor="let project of projects" [value]="project" (click)="navigateToBmc(project)">
                     {{ project.nomProjet }}
                   </mat-option>
-                  
-                  
-                  
                 </mat-select>
               </mat-form-field>
         

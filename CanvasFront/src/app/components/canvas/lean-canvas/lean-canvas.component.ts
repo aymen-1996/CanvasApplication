@@ -31,6 +31,10 @@ export class LeanCanvasComponent implements OnInit {
   projects:any
   selectedProjectId: string | null = null; 
   userPhotoUrl!: SafeUrl | string; 
+  currentProject: any;
+  showPendingInvitesDropdown: boolean = false;
+  showDropdown: boolean = false;
+
   showFirst:boolean=true;
   selectedId: string | null = null;
   blocks:any;
@@ -624,13 +628,10 @@ telechargerPDF(): void {
 
 
 //partie header
-showPendingInvitesDropdown: boolean = false;
 
 togglePendingInvitesDropdown() {
   this.showPendingInvitesDropdown = !this.showPendingInvitesDropdown;
 }
-
-showDropdown: boolean = false;
 
 toggleDropdown() {
   this.showDropdown = !this.showDropdown;
@@ -661,8 +662,15 @@ ListProjectsAndCanvas() {
   this.projetService.getProjectsCanvasByUserId(this.users.user.idUser)
     .subscribe(
       response => {
-        this.projects = response.projects
-        console.log("aaaapprrroje", this.projects)
+        this.projects = response.projects;
+        console.log("aaaapprrroje", this.projects);
+
+        this.idBloc = this.activatedRoute.snapshot.params['id'];
+
+        this.currentProject = this.projects.find((project: { canvas: any[]; }) => {
+          return project.canvas.some(canvas => canvas.idCanvas === this.idBloc);
+        });
+
       },
       error => {
         console.error('Une erreur est survenue lors du chargement des projets :', error);

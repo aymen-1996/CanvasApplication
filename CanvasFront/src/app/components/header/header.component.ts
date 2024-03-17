@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { project } from 'src/app/models/project';
 import { AuthService } from 'src/app/services/auth.service';
 import { ProjetService } from 'src/app/services/projet.service';
@@ -21,11 +21,14 @@ export class HeaderComponent implements OnInit {
   projects!:project[];
   userId!:number
   users:any
+  showDropdown: boolean = false;
+  showPendingInvitesDropdown: boolean = false;
+  currentProject: any;
   pendingInvites: any[] = [];
   pendingInvitesCount: number = 0;
   pollSubscription!: Subscription;
   projectImages: { [key: number]: string } = {}; 
-
+idBlock:any
   @Input() showFirstDiv: boolean = true;
   @Output() showFirstDivChange: EventEmitter<boolean> = new EventEmitter<boolean>();
   @Input() showFirstDiv2: boolean = true;
@@ -34,7 +37,9 @@ export class HeaderComponent implements OnInit {
   selectedProjectId: string | null = null; 
   userPhotoUrl!: SafeUrl | string; 
 
-  constructor(private http: HttpClient,private sanitizer: DomSanitizer,private dialogue: MatDialog ,private userService:UserService ,private projectService: ProjetService,private authService:AuthService,private router: Router ) {
+  constructor(private activatedRoute: ActivatedRoute,private http: HttpClient,private sanitizer: DomSanitizer,private dialogue: MatDialog ,private userService:UserService ,private projectService: ProjetService,private authService:AuthService,private router: Router ) {
+    this.idBlock = this.activatedRoute.snapshot.params['id'];
+
   }
   ngOnInit(): void {
     this.users = JSON.parse(localStorage.getItem('currentUser') as string);
@@ -92,28 +97,30 @@ export class HeaderComponent implements OnInit {
         }
       });
   }
-  getAllProjectByUser(){
+  getAllProjectByUser() {
     const userIdObject = this.authService.getStoredUserId();
     if (userIdObject !== null && userIdObject.idUser) {
       this.userId = userIdObject.idUser;
       console.log(this.userId);
       
-      this.projectService.getallProjectByUser(this.userId).subscribe((response : project[]) => {
+      this.projectService.getallProjectByUser(this.userId).subscribe((response: project[]) => {
         console.log(response);
-        this.projects=response
-
-        console.log("mmmmmmzzzzzzzzz",this.projects)
-
-
+        this.projects = response;
+  
+        console.log("mmmmmmzzzzzzzzz", this.projects);
+        
+        // Utilisation de find() pour rechercher un projet avec idCanvas égal à this.idBlock
+        this.currentProject = this.projects.find(project => project.idProjet === this.idBlock);
+  
         this.projects.forEach(project => {
           this.loadImage(project.idProjet);
         });
       });
-    
     } else {
       console.error('Error: Unable to retrieve userId.');
     }
-}
+  }
+  
 loadImage(projectId: number) {
   this.projectService.getImageForProject(projectId).subscribe(blob => {
     const imageUrl = URL.createObjectURL(blob);
@@ -136,7 +143,6 @@ getUserPhoto(): void {
   );
 }
 
-showDropdown: boolean = false;
 
 toggleDropdown() {
   this.showDropdown = !this.showDropdown;
@@ -151,7 +157,6 @@ logout() {
 
 
 
-showPendingInvitesDropdown: boolean = false;
 
 togglePendingInvitesDropdown() {
   this.showPendingInvitesDropdown = !this.showPendingInvitesDropdown;
