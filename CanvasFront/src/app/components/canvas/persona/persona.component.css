@@ -946,6 +946,7 @@ height: 65px;
     text-decoration: none;
     display: flex;
     align-items: center;
+    padding-top: 20px;
   }
   
   .dropdown-content mat-icon {

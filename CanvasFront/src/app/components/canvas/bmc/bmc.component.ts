@@ -60,14 +60,23 @@ export class BmcComponent implements OnInit {
     this.idBloc = this.activatedRoute.snapshot.params['id'];
 
   }
+  title!: string;
+
   ngOnInit(): void {
+    this.activatedRoute.data.subscribe((data: any) => {
+      const title = data.title || 'Titre par défaut';
+      document.title = `Canvas | ${title}`;
+    });
+  
+  
     this.users = JSON.parse(localStorage.getItem('currentUser') as string);
     this.getUserPhoto()
     this.ListProjectsAndCanvas()
 
     this.getBlocksByCanvasId()
     this.GetRole()
-
+  
+  
     this.pollSubscription = interval(1000)
     .pipe(
       switchMap(() => this.getPendingInvites())

@@ -1,1 +1,9 @@
-/* You can add global styles to this file, and also import other style files */
+/* You can add global styles to this file, and also import other style files *//* You can add global styles to this file, and also import other style files */
+@import '~@angular/material/prebuilt-themes/indigo-pink.css';
+
+
+@import "../node_modules/alertifyjs/build/css/alertify.css";
+@import "../node_modules/alertifyjs/build/css/themes/bootstrap.min.css";
+@import "../node_modules/alertifyjs//build/css/themes/default.min.css";
+
+@import "~@ng-select/ng-select/themes/default.theme.css";

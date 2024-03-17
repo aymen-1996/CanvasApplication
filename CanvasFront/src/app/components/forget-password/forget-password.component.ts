@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
 import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
@@ -14,7 +15,11 @@ export class ForgetPasswordComponent {
   successMessage: string = ''
 
 
-  constructor(private fb: FormBuilder, private authService: AuthService) {
+  constructor(private activatedRoute:ActivatedRoute,private fb: FormBuilder, private authService: AuthService) {
+    this.activatedRoute.data.subscribe((data: any) => {
+      const title = data.title || 'Titre par défaut';
+      document.title = `Canvas | ${title}`;
+    });
     this.form = this.fb.group({
       emailUser: '',
     });

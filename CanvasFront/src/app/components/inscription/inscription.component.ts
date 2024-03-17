@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ValidatorFn, Validators } from '@angular/forms';
 import { UserService } from 'src/app/services/user.service';
 import * as alertify from 'alertifyjs';
+import { ActivatedRoute } from '@angular/router';
 interface City {
   name: string
 }
@@ -15,7 +16,7 @@ export class InscriptionComponent implements OnInit{
   showFirst: boolean = false;
   showFirst2: boolean = true;
   signUpForm:any;
- constructor( private formBuilder: FormBuilder, private userService: UserService){
+ constructor( private formBuilder: FormBuilder, private userService: UserService , private activatedRoute:ActivatedRoute){
   this.governorates = [
     { name: 'Tunis' },
     { name: 'Ariana' },
@@ -43,6 +44,10 @@ export class InscriptionComponent implements OnInit{
   
  
   ngOnInit(): void {
+    this.activatedRoute.data.subscribe((data: any) => {
+      const title = data.title || 'Titre par défaut';
+      document.title = `Canvas | ${title}`;
+    });
     this.signUpForm= this.formBuilder.group({
     nomUser:[''],
     prenomUser:[''],

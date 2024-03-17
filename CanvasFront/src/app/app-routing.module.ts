@@ -22,23 +22,27 @@ const routes: Routes = [
 
   {
     path: 'login',
-    component: LoginComponent
+    component: LoginComponent,
+    data: { title: 'Login' }
   },
   {
     path: 'projects',
     component: ProjectComponent,
-    canActivate: [AuthGuard]
+    canActivate: [AuthGuard],
+    data: { title: 'Projets' }
   },
  
   {
     path: 'register',
-    component: InscriptionComponent
+    component: InscriptionComponent,
+    data: { title: 'Register' }
   },
 
   {
     path: 'profil',
     component: ProfilComponent,
-    canActivate: [AuthGuard]
+    canActivate: [AuthGuard],
+    data: { title: 'Profil' }
 
   },
   {
@@ -50,52 +54,62 @@ const routes: Routes = [
   {
     path: 'canvas/:id',
     component: CanvasComponent,
-    canActivate: [AuthGuard]
+    canActivate: [AuthGuard],
+    data: { title: 'Mes Canvas' }
 
   },
   {
     path: 'bmc/:id',
     component: BmcComponent,
-    canActivate: [AuthGuard]
-
+    canActivate: [AuthGuard],
+    data: { title: 'BMC' }
   },
   {
     path: 'lean/:id',
     component: LeanCanvasComponent,
-    canActivate: [AuthGuard]
+    canActivate: [AuthGuard],
+    data: { title: 'LEAN' }
 
   },
   {
     path: 'persona/:id',
     component: PersonaComponent,
-    canActivate: [AuthGuard]
+    canActivate: [AuthGuard],
+    data: { title: 'Persona' }
 
   },
   {
     path: 'vp/:id',
     component: VpCanvasComponent,
-    canActivate: [AuthGuard]
+    canActivate: [AuthGuard],
+    data: { title: 'VP Canvas' }
 
   },
   {
     path: 'reinitialiser-mot-de-passe',
-    component: ForgetPasswordComponent
+    component: ForgetPasswordComponent,
+    data: { title: 'Reinitialisation Mot de Passe' }
   },
 
   {
     path: 'swot/:id',
     component: SwotComponent,
-    canActivate: [AuthGuard]
+    canActivate: [AuthGuard],
+    data: { title: 'SWOT' }
 
   },
   {
     path: 'empathie/:id',
     component: EmpathieComponent,
-    canActivate: [AuthGuard]
+    canActivate: [AuthGuard],
+    data: { title: 'Empathie' }
 
   },
   { path: 'reset-password/:resetToken', 
-  component: ChangePassComponent }, 
+  component: ChangePassComponent ,
+  data: { title: 'Nouveau Mot de Passe' }
+}, 
+  
   {
     path: '**',
     redirectTo: '/login'

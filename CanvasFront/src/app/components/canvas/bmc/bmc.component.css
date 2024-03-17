@@ -825,6 +825,11 @@ height: 65px;
     margin: 0 12px; 
 }
 
+.dropdown-container {
+  position: relative;
+  display: inline-block;
+  margin: 0 8px; 
+}
   .dropdown-content {
     display: none;
     position: absolute;
@@ -846,6 +851,7 @@ height: 65px;
     text-decoration: none;
     display: flex;
     align-items: center;
+    padding-top: 20px;
   }
   
   .dropdown-content mat-icon {

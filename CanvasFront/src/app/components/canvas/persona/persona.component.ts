@@ -60,6 +60,10 @@ export class PersonaComponent implements OnInit{
 
   }
   ngOnInit(): void {
+    this.activatedRoute.data.subscribe((data: any) => {
+      const title = data.title || 'Titre par défaut';
+      document.title = `Canvas | ${title}`;
+    });
     this.users = JSON.parse(localStorage.getItem('currentUser') as string);
     this.getBlocksByCanvasId()
     this.GetRole()

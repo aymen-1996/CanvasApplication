@@ -24,6 +24,10 @@ export class ChangePassComponent {
 
   
   ngOnInit() {
+    this.activatedRoute.data.subscribe((data: any) => {
+      const title = data.title || 'Titre par défaut';
+      document.title = `Canvas | ${title}`;
+    });
     this.resetForm = this.formBuilder.group({
       newpwd: '',
       comfpwd:'',

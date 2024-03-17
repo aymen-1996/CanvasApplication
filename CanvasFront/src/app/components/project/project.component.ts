@@ -3,7 +3,7 @@ import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription, interval, switchMap } from 'rxjs';
 import { project } from 'src/app/models/project';
 import { User } from 'src/app/models/user';
@@ -50,8 +50,13 @@ userproject!:User
   selectedImage: File | null = null;
   users:any
 projectProgress: { [key: number]: number } = {};
-  constructor(private dialogue: MatDialog ,private http: HttpClient,private sanitilzer: DomSanitizer,private userService:UserService ,private router: Router,private fb:FormBuilder ,private projectService: ProjetService ,private authService:AuthService){}
+  constructor(private activatedRoute:ActivatedRoute ,private dialogue: MatDialog ,private http: HttpClient,private sanitilzer: DomSanitizer,private userService:UserService ,private router: Router,private fb:FormBuilder ,private projectService: ProjetService ,private authService:AuthService){}
    ngOnInit(): void {
+
+    this.activatedRoute.data.subscribe((data: any) => {
+      const title = data.title || 'Titre par défaut';
+      document.title = `Canvas | ${title}`;
+    });
     this.users = JSON.parse(localStorage.getItem('currentUser') as string);
     this.getUserPhoto()
     this.projectService.projectUpdated$.subscribe(() => {

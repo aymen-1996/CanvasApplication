@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { User } from 'src/app/models/user';
 import { AuthService } from 'src/app/services/auth.service';
 
@@ -16,13 +16,16 @@ export class LoginComponent implements OnInit{
   errorMessage: string = ''
   formUser!: FormGroup
 
-  constructor(private router:Router , private authService: AuthService , private formBuilder: FormBuilder){
+  constructor(private router:Router , private authService: AuthService , private formBuilder: FormBuilder , private activatedRoute:ActivatedRoute){
     if (this.authService.currentUserValue ) {
       this.router.navigate(['/projects']);
     }
   }
   ngOnInit(): void {
-   
+    this.activatedRoute.data.subscribe((data: any) => {
+      const title = data.title || 'Titre par défaut';
+      document.title = `Canvas | ${title}`;
+    });
     this.formUser = this.formBuilder.group({
 
       emailUser:'',
