@@ -713,6 +713,7 @@ updateInviteState(userId: number, idInvite: number): void {
         this.pendingInvitesCount = this.pendingInvites.length;
         this.projetService.updateProject(); 
         this.projetService.updateCanvas(); 
+        this.ListProjectsAndCanvas()
 
         setTimeout(() => {
           this.getPendingInvites().subscribe(

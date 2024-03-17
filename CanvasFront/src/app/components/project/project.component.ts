@@ -1,9 +1,17 @@
+import { HttpClient } from '@angular/common/http';
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { MatDialog } from '@angular/material/dialog';
+import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
+import { Router } from '@angular/router';
+import { Subscription, interval, switchMap } from 'rxjs';
 import { project } from 'src/app/models/project';
 import { User } from 'src/app/models/user';
 import { AuthService } from 'src/app/services/auth.service';
 import { ProjetService } from 'src/app/services/projet.service';
+import { UserService } from 'src/app/services/user.service';
+import { environment } from 'src/environments/environment';
+import { PopupAcceptedComponent } from '../popup/popup-accepted/popup-accepted.component';
 interface BlockData {
   block: any; // Remplacez 'any' par le type approprié pour votre bloc
   donnees: any[]; // Remplacez 'any' par le type approprié pour vos données
@@ -20,6 +28,12 @@ export class ProjectComponent implements OnInit{
 
 
   addProjectModal: boolean = false;
+
+  pendingInvites: any[] = [];
+  pendingInvitesCount: number = 0;
+  pollSubscription!: Subscription;
+  selectedProjectId: string | null = null; 
+  userPhotoUrl!: SafeUrl | string; 
   refreshSideBarProject: boolean = false;
   showFirst: boolean = true;
 
@@ -36,14 +50,38 @@ userproject!:User
   selectedImage: File | null = null;
   users:any
 projectProgress: { [key: number]: number } = {};
-  constructor(private fb:FormBuilder ,private projectService: ProjetService ,private authService:AuthService){}
+  constructor(private dialogue: MatDialog ,private http: HttpClient,private sanitilzer: DomSanitizer,private userService:UserService ,private router: Router,private fb:FormBuilder ,private projectService: ProjetService ,private authService:AuthService){}
    ngOnInit(): void {
     this.users = JSON.parse(localStorage.getItem('currentUser') as string);
-
+    this.getUserPhoto()
     this.projectService.projectUpdated$.subscribe(() => {
       this.getAllProjectByUser();
-      this.getInvitesByUserId(5)
     });
+   
+    this.pollSubscription = interval(1000)
+    .pipe(
+      switchMap(() => this.getPendingInvites())
+    )
+    .subscribe(
+      (response) => {
+        this.pendingInvites = response.pendingInvites;
+        this.pendingInvitesCount = this.pendingInvites.length;
+      },
+      (error) => {
+        console.error('Une erreur s\'est produite :', error);
+      }
+    );
+    
+  this.getPendingInvites().subscribe(
+    (response: { pendingInvites: any[]; }) => {
+      this.pendingInvites = response.pendingInvites;
+      this.pendingInvitesCount = this.pendingInvites.length;
+    },
+    (error: any) => {
+      console.error('Une erreur s\'est produite :', error);
+    }
+  );
+    this.getPendingInvites()
     this.projectForm = this.fb.group({
       nomProjet: [''],
       image: [null]
@@ -222,7 +260,125 @@ getInvitesByUserId(projId: number): void {
 
 
 
+//partie header
+showPendingInvitesDropdown: boolean = false;
+
+togglePendingInvitesDropdown() {
+  this.showPendingInvitesDropdown = !this.showPendingInvitesDropdown;
 }
+
+showDropdown: boolean = false;
+
+toggleDropdown() {
+  this.showDropdown = !this.showDropdown;
+}
+
+logout() {
+  localStorage.removeItem('currentUser');
+
+  this.router.navigateByUrl('/login')
+}
+
+getUserPhoto(): void {
+  this.userService.getUserPhotoUrl(this.users.user.idUser).subscribe(
+    (res: Blob) => {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        this.userPhotoUrl = this.sanitilzer.bypassSecurityTrustUrl(reader.result as string);
+      };
+      reader.readAsDataURL(res);
+    },
+    error => {
+      console.error('Error getting user photo:', error);
+    }
+  );
+}
+
+
+
+
+getPendingInvites() {
+  return this.http.get<any>(`${environment.backendHost}/projet/invites/${this.users.user.idUser}/etat`);
+}
+
+
+
+openPopup1(idInvite: number): void {
+  const confirmationMessage = 'Êtes-vous sûr de vouloir supprimer cette Post-it ?';
+  const dialogRef = this.dialogue.open(PopupAcceptedComponent, {
+    width: '600px',
+    data: { confirmationMessage, idInvite },
+  });
+
+  dialogRef.afterClosed().subscribe((result) => {
+    if (result && result.action === 'delete') {
+      console.log('Suppression confirmée');
+      this.delete(idInvite, this.users.user.idUser);
+    } else if (result && result.action === 'accept') {
+      console.log('Accepter');
+      this.updateInviteState(this.users.user.idUser, idInvite);
+    } else {
+      console.log('Opération annulée');
+    }
+  });
+}
+
+
+
+updateInviteState(userId: number, idInvite: number): void {
+  this.projectService.updateInviteState(userId, idInvite)
+    .subscribe(
+      (response) => {
+        console.log('Invitation state updated successfully:', response);
+
+        this.pendingInvites = this.pendingInvites.filter(invite => invite.id !== idInvite);
+        this.pendingInvitesCount = this.pendingInvites.length;
+        this.projectService.updateProject(); 
+        this.projectService.updateCanvas(); 
+
+        setTimeout(() => {
+          this.getPendingInvites().subscribe(
+            (response: { pendingInvites: any[]; }) => {
+              this.pendingInvites = response.pendingInvites;
+              this.pendingInvitesCount = this.pendingInvites.length;
+            },
+            (error: any) => {
+              console.error('Une erreur s\'est produite :', error);
+            }
+          );
+        }, 100); 
+      },
+      (error) => {
+        console.error('Failed to update invitation state:', error);
+      }
+    );
+}
+
+delete(idInvite: number,userId: number): void {
+  this.projectService.deleteInviteByIdAndUserId(idInvite,userId )
+    .subscribe(
+      (response) => {
+        this.pendingInvites = this.pendingInvites.filter(invite => invite.id !== idInvite);
+        this.pendingInvitesCount = this.pendingInvites.length;
+        setTimeout(() => {
+          this.getPendingInvites().subscribe(
+            (response: { pendingInvites: any[]; }) => {
+              this.pendingInvites = response.pendingInvites;
+              this.pendingInvitesCount = this.pendingInvites.length;
+            },
+            (error: any) => {
+              console.error('Une erreur s\'est produite :', error);
+            }
+          );
+        }, 100); 
+      },
+      (error) => {
+        console.error('Failed to update invitation state:', error);
+      }
+    );
+}
+}
+
 
 
 

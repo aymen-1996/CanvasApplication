@@ -885,9 +885,9 @@ height: 65px;
   }
   
 
-.badge {
+  .badge {
     position: absolute;
-    top: -7px;
+    top: -15.5px;
     right: 0;
     background-color: rgb(236, 16, 16);
     color: white;
@@ -902,4 +902,7 @@ height: 65px;
   }
 
 
+  .maticon1{
+    color: rgb(48, 133, 202);
+}
   
