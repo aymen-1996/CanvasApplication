@@ -444,7 +444,7 @@
        
       </div>
       <div class="css-1xto6kq">
-        <button class="css-5357ut" 
+        <button class="css-5357ut" *ngIf="userRole?.roleInvite !== null"
         tabindex="0" 
         type="button" 
         (click)="precedent()" 
@@ -464,5 +464,9 @@
     </div>
     </div>
   </div>
+  </div>
+
+  <div class="centered-message" *ngIf="userRole?.roleInvite === null">
+    <p>tu n'as pas le droit dans cette canvas. Attendre une invitation ou contacter le superviseur de projet.</p>
   </div>
   

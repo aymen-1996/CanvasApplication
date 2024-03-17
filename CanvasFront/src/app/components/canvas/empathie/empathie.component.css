@@ -883,4 +883,18 @@ height: 65px;
   .maticon1{
     color: rgb(48, 133, 202);
 }
+
+
+.centered-message {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%; 
+}
+
+.centered-message p {
+  font-size: 25px;
+  color: rgb(189, 39, 39);
+}
+
   

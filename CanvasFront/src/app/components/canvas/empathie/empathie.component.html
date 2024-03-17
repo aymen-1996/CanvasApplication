@@ -182,7 +182,8 @@
           
             </div>
               
-                     </div>
+          
+                                 </div>
                      <div class="button-container" [ngClass]="{'centerbtn':userRole?.roleInvite === 'moniteur' }">
                       <button class="download-button" *ngIf="showTable ||userRole?.roleInvite === 'moniteur' " mat-raised-button color="primary" (click)="telechargerPDF()">Télécharger en PDF</button>
                       <button *ngIf="showTable && userRole?.roleInvite === 'editor'" class="download-button" mat-raised-button color="primary" (click)="openPopupInvite()">Envoyer Invitation</button>
@@ -409,11 +410,11 @@
 
     
       <div class="css-1xto6kq" >
-        <button class="css-5357ut"  [ngClass]="{'btn-container':showTable || userRole?.roleInvite === 'moniteur' }"
+        <button class="css-5357ut" *ngIf="userRole?.roleInvite !== null"  [ngClass]="{'btn-container':showTable || userRole?.roleInvite === 'moniteur' }"
         tabindex="0" 
         type="button" 
         (click)="precedent()" 
-        [disabled]="userRole?.roleInvite === 'moniteur' || currentBlockIndex === 0">
+        [disabled]="userRole?.roleInvite === 'moniteur' || currentBlockIndex === 0 ">
     Précédent
     <span class="css-w0pj6f"></span>
     </button>
@@ -432,3 +433,6 @@
   </div>
   </div>
   
+  <div class="centered-message" *ngIf="userRole?.roleInvite === null">
+    <p>tu n'as pas le droit dans cette canvas. Attendre une invitation ou contacter le superviseur de projet.</p>
+  </div>

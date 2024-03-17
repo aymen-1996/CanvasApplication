@@ -1045,5 +1045,24 @@ height: 65px;
 }
 
 
+.centered-message {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%; 
+  width: 100%;
+}
+
+.centered-message p {
+  font-size: 25px;
+  color: rgb(189, 39, 39);
+}
+
+
+
   
 
