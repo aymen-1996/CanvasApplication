@@ -38,6 +38,6 @@ export class UserService {
     formData.append('file', file, file.name);
 
     const url = `${environment.backendHost}/user/${userId}/updatephoto`; // Modifier l'URL selon votre API
-    return this.http.put<any>(url, formData);
+    return this.http.post<any>(url, formData);
   }
 }

@@ -158,65 +158,56 @@ async getUser(@Param('iduser')iduser :number, @Req() request:Request){
  
     //changephoto
   
-    @Put (':iduser/updatephoto')
+    @Post(':iduser/updatephoto')
     @UseInterceptors(FileInterceptor('file',{
-        fileFilter:(req, file ,cb)=>{
-            if(!file.originalname.match(/\.(jpg|jpeg|png|gif)$/)){
-                return cb(null,false);
+        fileFilter: (req, file ,cb) => {
+            if (!file.originalname.match(/\.(jpg|jpeg|png|gif)$/)) {
+                return cb(null, false);
             }
-            cb(null,true);
-
+            cb(null, true);
         }
     }))
     async updatephoto(
-        @Param('iduser')iduser:number,
+        @Param('iduser') iduser: number,
         @UploadedFile() photo?: Express.Multer.File,
-    ){
-
-        const user =await this.userService.findOneById(iduser);
-        if(!user){
-            return { message :'User not found'};
-        }
-
-        if(photo){
-            if(user.imageUser){
-
-                const oldPotoPath = path.join(__dirname,'..','..','upload-photos',user.imageUser);
-             if(fs.existsSync(oldPotoPath))   {
-                await this.deleteFile(oldPotoPath);
-             }
+    ) {
+        try {
+            const user = await this.userService.findOneById(iduser);
+            if (!user) {
+                return { status: 'error', message :'User not found' };
             }
 
-            const logoFileName=`${Date.now()}_${photo.originalname}`;
-            const filePath=path.join(__dirname,'..','..','upload-photos',logoFileName);
-            await this.saveFile(photo.buffer,filePath);
-            
-            user.imageUser=logoFileName
-            const newuser=await this.userService.changephoto(user.idUser,logoFileName)
+            if (photo) {
+                if (user.imageUser && user.imageUser !== 'avatar.png') {
+                    const oldPhotoPath = path.join(__dirname, '..', '..', 'upload-photos', user.imageUser);
+                    if (fs.existsSync(oldPhotoPath)) {
+                        await this.deleteFile(oldPhotoPath);
+                    }
+                }
 
-            return logoFileName;
-        }else{
-            return { message:'No logo provided'}
+                const logoFileName = `${Date.now()}_${photo.originalname}`;
+                const filePath = path.join(__dirname, '..', '..', 'upload-photos', logoFileName);
+                await this.saveFile(photo.buffer, filePath);
+                
+                user.imageUser = logoFileName;
+                await this.userService.changephoto(user.idUser, logoFileName);
+
+                return { status: 'success', message: 'Photo updated successfully', data: logoFileName };
+            } else {
+                return { status: 'error', message: 'No photo provided' };
+            }
+        } catch (error) {
+            console.error('Error updating photo:', error.message);
+            return { status: 'error', message: 'An error occurred while updating the photo' };
         }
-
-       
     }
-
 
     private saveFile(buffer: Buffer, filePath: string): Promise<void> {
         return new Promise<void>((resolve, reject) => {
-            const fs = require('fs');
-            const path = require('path');
-    
-            // Get the directory path
             const directory = path.dirname(filePath);
-    
-            // Check if the directory exists, create it if it doesn't
             if (!fs.existsSync(directory)) {
                 fs.mkdirSync(directory, { recursive: true });
             }
-    
-            // Write the file
             fs.writeFile(filePath, buffer, (error) => {
                 if (error) {
                     console.error(`Error saving file at ${filePath}: ${error.message}`);
@@ -228,19 +219,27 @@ async getUser(@Param('iduser')iduser :number, @Req() request:Request){
             });
         });
     }
+
     private async deleteFile(filePath: string): Promise<void> {
         return new Promise<void>((resolve, reject) => {
-          require('fs').unlink(filePath, (error) => {
-            if (error) {
-              console.error(`Error deleting file at ${filePath}: ${error.message}`);
-              reject(error);
+            const fileName = filePath.split('/').pop();
+            if (fileName === 'avatar.png') {
+                console.log(`File "${fileName}" is not deleted.`);
+                resolve();
             } else {
-              console.log(`File deleted successfully at ${filePath}`);
-              resolve();
+                fs.unlink(filePath, (error: any) => {
+                    if (error) {
+                        console.error(`Error deleting file at ${filePath}: ${error.message}`);
+                        reject(error);
+                    } else {
+                        console.log(`File deleted successfully at ${filePath}`);
+                        resolve();
+                    }
+                });
             }
-          });
         });
-      }
+    }
+  
 
     //logout
     @Post('logout') 

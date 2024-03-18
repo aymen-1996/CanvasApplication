@@ -64,6 +64,7 @@ export class ProfilComponent {
       const title = data.title || 'Titre par défaut';
       document.title = `Canvas | ${title}`;
     });
+
     this.users = JSON.parse(localStorage.getItem('currentUser') as string);
     this.getUserPhoto()
   
@@ -92,7 +93,7 @@ export class ProfilComponent {
     }
   );
     this.getPendingInvites();
-    this.getUserDetails()
+  
 
     this.userForm = this.formBuilder.group({
       nomUser: [''],
@@ -108,6 +109,7 @@ export class ProfilComponent {
      
     });
   
+    this.getUserDetails()
 
   }
  
@@ -168,20 +170,21 @@ onFileSelected(event: any): void {
         reader.readAsDataURL(file);
 
         this.updatePhoto(file);
-        this.getUserPhoto()
     }
 }
 
 updatePhoto(file: File): void {
-    this.userService.updatePhoto(this.users.user.idUser, file).subscribe(
-        response => {
-            console.log('Photo de profil mise à jour avec succès :', response);
-        },
-        error => {
-            console.error('Une erreur s\'est produite lors de la mise à jour de la photo de profil :', error);
-        }
-    );
+  this.userService.updatePhoto(this.users.user.idUser, file).subscribe(
+      response => {
+          console.log('Photo de profil mise à jour avec succès :', response);
+          alert('Photo de profil mise à jour avec succès!');
+      },
+      error => {
+          console.error('Une erreur s\'est produite lors de la mise à jour de la photo de profil :', error);
+      }
+  );
 }
+
   
 
 

@@ -74,15 +74,19 @@ export class UserService {
         }
       }
 
-async changephoto(userId:number,photname:string):Promise<user>{
-
-    const user = await this.userRep.findOne({where :{idUser :userId}});
-    if(!user){
-        throw new Error('User not found');
+      async changephoto(userId: number, photoName: string): Promise<user> {
+        try {
+            const user = await this.userRep.findOne({ where: { idUser: userId } });
+            if (!user) {
+                throw new Error('User not found');
+            }
+            user.imageUser = photoName;
+            return this.userRep.save(user);
+        } catch (error) {
+            console.error('Error changing photo:', error.message);
+            throw new Error('Failed to change photo');
+        }
     }
-    user.imageUser=photname;
-    return this.userRep.save(user);
-}
 
 async requestPasswordReset(emailUser: string): Promise<void> {
     const user = await this.userRep.findOne({ where: { emailUser } });

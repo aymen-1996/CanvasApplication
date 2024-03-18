@@ -30,7 +30,7 @@
       
         <div class="dropdown-content" *ngIf="showPendingInvitesDropdown">
           <ng-container *ngIf="pendingInvites && pendingInvites.length > 0; else noInvites">
-            <div *ngFor="let invite of pendingInvites" class="dropdown-item" (click)="openPopup(invite.idInvite)">
+            <div *ngFor="let invite of pendingInvites" class="dropdown-item" (click)="openPopup1(invite.idInvite)">
               <p class="invite">Vous avez une Invitation dans <br><strong>{{ invite.canvas.nomCanvas}}</strong> de projet <strong>{{ invite.projet.nomProjet }}</strong></p>
             </div>
           </ng-container>
