@@ -14,6 +14,7 @@ export class CanvasComponent implements OnInit {
   canvas: any;
   users: any;
   projet: any;
+  project:any
   constructor(private activatedRoute: ActivatedRoute, private canvasService: CanvasService ,private PojectService:ProjetService  ) {
     this.projet = this.activatedRoute.snapshot.params['id'];
   }
@@ -28,6 +29,7 @@ export class CanvasComponent implements OnInit {
       this.listeCanvases(this.projet);
     });
     this.listeCanvases(this.projet);
+    this.getProject(this.projet)
   }
 
   onShowFirstChange(value: boolean) {
@@ -112,4 +114,16 @@ export class CanvasComponent implements OnInit {
   }
   
 
+  getProject(id:number): void {
+    id=this.activatedRoute.snapshot.params['id'];
+
+    this.PojectService.getProjectById(id)
+      .subscribe(
+        response => {
+          this.project = response.data;
+        },
+        error => {
+        }
+      );
+  }
 }

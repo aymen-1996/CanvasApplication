@@ -194,5 +194,30 @@ async getProjectsCanvasByUserId(@Param('userId') userId: number) {
         return { success: false, error: error.message };
     }
 }
+
+//Projebyid
+@Get('projid/:id/proj')
+async getProjectById(@Param('id', ParseIntPipe) idProjet: number): Promise<any> {
+    try {
+        const project = await this.projetService.getProjectById(idProjet);
+        if (project) {
+            return {
+                success: true,
+                data: project,
+            };
+        } else {
+            return {
+                success: false,
+                message: 'Project not found',
+            };
+        }
+    } catch (error) {
+        return {
+            success: false,
+            message: 'Failed to fetch project',
+            error: error.message || error.toString(),
+        };
+    }
+}
 }
 

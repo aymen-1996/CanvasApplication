@@ -6,7 +6,7 @@
     </div>
  
   <div class="canvas-list">
-    <h4>Liste des canvas</h4>
+    <h4>Liste des canvas : <span class="shiny-blue">{{ project.nomProjet }}</span></h4>
     <div class="canvas-items" *ngIf="canvas && canvas.Canvas && canvas.Canvas.length > 0">
         <div class="canvas-item" *ngIf="shouldDisplayBMC()">
           <div class="role" [ngClass]="{

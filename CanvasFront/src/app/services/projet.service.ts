@@ -73,5 +73,8 @@ export class ProjetService {
     return this.http.get<any>(`${environment.backendHost}/projet/proj/${userId}/canvas`);
 
 }
-
+getProjectById(id: number): Observable<any> {
+  const url = `${environment.backendHost}/projet/projid/${id}/proj`;
+  return this.http.get<any>(url);
+}
 }

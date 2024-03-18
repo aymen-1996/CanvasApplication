@@ -93,6 +93,7 @@ idBlock:any
     this.router.navigate(['/canvas', projectId])
       .then(() => {
       this.canvasComponent.listeCanvases(projectId)
+      this.canvasComponent.getProject(this.idBlock)
       });
   }
   getAllProjectByUser() {
