@@ -1,34 +1,42 @@
-<app-header [showFirstDiv]="showFirst" (showFirstDivChange)="onShowFirstChange($event)"></app-header>
-
 <div class="container">
-
-    <div class="content">
-        <div class="content-one" >
-            <h3 class="css-w29fpn"> Bienvenue a nouveau </h3>
-        
-           <img src="assets/imgs/login.png" alt="" class="flex-grow-1">
-        </div>
-        <div class="col md-6 mt-3 mt-md-0" id="form">
-            <h3 class="intro2">Connectez-vous a CANVAS.</h3>
-            <h6> Entrez vos coordonnées ci-dessous.</h6>
-
-      <div *ngIf="errorMessage" class="error-message">
-        {{ errorMessage }}
+  <div class="content">
+    <div class="wrapper">
+    <div class="banner">
+      <div class="image-content">
+        <a routerLink="/login" class="no-underline">
+          <h2><span style="color: rgb(33, 150, 243)">Canvas</span></h2>
+        </a>        <h3 class="css-w29fpn">Bienvenue à nouveau</h3>
+        <img src="assets/imgs/login.png" alt="" class="flex-grow-1">
       </div>
-      
-      <form [formGroup]="formUser" (ngSubmit)="onLogin()">
-        <div class="inputs">
-          <input type="email" formControlName="emailUser" placeholder="Saisir votre email">
-          <input type="password" formControlName="passwordUser" placeholder="Saisir votre mot de passe">
+    </div>
+      <div class="form-content">
+        <h2 class="css-8r6ded text-right">
+          Vous n'avez pas de compte ? 
+          <a routerLink='/register' class="css-1r5vhv8">Commencer maintenant</a>
+        </h2>        
+
+        <h3 class="intro2">Connectez-vous à CANVAS.</h3>
+        <h6>Entrez vos coordonnées ci-dessous.</h6>
+
+        <div *ngIf="errorMessage" class="error-message">
+          {{ errorMessage }}
         </div>
-        <div class="password-forgot">
-          <a routerLink="/reinitialiser-mot-de-passe"> <h6>Vous avez oublié votre mot de passe ?</h6></a>
-          <button type="submit" class="signup-btn">Se connecter</button>
-        </div>
-      </form>
-      
-      
-        </div>
+        
+        <form [formGroup]="formUser" (ngSubmit)="onLogin()">
+          <div class="inputs">
+            <input type="email" formControlName="emailUser" placeholder="Saisir votre email">
+            <input type="password" formControlName="passwordUser" placeholder="Saisir votre mot de passe">
+          </div>
+          <div class="password-forgot">
+            <div class="password-forgot-content">
+              <a  routerLink="/reinitialiser-mot-de-passe"><h6>Vous avez oublié votre mot de passe ?</h6></a>
+              <button type="submit" class="signup-btn">Se connecter</button>
+            </div>
+          </div>
+          
+          
+        </form>
+      </div>
     </div>
   </div>
-  
+</div>
