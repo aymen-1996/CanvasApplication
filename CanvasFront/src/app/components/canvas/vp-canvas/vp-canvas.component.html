@@ -13,7 +13,7 @@
               <mat-label>Projet actuel</mat-label>
               <mat-select [(ngModel)]="currentProject">
                 <mat-option>Mes projet</mat-option>
-                <mat-option *ngFor="let project of projects" [value]="project" (click)="navigateToBmc(project)">
+                <mat-option *ngFor="let project of projects" [value]="project" (click)="navigateToVP(project)">
                   {{ project.nomProjet }}
                 </mat-option>
               </mat-select>

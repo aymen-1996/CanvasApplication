@@ -12,6 +12,8 @@ export class ProjetService {
   projectUpdated$ = this.projectUpdatedSource.asObservable();
   private canvasUpdatedSource = new BehaviorSubject<boolean>(false);
   canvasUpdated$ = this.canvasUpdatedSource.asObservable();
+  private refreshSubject = new BehaviorSubject<boolean>(false);
+
   constructor(private http: HttpClient) { }
 
 
@@ -21,6 +23,13 @@ export class ProjetService {
     );
   }
 
+  refreshPage(): void {
+    this.refreshSubject.next(true);
+  }
+
+  getRefreshObservable() {
+    return this.refreshSubject.asObservable();
+  }
 
   getImageForProject(projectId: number): Observable<Blob> {
     return this.http.get(`${environment.backendHost}/projet/image/${projectId}/im`, { responseType: 'blob' });

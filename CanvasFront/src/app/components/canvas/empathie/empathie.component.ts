@@ -118,9 +118,8 @@ export class EmpathieComponent implements OnInit {
   }
 
   toggleSelection(id: string): void {
-    if (this.userRole?.roleInvite !== 'moniteur') {
       this.selectedId = id;
-    }
+    
  
   }
   
@@ -851,18 +850,27 @@ getCanvasId(projectId: string, type: string): string | undefined {
 }
 
 //routerlink
-navigateToBmc(project: any): void {
+navigateToEmpathy(project: any): void {
   const idCanvas = this.getCanvasId(project.idProjet, 'empathy map canvas');
   if (idCanvas) {
     this.router.navigateByUrl(`/empathie/${idCanvas}`)
     .then(() => {
-      window.location.reload();
-    });
+      this.updateEmpathyData(idCanvas)   
+     });
   } else {
     console.error('Canvas de type "empathie" non trouvé pour le projet donné.');
   }
 }
-
+updateEmpathyData(idCanvas: string) {
+  this.idBloc = idCanvas;
+  this.currentProject = this.projects.find((project: { canvas: any[]; }) => {
+    return project.canvas.some(canvas => canvas.idCanvas === this.idBloc);
+  });
+  this.getBlocksByCanvasId();
+  this.GetRole()
+  this.detectedBlockById(1)
+  
+}
 getPendingInvites() {
   return this.http.get<any>(`${environment.backendHost}/projet/invites/${this.users.user.idUser}/etat`);
 }

@@ -691,18 +691,27 @@ getCanvasId(projectId: string, type: string): string | undefined {
 }
 
 //routerlink
-navigateToBmc(project: any): void {
+navigateToLean(project: any): void {
   const idCanvas = this.getCanvasId(project.idProjet, 'Lean Canvas');
   if (idCanvas) {
     this.router.navigateByUrl(`/lean/${idCanvas}`)
     .then(() => {
-      window.location.reload();
-    });
+this.updateLeanData(idCanvas)   
+ });
   } else {
     console.error('Canvas de type "lean" non trouvé pour le projet donné.');
   }
 }
 
+updateLeanData(idCanvas: string) {
+  this.idBloc = idCanvas;
+  this.currentProject = this.projects.find((project: { canvas: any[]; }) => {
+    return project.canvas.some(canvas => canvas.idCanvas === this.idBloc);
+  });
+  this.getBlocksByCanvasId();
+  this.GetRole()
+  this.detectedBlockById(1)
+}
 getPendingInvites() {
   return this.http.get<any>(`${environment.backendHost}/projet/invites/${this.users.user.idUser}/etat`);
 }

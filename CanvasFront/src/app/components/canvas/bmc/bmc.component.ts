@@ -704,11 +704,21 @@ navigateToBmc(project: any): void {
   if (idCanvas) {
     this.router.navigateByUrl(`/bmc/${idCanvas}`)
     .then(() => {
-      window.location.reload();
+      this.updateBmcData(idCanvas);
     });
   } else {
     console.error('Canvas de type "BMC" non trouvé pour le projet donné.');
   }
+}
+
+updateBmcData(idCanvas: string) {
+  this.idBloc = idCanvas;
+  this.currentProject = this.projects.find((project: { canvas: any[]; }) => {
+    return project.canvas.some(canvas => canvas.idCanvas === this.idBloc);
+  });
+  this.getBlocksByCanvasId();
+  this.GetRole()
+
 }
 
 getPendingInvites() {

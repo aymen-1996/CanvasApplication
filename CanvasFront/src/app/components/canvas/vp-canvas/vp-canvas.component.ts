@@ -792,16 +792,26 @@ getCanvasId(projectId: string, type: string): string | undefined {
 }
 
 //routerlink
-navigateToBmc(project: any): void {
+navigateToVP(project: any): void {
   const idCanvas = this.getCanvasId(project.idProjet, 'VP Canvas');
   if (idCanvas) {
     this.router.navigateByUrl(`/vp/${idCanvas}`)
     .then(() => {
-      window.location.reload();
-    });
+this.updateVPData(idCanvas)   
+ });
   } else {
     console.error('Canvas de type "VP Canvas" non trouvé pour le projet donné.');
   }
+}
+
+updateVPData(idCanvas: string) {
+  this.idBloc = idCanvas;
+  this.currentProject = this.projects.find((project: { canvas: any[]; }) => {
+    return project.canvas.some(canvas => canvas.idCanvas === this.idBloc);
+  });
+  this.getBlocksByCanvasId();
+  this.GetRole()
+  this.detectedBlockById(1)
 }
 
 getPendingInvites() {
