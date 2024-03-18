@@ -73,11 +73,5 @@ export class ProjetService {
     return this.http.get<any>(`${environment.backendHost}/projet/proj/${userId}/canvas`);
 
 }
-private refreshCanvasSubject = new Subject<void>();
 
-refreshCanvas$ = this.refreshCanvasSubject.asObservable();
-
-triggerRefresh() {
-  this.refreshCanvasSubject.next();
-}
 }
