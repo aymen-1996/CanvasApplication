@@ -42,8 +42,8 @@
 </div>
 
       <div class="dropdown-container">
-        <mat-icon class="circular-image" (click)="toggleDropdown()">
-          <img [src]="userPhotoUrl" alt="User Photo">
+        <mat-icon  (click)="toggleDropdown()">
+          <img class="circular-image" [src]="userPhotoUrl" alt="User Photo">
         </mat-icon>
       
         <div class="dropdown-content" *ngIf="showDropdown">
