@@ -25,8 +25,20 @@
         <form [formGroup]="formUser" (ngSubmit)="onLogin()">
           <div class="inputs">
             <input type="email" formControlName="emailUser" placeholder="Saisir votre email">
-            <input type="password" formControlName="passwordUser" placeholder="Saisir votre mot de passe">
-          </div>
+            <div class="input-container">
+              <input
+                #passwordInput
+                type="{{ showPassword ? 'text' : 'password' }}"
+                formControlName="passwordUser"
+                placeholder="Saisir votre mot de passe">
+              <mat-icon class="password-toggle-icon" (click)="toggleShowPassword()">
+                {{ showPassword ? 'visibility' : 'visibility_off' }}
+              </mat-icon>
+            </div>
+            
+          
+            
+                      </div>
           <div class="password-forgot">
             <div class="password-forgot-content">
               <a  routerLink="/reinitialiser-mot-de-passe"><h6>Vous avez oublié votre mot de passe ?</h6></a>

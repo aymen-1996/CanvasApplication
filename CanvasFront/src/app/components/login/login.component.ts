@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { User } from 'src/app/models/user';
@@ -15,7 +15,9 @@ export class LoginComponent implements OnInit{
   password: string = '';
   errorMessage: string = ''
   formUser!: FormGroup
+  @ViewChild('passwordInput') passwordInput!: ElementRef;
 
+  showPassword: boolean = false;
   constructor(private router:Router , private authService: AuthService , private formBuilder: FormBuilder , private activatedRoute:ActivatedRoute){
     if (this.authService.currentUserValue ) {
       this.router.navigate(['/projects']);
@@ -34,6 +36,12 @@ export class LoginComponent implements OnInit{
     });
   }
 
+
+  toggleShowPassword() {
+    this.showPassword = !this.showPassword;
+    const inputEl: HTMLInputElement = this.passwordInput.nativeElement;
+    inputEl.type = this.showPassword ? 'text' : 'password';
+  }
   onLogin(): void {
     this.authService.login(this.formUser.value.emailUser, this.formUser.value.passwordUser).subscribe(
       (response) => {

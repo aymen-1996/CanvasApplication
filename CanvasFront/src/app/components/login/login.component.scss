@@ -138,6 +138,21 @@
     margin-left: 100px; 
     
   }
+
+  .input-container {
+    position: relative;
+    display: inline-block;
+  }
+ 
+  
+  .password-toggle-icon {
+    position: absolute;
+    top: 48%;
+    right: 5px; 
+    transform: translateY(-50%);
+    cursor: pointer;
+  }
+  
   .css-8r6ded{
 position: relative;
 top: -60px;
@@ -227,7 +242,7 @@ img {
 .css-8r6ded {
     margin: 0px;
     line-height: 1.57143;
-    font-size: 1.2rem;
+    font-size: 1rem;
     font-family: "Public Sans", sans-serif;
     font-weight: 400;
 }
