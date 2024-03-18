@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, catchError, map } from 'rxjs';
+import { BehaviorSubject, Observable, Subject, catchError, map } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { project } from '../models/project';
 
@@ -23,13 +23,7 @@ export class ProjetService {
     );
   }
 
-  refreshPage(): void {
-    this.refreshSubject.next(true);
-  }
-
-  getRefreshObservable() {
-    return this.refreshSubject.asObservable();
-  }
+ 
 
   getImageForProject(projectId: number): Observable<Blob> {
     return this.http.get(`${environment.backendHost}/projet/image/${projectId}/im`, { responseType: 'blob' });
@@ -78,5 +72,12 @@ export class ProjetService {
   getProjectsCanvasByUserId(userId: number): Observable<any> {
     return this.http.get<any>(`${environment.backendHost}/projet/proj/${userId}/canvas`);
 
+}
+private refreshCanvasSubject = new Subject<void>();
+
+refreshCanvas$ = this.refreshCanvasSubject.asObservable();
+
+triggerRefresh() {
+  this.refreshCanvasSubject.next();
 }
 }

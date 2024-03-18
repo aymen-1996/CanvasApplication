@@ -25,17 +25,18 @@ export class CanvasComponent implements OnInit {
     });
     this.users = JSON.parse(localStorage.getItem('currentUser') as string);
     this.PojectService.canvasUpdated$.subscribe(() => {
-      this.listeCanvases();
+      this.listeCanvases(this.projet);
     });
-    this.listeCanvases();
+    this.listeCanvases(this.projet);
   }
 
   onShowFirstChange(value: boolean) {
     this.showFirst = value;
   }
 
-  listeCanvases(): void {
-    this.canvasService.getCanvases(this.users.user.idUser, this.projet).subscribe(
+  listeCanvases(projet:number): void {
+    projet=this.activatedRoute.snapshot.params['id'];
+    this.canvasService.getCanvases(this.users.user.idUser, projet).subscribe(
       (data) => {
         this.canvas = data;
         console.log(this.canvas);

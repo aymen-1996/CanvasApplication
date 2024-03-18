@@ -37,7 +37,7 @@ idBlock:any
   selectedProjectId: string | null = null; 
   userPhotoUrl!: SafeUrl | string; 
 
-  constructor(private activatedRoute: ActivatedRoute,private http: HttpClient,private sanitizer: DomSanitizer,private dialogue: MatDialog ,private userService:UserService ,private projectService: ProjetService,private authService:AuthService,private router: Router ) {
+  constructor(private canvasComponent:CanvasComponent,private activatedRoute: ActivatedRoute,private http: HttpClient,private sanitizer: DomSanitizer,private dialogue: MatDialog ,private userService:UserService ,private projectService: ProjetService,private authService:AuthService,private router: Router ) {
     this.idBlock = this.activatedRoute.snapshot.params['id'];
 
   }
@@ -92,9 +92,7 @@ idBlock:any
   navigateToProject(projectId: number): void {
     this.router.navigate(['/canvas', projectId])
       .then(() => {
-        if (this.router.url.includes('/canvas')) {
-          window.location.reload();
-        }
+      this.canvasComponent.listeCanvases(projectId)
       });
   }
   getAllProjectByUser() {
