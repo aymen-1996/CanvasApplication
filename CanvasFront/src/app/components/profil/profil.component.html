@@ -33,8 +33,8 @@
     </div>
     
           <div class="dropdown-container">
-            <mat-icon class="circular-image" (click)="toggleDropdown()">
-              <img [src]="userPhotoUrl" alt="User Photo">
+            <mat-icon  (click)="toggleDropdown()">
+              <img class="circular-image" [src]="userPhotoUrl" alt="User Photo">
             </mat-icon>
           
             <div class="dropdown-content" *ngIf="showDropdown">
@@ -57,58 +57,86 @@
     </div>
         </div>  
 <div class="container rounded bg-white mt-5">
-   
             <div class="css-1byr0tz">
-                <div class="card" style="position: relative;top: 50px;" >
+                <div class="card"  >
                     <div class="card-body">
                         <div class="row">
-                            <div class="col-md-12 border-right">
+                            <div style="position: relative;top: -50px;" class="col-md-12 border-right">
                                 <div class="d-flex flex-column align-items-center text-center p-3 py-5">
-                                    <img class="rounded-circle mt-5" src="https://i.imgur.com/0eg0aG0.jpg" width="90">
-                                    <span class="font-weight-bold">John Doe</span>
-                                    <span class="text-black-50">john_doe12@bbb.com</span>
-                                    <span>United States</span>
+                                    <img class="rounded-circle mt-5" [src]="userPhotoUrl" alt="User Photo" width="60" height="60">
+                                    <svg style="color:rgb(48, 143, 143) ; position: relative;left: 15px" (click)="openFileInput()" xmlns="http://www.w3.org/2000/svg" width="17" height="17" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
+                                        <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
+                                        <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"/>
+                                      </svg>
+                                    <div *ngIf="userDetails">
+                                        <span class="font-weight-bold">{{userDetails?.nomUser}} {{userDetails?.prenomUser}}</span>
+                                      </div>            
+                                      
+                                    <input type="file" accept="image/*" #fileInput style="display: none" (change)="onFileSelected($event)">
                                 </div>
                             </div>
-                            <div class="col-md-12">
+                            
+                            <form [formGroup]="userForm" (ngSubmit)="UpdateProfil()">
+
+                            <div style="position: relative;top: -110px;"class="col-md-12">
+                                <div class="success-message-container">
+                                    <div class="success-message" *ngIf="successMessage">{{ successMessage }}</div>
+                                  </div>
+                                  
                                 <div class="p-3 py-5">
-                                    <div class="row mt-2">
-                                        <div class="col-md-6">
-                                            <input type="text" class="form-control" placeholder="first name" value="John">
-                                        </div>
-                                        <div class="col-md-6">
-                                            <input type="text" class="form-control" value="Doe" placeholder="Doe">
-                                        </div>
+                                  <div class="row mt-2">
+                                    <div class="col-md-6">
+                                      <input type="text" class="form-control" placeholder="Nom" formControlName="nomUser">
                                     </div>
-                                    <div class="row mt-3">
-                                        <div class="col-md-6">
-                                            <input type="text" class="form-control" placeholder="Email" value="john_doe12@bbb.com">
-                                        </div>
-                                        <div class="col-md-6">
-                                            <input type="text" class="form-control" value="+19685969668" placeholder="Phone number">
-                                        </div>
+                                    <div class="col-md-6">
+                                      <input type="text" class="form-control" placeholder="Prénom" formControlName="prenomUser">
                                     </div>
-                                    <div class="row mt-3">
-                                        <div class="col-md-6">
-                                            <input type="text" class="form-control" placeholder="address" value="D-113, right avenue block, CA,USA">
-                                        </div>
-                                        <div class="col-md-6">
-                                            <input type="text" class="form-control" value="USA" placeholder="Country">
-                                        </div>
+                                  </div>
+                                 
+                                  <div class="row mt-3">
+                                    <div class="col-md-6">
+                                      <input type="text" class="form-control" placeholder="Adresse" formControlName="adresse">
                                     </div>
-                                    <div class="row mt-3">
-                                        <div class="col-md-6">
-                                            <input type="text" class="form-control" placeholder="Bank Name" value="Bank of America">
-                                        </div>
-                                        <div class="col-md-6">
-                                            <input type="text" class="form-control" value="043958409584095" placeholder="Account Number">
-                                        </div>
+                                    <div class="col-md-6">
+                                      <input type="text" class="form-control" placeholder="education" formControlName="education">
                                     </div>
-                                    <div class="mt-5 text-right">
-                                        <button class="btn btn-primary profile-button" type="button">Save Profile</button>
+                                  </div>
+                                  <div class="row mt-3">
+                                    <div class="col-md-6">
+                                    <ng-select class="select" name="governorat"  formControlName="gov"> 
+                                                                              <ng-option *ngFor="let governorat of governorates" 
+                                                                              [value]="governorat.name" 
+                                                                             >
+                                                                            {{governorat.name}}
+                                                                          </ng-option>
+                                                                              </ng-select> 
                                     </div>
+                                    <div class="col-md-6">
+                                        <input type="date" class="form-control" placeholder="date de naissance" formControlName="datenaissance">
+
+                                        </div>
+                                  </div>
+                                  <div class="row mt-3">
+                                    <div class="col-md-6">
+                                      <input type="text" class="form-control" placeholder="genre" formControlName="genre">
+                                    </div>
+                                    <div class="col-md-6">
+                                      <input type="text" class="form-control" placeholder="qualification" formControlName="qualification">
+                                    </div>
+                                  </div>
+                                 
+                                  <div class="row mt-3">
+                                    <div class="col-md-6">
+                                      <input type="text" class="form-control" placeholder="Email" formControlName="emailUser">
+                                    </div>
+                                    
+                                  </div>
+                                                                    <div class="mt-5 text-right">
+                                    <button class="btn btn-primary profile-button" type="submit">Enregistrer le profil</button>
+                                  </div>
                                 </div>
-                            </div>
+                              </div>
+                            </form>
                         </div>
                     </div>
                 </div>

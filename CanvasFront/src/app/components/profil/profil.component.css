@@ -1,13 +1,26 @@
 body {
     background: #BA68C8;
-    overflow: hidden; /* Remove scroll */
+    overflow: hidden; 
 }
 
 .card {
-    width: 95%; /* Adjust width as needed */
+    width: 95%; 
+    height: 630px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    position: relative;
+    top: 30px;
    
 }
+.success-message-container {
+    text-align: center;
+  }
+  
+  .success-message {
+    color: green;
+    font-weight: bold;
+    margin-top: 30px;
+  }
+  
 
 .form-control:focus {
     box-shadow: none;
@@ -38,7 +51,6 @@ body {
     color: #682773;
     cursor: pointer;
 }
-
 
 
 

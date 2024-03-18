@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ElementRef, ViewChild } from '@angular/core';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { Subscription, interval, switchMap } from 'rxjs';
 import { PopupAcceptedComponent } from '../popup/popup-accepted/popup-accepted.component';
@@ -8,15 +8,23 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { UserService } from 'src/app/services/user.service';
 import { HttpClient } from '@angular/common/http';
 import { MatDialog } from '@angular/material/dialog';
-
+import { FormBuilder, FormGroup } from '@angular/forms';
+interface City {
+  name: string
+}
 @Component({
   selector: 'app-profil',
   templateUrl: './profil.component.html',
   styleUrls: ['./profil.component.css']
 })
 export class ProfilComponent {
-
+  @ViewChild('fileInput') fileInput!: ElementRef<HTMLInputElement>;
+  governorates : City[] | any;
+  selectedFile: File | null = null; 
   addProjectModal: boolean = false;
+  showPendingInvitesDropdown: boolean = false;
+  showDropdown: boolean = false;
+  successMessage: string = '';
 
   pendingInvites: any[] = [];
   pendingInvitesCount: number = 0;
@@ -26,7 +34,31 @@ export class ProfilComponent {
   refreshSideBarProject: boolean = false;
   showFirst: boolean = true;
   users:any
-  constructor(private activatedRoute :ActivatedRoute,private dialogue: MatDialog ,private http: HttpClient,private sanitilzer: DomSanitizer,private userService:UserService ,private router: Router,private projectService: ProjetService){}
+  userForm!: FormGroup;
+  userDetails:any
+  constructor(private formBuilder: FormBuilder,private activatedRoute :ActivatedRoute,private dialogue: MatDialog ,private http: HttpClient,private sanitilzer: DomSanitizer,private userService:UserService ,private router: Router,private projectService: ProjetService){
+
+    this.governorates = [
+      { name: 'Tunis' },
+      { name: 'Ariana' },
+      { name: 'Ben Arous' },
+      { name: 'Manouba' },
+      { name: 'Nabeul' },
+      { name: 'Zaghouan' },
+      { name: 'Bizerte' },
+      { name: 'Beja' },
+      { name: 'Jendouba' },
+      { name: 'Kef' },
+      { name: 'Siliana' },
+      { name: 'Kairouan' },
+      { name: 'Kasserine' },
+      { name: 'Sidi Bouzid' },
+      { name: 'Sfax' },
+      { name: 'Gabes' },
+      { name: 'Medenine' },
+      { name: 'Tataouine' }
+    ];
+  }
   ngOnInit(): void {
     this.activatedRoute.data.subscribe((data: any) => {
       const title = data.title || 'Titre par défaut';
@@ -59,21 +91,107 @@ export class ProfilComponent {
       console.error('Une erreur s\'est produite :', error);
     }
   );
-    this.getPendingInvites()
+    this.getPendingInvites();
+    this.getUserDetails()
+
+    this.userForm = this.formBuilder.group({
+      nomUser: [''],
+      prenomUser: [''],
+      emailUser: [''],
+      gov: [''],
+      datenaissance: [''],
+      adresse: [''],
+      education: [''],
+      qualification: [''],
+      imageUser: [''],
+      genre: [''],
+     
+    });
+  
 
   }
+ 
 
-
-
+  UpdateProfil(): void {
+    const updateUserDto = this.userForm.value;
   
+    this.userService.updateUser(this.users.user.idUser, updateUserDto).subscribe(
+      updatedUser => {
+        console.log('Profil utilisateur mis à jour avec succès :', updatedUser);
+        this.getUserDetails()
+        this.successMessage = 'Profil utilisateur mis à jour avec succès.';
+      },
+      error => {
+        console.error('Une erreur s\'est produite lors de la mise à jour du profil utilisateur :', error);
+      }
+    );
+  }
+  
+
+  getUserDetails(): void {
+    this.userService.getUser(this.users.user.idUser).subscribe(
+      (user: any) => {
+        this.userDetails = user; 
+        console.log('Détails de l\'utilisateur récupérés avec succès :', this.userDetails);
+  
+        this.userForm.patchValue({
+          nomUser: this.userDetails.nomUser,
+          prenomUser: this.userDetails.prenomUser,
+          emailUser: this.userDetails.emailUser,
+          gov: this.userDetails.gov,
+          datenaissance: this.userDetails.datenaissance,
+          adresse: this.userDetails.adresse,
+          education: this.userDetails.education,
+          qualification: this.userDetails.qualification,
+          imageUser:this.userDetails.imageUser,
+          genre: this.userDetails.genre,
+        });
+      },
+      error => {
+        console.error('Une erreur s\'est produite lors de la récupération des détails de l\'utilisateur :', error);
+      }
+    );
+  }
+
+  openFileInput(): void {
+    const fileInput = this.fileInput.nativeElement as HTMLInputElement;
+    fileInput.click();
+}
+
+onFileSelected(event: any): void {
+    const file = event.target.files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = () => {
+            this.userPhotoUrl = reader.result as string;
+        };
+        reader.readAsDataURL(file);
+
+        this.updatePhoto(file);
+        this.getUserPhoto()
+    }
+}
+
+updatePhoto(file: File): void {
+    this.userService.updatePhoto(this.users.user.idUser, file).subscribe(
+        response => {
+            console.log('Photo de profil mise à jour avec succès :', response);
+        },
+        error => {
+            console.error('Une erreur s\'est produite lors de la mise à jour de la photo de profil :', error);
+        }
+    );
+}
+  
+
+
+
 //partie header
-showPendingInvitesDropdown: boolean = false;
 
 togglePendingInvitesDropdown() {
   this.showPendingInvitesDropdown = !this.showPendingInvitesDropdown;
 }
 
-showDropdown: boolean = false;
 
 toggleDropdown() {
   this.showDropdown = !this.showDropdown;

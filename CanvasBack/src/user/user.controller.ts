@@ -84,12 +84,8 @@ export class UserController {
     //getuser 
 @Get(':iduser/user')
 async getUser(@Param('iduser')iduser :number, @Req() request:Request){
-   try{ const cookie =request.cookies['jwt'];
-    const data =await this.jwtService.verifyAsync(cookie);
+   try{ 
 
-    if(!data){
-        throw new UnauthorizedException();
-    }
    
     const user= await this.userService.findOne(iduser)
 
