@@ -21,7 +21,7 @@
     display: flex;
     flex-flow: wrap;
     width: 100%;
-    height: 90%;
+    height: 100%;
 }
 @media (min-width: 1200px)
 {.css-1xhw2i0 {
@@ -83,15 +83,8 @@
     color: rgb(33, 150, 243);
     width: 100%;
 }
-.css-w675a5 {
-    list-style: none;
-    margin: 0px;
-    padding: 8px 0px;
-    position: relative;
-    width: 100%;
-    overflow: auto;
-    height: 7rem;
-}
+
+
 .css-11icm35 {
     box-sizing: border-box;
     margin: 0px;
@@ -134,8 +127,8 @@
     padding: 8px 0px;
     position: relative;
     width: 100%;
-    overflow: auto;
-    height: 7rem;
+    overflow: hidden; /* Remove scrollbar */
+    height: 10.2rem;
 }
 .css-ofc7as {
     box-sizing: border-box;
@@ -151,3 +144,315 @@
     border-color: initial;
     border-image: initial;
 }
+
+.conteneur {
+    display: flex;
+    flex-wrap: wrap;
+    overflow: hidden; /* Prevent scrollbars */
+}
+.button-container {
+    text-align: right; 
+   position: relative;
+  }
+  
+  .download-button {
+    margin-left: 10px;
+    background-color: #2196F3;
+    color: #FFFFFF;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+.kqsxjs1 {
+    background: rgb(0, 150, 136);
+    color: rgb(255, 255, 255);
+    padding: 18px;
+    word-break: break-word;
+    font-size: 10px;
+    overflow: hidden; /* Hide overflow content */
+    height:7.2em;
+    margin: 0px 0px 0.5em;
+    position: relative;
+    margin-bottom: 1px;
+    top: -4px;
+    left: 5px;
+    box-shadow: rgba(0, 0, 0, 0.16) 0px 3px 2px, rgba(0, 0, 0, 0.23) 0px 3px 2px;
+    min-width: 0; 
+}
+
+.circle {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    display: inline-block;
+    border: 2px solid white;
+
+  }
+
+    .color-form {
+        position: relative;
+        background-color: rgb(255, 255, 255);
+        color: rgb(33, 43, 54);
+        border-radius: 8px;
+        background-image: none;
+        overflow: hidden auto;
+        min-height: 5.4em;
+        min-width: 70px;
+        max-width: calc(100% - 32px);
+        outline: 0px;
+    
+      }
+     
+    .flex-container {
+      display: flex;
+      flex-wrap: wrap;
+    }
+
+    .css-cpm1aj {
+        position: absolute;
+        top: 0px;
+        right: 0px;
+        width: 0%;
+        height: 0%;
+        border-width: 15px;
+        border-style: solid;
+        border-color: rgba(255, 255, 255, 0.5) rgba(255, 255, 255, 0.5) transparent transparent;
+      }
+      
+      
+      .css-1m32rbj:hover {
+        background-color: transparent;
+      }
+      .css-1m32rbj:hover {
+        background-color: rgba(99, 115, 129, 0.08);
+      }
+      .css-1m32rbj {
+        display: inline-flex;
+        -webkit-box-align: center;
+        align-items: center;
+        -webkit-box-pack: center;
+        justify-content: center;
+        box-sizing: border-box;
+        -webkit-tap-highlight-color: transparent;
+        background-color: transparent;
+        outline: 0px;
+        border: 0px;
+        margin: 0px;
+        cursor: pointer;
+        user-select: none;
+        vertical-align: middle;
+        appearance: none;
+        text-decoration: none;
+        text-align: center;
+        flex: 0 0 auto;
+        font-size: 1.3rem;
+        padding: 13px;
+        border-radius: 50%;
+        overflow: visible;
+        color: rgb(99, 115, 129);
+        transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+        position: absolute;
+        top: -25px;
+        right: -25px;
+      }
+
+      
+
+  /*css header*/
+  .navbar {
+    transition: box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+    box-shadow: rgba(145, 158, 171, 0.2) 0px 2px 4px -1px, rgba(145, 158, 171, 0.14) 0px 4px 5px 0px, rgba(145, 158, 171, 0.12) 0px 1px 10px 0px;
+    background-image: none;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    box-sizing: border-box;
+    flex-shrink: 0;
+    position: fixed;
+    top: 0px;
+    left: auto;
+    right: 0px;
+    color: rgb(255, 255, 255);
+    z-index: 1201;
+    backdrop-filter: blur(6px);
+    background-color: rgba(249, 250, 251, 0.72);
+height: 65px;
+    @media (min-width: 1200px) {
+        .css-1ir47a1 {
+            min-height: 64px;
+            padding: 16px 7px;
+        }
+    }
+}
+
+.logo {
+    color: rgb(75, 75, 216);
+    margin-right: auto; /* Alignement à gauche */
+}
+
+.css-1ir47a1 {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.css-i9gxme {
+    -webkit-box-flex: 1;
+    flex-grow: 1;
+    width: 600px;
+}
+
+.mat-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    box-sizing: border-box;
+    cursor: pointer;
+    user-select: none;
+    vertical-align: middle;
+    appearance: none;
+    text-decoration: none;
+    text-align: center;
+    flex: 0 0 auto;
+    font-size: 1.5rem;
+    padding: 8px;
+    border-radius: 50%;
+    overflow: visible;
+    color: rgb(99, 115, 129);
+    transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+    width: 46px;
+}
+
+
+.css-2x4nai{
+    color: black;
+}
+.no-underline {
+    text-decoration: none;
+    color: rgb(33, 150, 243);
+  }
+
+  .circular-image {
+    border-radius: 50%;
+    overflow: hidden;
+    width: 42px; 
+    height: 42px; 
+  }
+  
+  .circular-image img {
+    width: 80%;
+    height: 80%;
+    object-fit: cover; 
+  }
+  .dropdown-container {
+    position: relative;
+    right: 15px;
+    display: inline-block;
+    margin: 0 12px; 
+}
+
+  .dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #f9f9f9;
+    max-width: 250px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    z-index: 1;
+    overflow-wrap: break-word;
+    max-height: 250px; 
+    overflow-y: auto; 
+    overflow-x: hidden; 
+
+  }
+  
+  
+  
+  .dropdown-content .dropdown-item {
+    padding: 8px;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    padding-top: 20px;
+  }
+  
+  .dropdown-content mat-icon {
+    margin-right: 8px;
+  }
+  
+  .dropdown-content .dropdown-item:hover {
+    background-color: #ddd;
+  }
+  
+  .dropdown-container:hover .dropdown-content {
+    display: block;
+  }
+  
+  .mat{
+    color: black;
+    position: relative;
+    right: 7px;
+    top: 7px;
+  }
+
+.maticons{
+    position: relative;
+    color: rgb(48, 133, 202);
+    left: 17px;
+}
+  .invite{
+    color: black;
+    font-size: 13px;
+  }
+
+  .dropdown-content .dropdown-item .invite {
+    background-color: #ddd;
+    padding: 8px;
+    border-radius: 5px;
+    margin-bottom: -7px; 
+  }
+  
+
+  .badge {
+    position: absolute;
+    top: -15.5px;
+    right: 0;
+    background-color: rgb(236, 16, 16);
+    color: white;
+    font-size: 12px;
+    padding: 5px;
+    border-radius: 50%;
+  }
+  
+  .no-invite{
+    color: black;
+
+  }
+
+
+  .centered-message {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%; 
+    width: 100%;
+  }
+  
+  .centered-message p {
+    font-size: 25px;
+    color: rgb(189, 39, 39);
+  }
+  
+  .maticon1{
+    color: rgb(48, 133, 202);
+}
+
+  
+
