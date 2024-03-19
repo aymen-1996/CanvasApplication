@@ -14,7 +14,7 @@
         Mes projets
           </mat-option>
           <mat-option *ngFor="let project of projects" [value]="project" (click)="navigateToProject(project.idProjet)">
-            {{ project.nomProjet }}
+            {{ project?.nomProjet }}
           </mat-option>
           
         </mat-select>

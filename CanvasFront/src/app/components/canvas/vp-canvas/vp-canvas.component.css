@@ -828,14 +828,14 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 930px !important;
+    width: 915px !important;
     height: 550px;
     top: 40px;
     position: relative;
   }
   
   .wi {
-    width: 770px;
+    width: 744px;
   }
   
   .button-container {
