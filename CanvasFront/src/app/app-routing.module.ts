@@ -52,7 +52,7 @@ const routes: Routes = [
 
   },
   {
-    path: 'canvas/:id',
+    path: 'canvas',
     component: CanvasComponent,
     canActivate: [AuthGuard],
     data: { title: 'Mes Canvas' }

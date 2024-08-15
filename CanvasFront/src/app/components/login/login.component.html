@@ -15,8 +15,9 @@
           <a routerLink='/register' class="css-1r5vhv8">Commencer maintenant</a>
         </h2>        
 
-        <h3 class="intro2">Connectez-vous à CANVAS.</h3>
-        <h6>Entrez vos coordonnées ci-dessous.</h6>
+        <h4 class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom css-1bhrkuh">Connectez-vous à 
+          <span class="MuiTypography-root MuiTypography-h4 css-vt5zdj">Canvas</span></h4>   
+          <p class="MuiTypography-root MuiTypography-body1 css-19e4da">Entrez vos coordonnées ci-dessous.</p>
 
         <div *ngIf="errorMessage" class="error-message">
           {{ errorMessage }}
@@ -41,7 +42,7 @@
                       </div>
           <div class="password-forgot">
             <div class="password-forgot-content">
-              <a  routerLink="/reinitialiser-mot-de-passe"><h6>Vous avez oublié votre mot de passe ?</h6></a>
+              <a routerLink="/reinitialiser-mot-de-passe" class="MuiTypography-root MuiTypography-subtitle2 MuiLink-root MuiLink-underlineHover css-oq680g" href="/reinitialiser-mot-de-passe">Vous avez oublié votre mot de passe ? </a>
               <button type="submit" class="signup-btn">Se connecter</button>
             </div>
           </div>

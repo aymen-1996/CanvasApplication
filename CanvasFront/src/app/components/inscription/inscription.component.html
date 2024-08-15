@@ -12,13 +12,17 @@
             </div>
             <img src="assets/imgs/illustration_register.png" alt="" class="flex-grow-1">
         </div>
+
         <div class="form-content">
             <h3 class="title" id="titlerej"> Rejoignez CANVAS aujourd'hui.</h3>
             <h6> Commencez en saisissant vos coordonnées ci-dessous.</h6>
             <form [formGroup]="signUpForm" (ngSubmit)="onSignup()" >
                 <div class="inputs">
-                  <input type="text" name="nom" placeholder="saisir votre nom " formControlName="nomUser" >
-                  <input  type="text" name="prenom" placeholder="saisir votre prenom " formControlName="prenomUser">
+                  <div class="input-container">
+                    <input type="text" name="nom" placeholder="saisir votre nom" formControlName="nomUser">
+                    <input type="text" name="prenom" placeholder="saisir votre prénom" formControlName="prenomUser">
+                  </div>
+                  
                 <div>
                   <input  type="email" name="email" placeholder="saisir votre email " formControlName="emailUser" [class.invalid-input]="signUpForm.get('emailUser')!.invalid && signUpForm.get('emailUser')!.touched">
                   <span class="input-group_error" *ngIf="signUpForm.get('emailUser')!.invalid && signUpForm.get('emailUser')!.touched" >** email est requis</span>

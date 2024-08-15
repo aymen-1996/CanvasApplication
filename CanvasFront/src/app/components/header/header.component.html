@@ -4,61 +4,21 @@
     <a routerLink="/projects" class="no-underline">
       <h2 class="logo"><span style="color: rgb(33, 150, 243)">Canvas</span></h2>
     </a>    <div class="MuiBox-root css-i9gxme"></div>
-    <div class="css-1x4nai"*ngIf="showFirstDiv">
+    <div *ngIf="showFirstDiv">
       <mat-icon class="maticon1">menu</mat-icon>
       <mat-icon class="maticon1">info</mat-icon>
       <mat-form-field class="custom-select">
         <mat-label>Projet actuel</mat-label>
-        <mat-select  [(ngModel)]="currentProject">
-          <mat-option >
-        Mes projets
-          </mat-option>
-          <mat-option *ngFor="let project of projects" [value]="project" (click)="navigateToProject(project.idProjet)">
+        <mat-select [(ngModel)]="currentProject" (selectionChange)="onProjectSelect($event.value)">
+          <mat-option>Mes projets</mat-option>
+          <mat-option *ngFor="let project of projects" [value]="project" >
             {{ project?.nomProjet }}
           </mat-option>
-          
         </mat-select>
       </mat-form-field>
+    
+    </div>
 
-<div class="dropdown-container">
-  <mat-icon class="maticons" (click)="togglePendingInvitesDropdown()">email</mat-icon>
-
-  <div *ngIf="pendingInvitesCount > 0" class="badge">{{ pendingInvitesCount }}</div>
-
-  <div class="dropdown-content" *ngIf="showPendingInvitesDropdown">
-    <ng-container *ngIf="pendingInvites && pendingInvites.length > 0; else noInvites">
-      <div *ngFor="let invite of pendingInvites" class="dropdown-item" (click)="openPopup(invite.idInvite)">
-        <p class="invite">Vous avez une Invitation dans <br><strong>{{ invite.canvas.nomCanvas}}</strong> de projet <strong>{{ invite.projet.nomProjet }}</strong></p>
-      </div>
-    </ng-container>
-    <ng-template #noInvites>
-      <div class="dropdown-item">
-        <p class="no-invite">Aucune invitation en attente.</p>
-      </div>
-    </ng-template>
-  
-   
-  </div>
-</div>
-
-      <div class="dropdown-container">
-        <mat-icon  (click)="toggleDropdown()">
-          <img class="circular-image" [src]="userPhotoUrl" alt="User Photo">
-        </mat-icon>
-      
-        <div class="dropdown-content" *ngIf="showDropdown">
-          <div (click)="logout()" class="dropdown-item">
-            <mat-icon>logout</mat-icon> <p class="mat">Deconnexion</p>
-          </div>
-          <div routerLink="/profil"  class="dropdown-item">
-            <mat-icon>settings</mat-icon> <p class="mat">Paramétre</p>
-          </div>
-        </div>
-      </div>
-      
-      
-      
-          </div>
     <div class="css-2x4nai" *ngIf="!showFirstDiv">
       <p class="MuiTypography-root MuiTypography-body2 css-8r6ded">
         Vous n'avez pas de compte ? 

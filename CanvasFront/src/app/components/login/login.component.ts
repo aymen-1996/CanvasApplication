@@ -13,7 +13,7 @@ export class LoginComponent implements OnInit{
   showFirst: boolean = false;
   email: string = '';
   password: string = '';
-  errorMessage: string = ''
+  errorMessage: string  | null = null;
   formUser!: FormGroup
   @ViewChild('passwordInput') passwordInput!: ElementRef;
 
@@ -36,7 +36,9 @@ export class LoginComponent implements OnInit{
     });
   }
 
-
+  closeErrorMessage(): void {
+    this.errorMessage = null;
+  }
   toggleShowPassword() {
     this.showPassword = !this.showPassword;
     const inputEl: HTMLInputElement = this.passwordInput.nativeElement;

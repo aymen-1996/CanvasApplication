@@ -26,6 +26,23 @@
   margin-left: 20px;
 }
 
+.input-container {
+  display: flex;
+  gap: 10px; 
+}
+
+.input-container input {
+  padding: 1rem;
+  font-size: 1rem;
+  border: 1px solid #ced4da;
+  border-radius: 1rem;
+  margin-bottom: 10px;
+  flex: 1;
+  font-family: "Public Sans", sans-serif;
+  transition: border 150ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+
 img {
     display: block;
     max-width: 100%;
@@ -203,3 +220,27 @@ img {
     height: 60px !important;
   }
   
+
+  @media (min-width: 600px) {
+    .css-1bhrkuh {
+        font-size: 1.25rem;
+    }
+}
+.css-1bhrkuh {
+    margin: 0px 0px 8px;
+    font-weight: 700;
+    line-height: 1.5;
+    font-size: 1.25rem;
+    font-family: "Public Sans", sans-serif;
+}
+
+.css-vt5zdj {
+  margin: 0px;
+  font-weight: 700;
+  line-height: 1.5;
+  font-size: 1.25rem;
+  font-family: "Public Sans", sans-serif;
+  color: rgb(33, 150, 243);
+}
+
+

@@ -31,12 +31,19 @@
 
   .error-message {
     display: block;
-    padding: 0.75rem 1.25rem;
-    margin-bottom: 1rem;
-    border: 1px solid #dc3545;
-    border-radius: 0.25rem;
-    color: #dc3545;
-    background-color: #f8d7da;
+    font-weight: 600;
+    width: 90%;
+    text-align: center;
+    transition: box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1);
+    border-radius: 8px;
+    padding: 6px 16px;
+    box-shadow: none;
+    background-image: none;
+    line-height: 1.57143;
+    font-size: 0.875rem;
+    background-color: rgb(165, 46, 29);
+        border-radius: 0.25rem;
+        color: rgb(255, 255, 255);
   }
 
   
@@ -332,3 +339,45 @@ img {
   text-align: right;
 }
 
+
+@media (min-width: 600px) {
+  .css-1bhrkuh {
+      font-size: 1.25rem;
+  }
+}
+.css-1bhrkuh {
+  margin: 0px 0px 8px;
+  font-weight: 700;
+  line-height: 1.5;
+  font-size: 1.25rem;
+  font-family: "Public Sans", sans-serif;
+}
+
+
+.css-vt5zdj {
+  margin: 0px;
+  font-weight: 700;
+  line-height: 1.5;
+  font-size: 1.25rem;
+  font-family: "Public Sans", sans-serif;
+  color: rgb(33, 150, 243);
+}
+
+.css-19e4da {
+  margin: 0px 0px 40px;
+  line-height: 1.5;
+  font-size: 1rem;
+  font-family: "Public Sans", sans-serif;
+  font-weight: 400;
+  color: rgb(99, 115, 129);
+}
+
+.css-oq680g {
+  margin: 0px;
+  font-weight: 600;
+  line-height: 1.57143;
+  font-size: 0.875rem;
+  font-family: "Public Sans", sans-serif;
+  color: rgb(33, 150, 243);
+  text-decoration: none;
+}

@@ -71,6 +71,7 @@ projectProgress: { [key: number]: number } = {};
       (response) => {
         this.pendingInvites = response.pendingInvites;
         this.pendingInvitesCount = this.pendingInvites.length;
+        this.getAllProjectByUser()
       },
       (error) => {
         console.error('Une erreur s\'est produite :', error);
@@ -121,6 +122,10 @@ projectProgress: { [key: number]: number } = {};
 
   id!: number;
 
+  saveProjectId(projectId: number): void {
+    localStorage.setItem('selectedProjectId', projectId.toString());
+  }
+  
   getLogedInUser():any{
     const user= this.authService.getStoredUser()
     this.idlogedIn=user?.idUser
@@ -224,26 +229,28 @@ blocks: any[] = []; // Tableau de blocs
 
 
 
-
 getAllProjectByUser() {
   const userIdObject = this.authService.getStoredUserId();
   if (userIdObject !== null && userIdObject.idUser) {
-      this.userId = userIdObject.idUser;
-      console.log(this.userId);
+    this.userId = userIdObject.idUser;
   
-      this.projectService.getallProjectByUser(this.userId).subscribe((response: any[]) => {
-          console.log(response);
-          this.projects = response;
-          
-          console.log(this.projects);
-          
-          this.projects.forEach(project => {
-              this.loadImage(project.idProjet);
-              this.getInvitesByUserId(project.idProjet);
-          });
+    this.projectService.getallProjectByUser(this.userId).subscribe((response: any[]) => {
+      this.projects = response;
+
+      // Vérifier si selectedProjectId est null
+      const selectedProjectId = localStorage.getItem('selectedProjectId');
+      if (selectedProjectId === null && this.projects.length > 0) {
+        // Enregistrer l'ID du premier projet dans localStorage
+        this.saveProjectId(this.projects[0].idProjet);
+      }
+
+      this.projects.forEach(project => {
+        this.loadImage(project.idProjet);
+        this.getInvitesByUserId(project.idProjet);
       });
+    });
   } else {
-      console.error('Error: Unable to retrieve userId.');
+    console.error('Error: Unable to retrieve userId.');
   }
 }
 
@@ -252,7 +259,6 @@ getInvitesByUserId(projId: number): void {
       .subscribe(
           progressPercentage => {
               this.projectProgress[projId] = progressPercentage;
-              console.log("Progress percentage for project", projId, ":",  this.projectProgress[projId]);
 
           },
           error => {

@@ -36,13 +36,15 @@ idBlock:any
 
   selectedProjectId: string | null = null; 
   userPhotoUrl!: SafeUrl | string; 
-
+  selectedProject:any
   constructor(private canvasComponent:CanvasComponent,private activatedRoute: ActivatedRoute,private http: HttpClient,private sanitizer: DomSanitizer,private dialogue: MatDialog ,private userService:UserService ,private projectService: ProjetService,private authService:AuthService,private router: Router ) {
     this.idBlock = this.activatedRoute.snapshot.params['id'];
 
   }
   ngOnInit(): void {
     this.users = JSON.parse(localStorage.getItem('currentUser') as string);
+    this.selectedProject =  localStorage.getItem('selectedProjectId');
+
     this.pollSubscription = interval(1000)
     .pipe(
       switchMap(() => this.getPendingInvites())
@@ -87,15 +89,23 @@ idBlock:any
     this.showFirstDiv2 = !this.showFirstDiv2;
     this.showFirstDiv2Change.emit(this.showFirstDiv2);
   }
-
   
-  navigateToProject(projectId: number): void {
-    this.router.navigate(['/canvas', projectId])
-      .then(() => {
-      this.canvasComponent.listeCanvases(projectId)
-      this.canvasComponent.getProject(this.idBlock)
-      });
+  onProjectSelect(selectedProject: any): void {
+    if (selectedProject && selectedProject.idProjet) {
+      this.selectedProjectId = selectedProject.idProjet.toString();
+      localStorage.setItem('selectedProjectId', this.selectedProjectId || ``);
+
+      const projectId = Number(this.selectedProjectId);
+
+      if (!isNaN(projectId)) {
+        this.canvasComponent.listeCanvases(projectId);
+        this.canvasComponent.getProject(projectId);
+      } else {
+        console.error('Project ID is not a valid number.');
+      }
+    }
   }
+
   getAllProjectByUser() {
     const userIdObject = this.authService.getStoredUserId();
     if (userIdObject !== null && userIdObject.idUser) {
@@ -109,7 +119,7 @@ idBlock:any
         console.log("mmmmmmzzzzzzzzz", this.projects);
         
         // Utilisation de find() pour rechercher un projet avec idCanvas égal à this.idBlock
-        this.currentProject = this.projects.find(project => project.idProjet === this.idBlock);
+        this.currentProject = this.projects.find(project => project.idProjet === this.selectedProject);
   
         this.projects.forEach(project => {
           this.loadImage(project.idProjet);
