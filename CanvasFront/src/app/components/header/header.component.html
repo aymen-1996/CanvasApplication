@@ -16,7 +16,42 @@
           </mat-option>
         </mat-select>
       </mat-form-field>
-    
+      
+      <div class="dropdown-container">
+        <mat-icon class="maticons" (click)="togglePendingInvitesDropdown()">email</mat-icon>
+      
+        <div *ngIf="pendingInvitesCount > 0" class="badge">{{ pendingInvitesCount }}</div>
+      
+        <div class="dropdown-content" *ngIf="showPendingInvitesDropdown">
+          <ng-container *ngIf="pendingInvites && pendingInvites.length > 0; else noInvites">
+            <div *ngFor="let invite of pendingInvites" class="dropdown-item" (click)="openPopup(invite.idInvite)">
+              <p class="invite">Vous avez une Invitation dans <br><strong>{{ invite.canvas.nomCanvas}}</strong> de projet <strong>{{ invite.projet.nomProjet }}</strong></p>
+            </div>
+          </ng-container>
+          <ng-template #noInvites>
+            <div class="dropdown-item">
+              <p class="no-invite">Aucune invitation en attente.</p>
+            </div>
+          </ng-template>
+        
+         
+        </div>
+      </div>
+      
+            <div class="dropdown-container">
+              <mat-icon  (click)="toggleDropdown()">
+                <img class="circular-image" [src]="userPhotoUrl" alt="User Photo">
+              </mat-icon>
+            
+              <div class="dropdown-content" *ngIf="showDropdown">
+                <div (click)="logout()" class="dropdown-item">
+                  <mat-icon>logout</mat-icon> <p class="mat">Deconnexion</p>
+                </div>
+                <div routerLink="/profil"  class="dropdown-item">
+                  <mat-icon>settings</mat-icon> <p class="mat">Paramétre</p>
+                </div>
+              </div>
+            </div>
     </div>
 
     <div class="css-2x4nai" *ngIf="!showFirstDiv">
