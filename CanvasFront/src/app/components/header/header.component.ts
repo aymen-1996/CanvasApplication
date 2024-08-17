@@ -158,7 +158,7 @@ toggleDropdown() {
 }
 
 logout() {
-  localStorage.removeItem('currentUser');
+  localStorage.clear();
 
   this.router.navigateByUrl('/login')
 }

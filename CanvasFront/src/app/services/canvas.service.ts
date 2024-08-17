@@ -10,7 +10,7 @@ export class CanvasService {
 
   constructor(private http: HttpClient) {}
 
-  getCanvases(userId: number, projetId: number): Observable<any> {
+  getCanvases(userId: number, projetId: any): Observable<any> {
     return this.http.get<any>(`${environment.backendHost}/projet/${userId}/${projetId}`);
   }
 }

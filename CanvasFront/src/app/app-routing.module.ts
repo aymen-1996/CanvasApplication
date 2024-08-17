@@ -59,27 +59,27 @@ const routes: Routes = [
 
   },
   {
-    path: 'bmc/:id',
+    path: 'bmc',
     component: BmcComponent,
     canActivate: [AuthGuard],
     data: { title: 'BMC' }
   },
   {
-    path: 'lean/:id',
+    path: 'lean',
     component: LeanCanvasComponent,
     canActivate: [AuthGuard],
     data: { title: 'LEAN' }
 
   },
   {
-    path: 'persona/:id',
+    path: 'persona',
     component: PersonaComponent,
     canActivate: [AuthGuard],
     data: { title: 'Persona' }
 
   },
   {
-    path: 'vp/:id',
+    path: 'vp',
     component: VpCanvasComponent,
     canActivate: [AuthGuard],
     data: { title: 'VP Canvas' }
@@ -92,14 +92,14 @@ const routes: Routes = [
   },
 
   {
-    path: 'swot/:id',
+    path: 'swot',
     component: SwotComponent,
     canActivate: [AuthGuard],
     data: { title: 'SWOT' }
 
   },
   {
-    path: 'empathie/:id',
+    path: 'empathie',
     component: EmpathieComponent,
     canActivate: [AuthGuard],
     data: { title: 'Empathie' }

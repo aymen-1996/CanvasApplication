@@ -16,6 +16,7 @@ import { ProjetService } from 'src/app/services/projet.service';
 import { HttpClient } from '@angular/common/http';
 import { PopupAcceptedComponent } from '../../popup/popup-accepted/popup-accepted.component';
 import { environment } from 'src/environments/environment';
+import { CanvasService } from 'src/app/services/canvas.service';
 @Component({
   selector: 'app-vp-canvas',
   templateUrl: './vp-canvas.component.html',
@@ -53,22 +54,28 @@ export class VpCanvasComponent implements OnInit {
   users:any
   showTable: boolean = false;
   userRole:any
+  selectProject:any
   positions: { top: string; left: string }[] = [];
   @ViewChild(MatStepper) stepper!: MatStepper;
 
-    constructor(private dialogue: MatDialog ,private http: HttpClient,private projetService:ProjetService,private sanitizer: DomSanitizer,private userService:UserService ,private router: Router,private blockService:BlocksService , private dialog: MatDialog, private activatedRoute:ActivatedRoute ,private formBuilder: FormBuilder){
-    this.idBloc = this.activatedRoute.snapshot.params['id'];
+    constructor(private dialogue: MatDialog ,private http: HttpClient,private canvasService:CanvasService,private projetService:ProjetService,private sanitizer: DomSanitizer,private userService:UserService ,private router: Router,private blockService:BlocksService , private dialog: MatDialog, private activatedRoute:ActivatedRoute ,private formBuilder: FormBuilder){
 
   }
   ngOnInit(): void {
+    this.users = JSON.parse(localStorage.getItem('currentUser') as string);
+
+    this.selectProject =  localStorage.getItem('selectedProjectId');
+
+    
     this.activatedRoute.data.subscribe((data: any) => {
       const title = data.title || 'Titre par défaut';
       document.title = `Canvas | ${title}`;
     });
-    this.users = JSON.parse(localStorage.getItem('currentUser') as string);
     this.calculatePositions();
     this.getBlocksByCanvasId()
     this.GetRole()
+
+this.listeCanvases()
 
     this.getUserPhoto()
     this.ListProjectsAndCanvas()
@@ -160,38 +167,65 @@ export class VpCanvasComponent implements OnInit {
 
   //les blocks by id canvas
   getBlocksByCanvasId(): void {
-    this.blockService.getBlocksByCanvasId(this.idBloc).subscribe(
-      (blocks) => {
-        this.blocks = blocks;
+    const selectedProjectId = localStorage.getItem('selectedProjectId');
+    
+    if (!selectedProjectId) {
+      console.error('Aucun ID de projet sélectionné trouvé dans localStorage.');
+      return;
+    }
+    
+    this.canvasService.getCanvases(this.users.user.idUser, this.selectProject).subscribe(
+      (data) => {
+        if (data && Array.isArray(data.Canvas)) {
+          const vpCanvas = data.Canvas.find((c: { nomCanvas: string; }) => c.nomCanvas === 'VP Canvas');
+          
+          if (vpCanvas) {
+            this.idBloc = vpCanvas.idCanvas;
+            console.log("ID du canvas vp getBlocksByCanvasId:", this.idBloc);
+            
+            this.blockService.getBlocksByCanvasId(this.idBloc).subscribe(
+              (blocks) => {
+                this.blocks = blocks;
   
-        if (this.blocks && this.blocks.length > 0) {
-          const firstBlockId = this.blocks[0]?.idBlock;
+                if (this.blocks && this.blocks.length > 0) {
+                  const firstBlockId = this.blocks[0]?.idBlock;
   
-          if (firstBlockId) {
-            this.toggleSelection(firstBlockId);
-            this.detectedBlockById(firstBlockId);
-            this.getDonneesByBloc(firstBlockId);
+                  if (firstBlockId) {
+                    this.toggleSelection(firstBlockId);
+                    this.detectedBlockById(firstBlockId);
+                    this.getDonneesByBloc(firstBlockId);
+                  } else {
+                    console.error('Block ID is undefined for the first block.');
+                  }
+  
+                  for (let i = 1; i < this.blocks.length; i++) {
+                    const currentBlockId = this.blocks[i]?.idBlock;
+  
+                    if (currentBlockId) {
+                      this.getDonneesByBloc(currentBlockId);
+                    } else {
+                      console.error(`Block ID is undefined for block at index ${i}.`);
+                    }
+                  }
+                } else {
+                  console.error('Blocks array is empty.');
+                }
+  
+                console.log('Blocks', this.blocks);
+              },
+              (error) => {
+                console.error('Error fetching blocks:', error);
+              }
+            );
           } else {
-            console.error('Block ID is undefined for the first block.');
-          }
-  
-          for (let i = 1; i < this.blocks.length; i++) {
-            const currentBlockId = this.blocks[i]?.idBlock;
-  
-            if (currentBlockId) {
-              this.getDonneesByBloc(currentBlockId);
-            } else {
-              console.error(`Block ID is undefined for block at index ${i}.`);
-            }
+            console.error('Canvas vp non trouvé.');
           }
         } else {
-          console.error('Blocks array is empty.');
+          console.error('Format de données inattendu:', data);
         }
-  
-        console.log('Blocks', this.blocks);
       },
       (error) => {
-        console.error('Error fetching blocks:', error);
+        console.error('Erreur lors de la récupération des canvases:', error);
       }
     );
   }
@@ -522,18 +556,39 @@ precedent(): void {
 
 
 //Role invitation dans canvas
-GetRole():void{
-  this.blockService.getRoleByUserIdAndCanvasId(this.users.user.idUser, this.idBloc)
-  .subscribe(
-    (role: any) => {
-      this.userRole = role;
-      console.log('User Role:', this.userRole);
+GetRole(): void {
+  this.canvasService.getCanvases(this.users.user.idUser, this.selectProject).subscribe(
+    (data) => {
+      if (data && Array.isArray(data.Canvas)) {
+        const vpCanvas = data.Canvas.find((c: { nomCanvas: string; }) => c.nomCanvas === 'VP Canvas');
+        if (vpCanvas) {
+          console.log("ID du canvas vp:", vpCanvas.idCanvas);
+          this.idBloc = vpCanvas.idCanvas;
+          console.log("idddd", this.idBloc);
+
+          this.blockService.getRoleByUserIdAndCanvasId(this.users.user.idUser, this.idBloc)
+            .subscribe(
+              (role: any) => {
+                this.userRole = role;
+                console.log('User Role:', this.userRole);
+              },
+              error => {
+                console.error('Error fetching user role:', error);
+              }
+            );
+        } else {
+          console.warn('Canvas vp non trouvé.');
+        }
+      } else {
+        console.error('Format de données inattendu:', data);
+      }
     },
-    error => {
-      console.error('Error fetching user role:', error);
+    (error) => {
+      console.error('Erreur lors de la récupération des canvases:', error);
     }
   );
 }
+
 
 //pour n affiche button suivant si showtable
 shouldDisplayButton(): boolean {
@@ -733,7 +788,29 @@ calculatePosition(index: number): { top: string, left: string } {
 
 
 //partie header
-
+listeCanvases(): void {
+  this.canvasService.getCanvases(this.users.user.idUser, this.selectProject).subscribe(
+    (data) => {
+      if (data && Array.isArray(data.Canvas)) {
+        const vpCanvas = data.Canvas.find((c: { nomCanvas: string; }) => c.nomCanvas === 'Canvas');
+        if (vpCanvas) {
+          console.log("ID du canvas vp:", vpCanvas.idCanvas);
+          this.idBloc = vpCanvas.idCanvas;
+          console.log("idddd", this.idBloc);
+          
+          this.getBlocksByCanvasId();
+        } else {
+          console.warn('Canvas vp non trouvé.');
+        }
+      } else {
+        console.error('Format de données inattendu:', data);
+      }
+    },
+    (error) => {
+      console.error('Erreur lors de la récupération des canvases:', error);
+    }
+  );
+}
 togglePendingInvitesDropdown() {
   this.showPendingInvitesDropdown = !this.showPendingInvitesDropdown;
 }
@@ -743,7 +820,7 @@ toggleDropdown() {
 }
 
 logout() {
-  localStorage.removeItem('currentUser');
+  localStorage.clear();
 
   this.router.navigateByUrl('/login')
 }
@@ -768,17 +845,27 @@ ListProjectsAndCanvas() {
     .subscribe(
       response => {
         this.projects = response.projects;
-        console.log("aaaapprrroje", this.projects);
+        console.log("Projets récupérés:", this.projects);
 
-        this.idBloc = this.activatedRoute.snapshot.params['id'];
 
+        if (!this.idBloc && this.projects.length > 0) {
+          for (const project of this.projects) {
+            const vpCanvas = project.canvas.find((canvas: { nomCanvas: string; }) => canvas.nomCanvas === 'VP Canvas');
+            if (vpCanvas) {
+              this.idBloc = vpCanvas.idCanvas;
+              break; 
+            }
+          }
+        }
         this.currentProject = this.projects.find((project: { canvas: any[]; }) => {
           return project.canvas.some(canvas => canvas.idCanvas === this.idBloc);
         });
 
+        console.log("ID du canvas sélectionné:", this.idBloc);
+
       },
       error => {
-        console.error('Une erreur est survenue lors du chargement des projets :', error);
+        console.error('Erreur lors du chargement des projets :', error);
       }
     );
 }
@@ -793,16 +880,24 @@ getCanvasId(projectId: string, type: string): string | undefined {
 
 //routerlink
 navigateToVP(project: any): void {
+  localStorage.setItem('selectedProjectId', project.idProjet);
+  
+  this.selectProject = project.idProjet;
+  
+  this.listeCanvases();
+  
   const idCanvas = this.getCanvasId(project.idProjet, 'VP Canvas');
   if (idCanvas) {
-    this.router.navigateByUrl(`/vp/${idCanvas}`)
+    this.router.navigateByUrl(`/vp`)
     .then(() => {
-this.updateVPData(idCanvas)   
- });
+      this.updateVPData(idCanvas);
+    });
   } else {
-    console.error('Canvas de type "VP Canvas" non trouvé pour le projet donné.');
+    console.error('Canvas de type "vp" non trouvé pour le projet donné.');
   }
 }
+
+
 
 updateVPData(idCanvas: string) {
   this.idBloc = idCanvas;
@@ -811,8 +906,9 @@ updateVPData(idCanvas: string) {
   });
   this.getBlocksByCanvasId();
   this.GetRole()
-  this.detectedBlockById(1)
+
 }
+
 
 getPendingInvites() {
   return this.http.get<any>(`${environment.backendHost}/projet/invites/${this.users.user.idUser}/etat`);

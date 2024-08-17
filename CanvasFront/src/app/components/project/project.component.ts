@@ -50,14 +50,16 @@ userproject!:User
   selectedImage: File | null = null;
   users:any
 projectProgress: { [key: number]: number } = {};
-  constructor(private activatedRoute:ActivatedRoute ,private dialogue: MatDialog ,private http: HttpClient,private sanitilzer: DomSanitizer,private userService:UserService ,private router: Router,private fb:FormBuilder ,private projectService: ProjetService ,private authService:AuthService){}
+  constructor(private activatedRoute:ActivatedRoute ,private dialogue: MatDialog ,private http: HttpClient,private sanitilzer: DomSanitizer,private userService:UserService ,private router: Router,private fb:FormBuilder ,
+    private projectService: ProjetService ,private authService:AuthService){}
    ngOnInit(): void {
+
+    this.users = JSON.parse(localStorage.getItem('currentUser') as string);
 
     this.activatedRoute.data.subscribe((data: any) => {
       const title = data.title || 'Titre par défaut';
       document.title = `Canvas | ${title}`;
     });
-    this.users = JSON.parse(localStorage.getItem('currentUser') as string);
     this.getUserPhoto()
     this.projectService.projectUpdated$.subscribe(() => {
       this.getAllProjectByUser();
@@ -237,10 +239,8 @@ getAllProjectByUser() {
     this.projectService.getallProjectByUser(this.userId).subscribe((response: any[]) => {
       this.projects = response;
 
-      // Vérifier si selectedProjectId est null
       const selectedProjectId = localStorage.getItem('selectedProjectId');
       if (selectedProjectId === null && this.projects.length > 0) {
-        // Enregistrer l'ID du premier projet dans localStorage
         this.saveProjectId(this.projects[0].idProjet);
       }
 

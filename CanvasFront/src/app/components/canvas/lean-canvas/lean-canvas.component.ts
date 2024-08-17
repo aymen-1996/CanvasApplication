@@ -16,6 +16,7 @@ import { ProjetService } from 'src/app/services/projet.service';
 import { HttpClient } from '@angular/common/http';
 import { PopupAcceptedComponent } from '../../popup/popup-accepted/popup-accepted.component';
 import { environment } from 'src/environments/environment';
+import { CanvasService } from 'src/app/services/canvas.service';
 
 @Component({
   selector: 'app-lean-canvas',
@@ -54,20 +55,23 @@ export class LeanCanvasComponent implements OnInit {
   users:any
   showTable: boolean = false;
   userRole:any
+  selectProject:any
   @ViewChild(MatStepper) stepper!: MatStepper;
 
-    constructor(private dialogue: MatDialog ,private http: HttpClient,private projetService:ProjetService,private sanitizer: DomSanitizer,private userService:UserService ,private router: Router,private blockService:BlocksService , private dialog: MatDialog, private activatedRoute:ActivatedRoute ,private formBuilder: FormBuilder){
-    this.idBloc = this.activatedRoute.snapshot.params['id'];
+    constructor(private dialogue: MatDialog ,private canvasService:CanvasService,private http: HttpClient,private projetService:ProjetService,private sanitizer: DomSanitizer,private userService:UserService ,private router: Router,private blockService:BlocksService , private dialog: MatDialog, private activatedRoute:ActivatedRoute ,private formBuilder: FormBuilder){
 
   }
   ngOnInit(): void {
+    this.users = JSON.parse(localStorage.getItem('currentUser') as string);
+
+    this.selectProject =  localStorage.getItem('selectedProjectId');
     this.activatedRoute.data.subscribe((data: any) => {
       const title = data.title || 'Titre par défaut';
       document.title = `Canvas | ${title}`;
     });
-    this.users = JSON.parse(localStorage.getItem('currentUser') as string);
     this.getBlocksByCanvasId()
     this.GetRole()
+    this.listeCanvases()
     this.getUserPhoto()
     this.ListProjectsAndCanvas()
     this.pollSubscription = interval(1000)
@@ -157,41 +161,69 @@ export class LeanCanvasComponent implements OnInit {
 
   //les blocks by id canvas
   getBlocksByCanvasId(): void {
-    this.blockService.getBlocksByCanvasId(this.idBloc).subscribe(
-      (blocks) => {
-        this.blocks = blocks;
+    const selectedProjectId = localStorage.getItem('selectedProjectId');
+    
+    if (!selectedProjectId) {
+      console.error('Aucun ID de projet sélectionné trouvé dans localStorage.');
+      return;
+    }
+    
+    this.canvasService.getCanvases(this.users.user.idUser, this.selectProject).subscribe(
+      (data) => {
+        if (data && Array.isArray(data.Canvas)) {
+          const leanCanvas = data.Canvas.find((c: { nomCanvas: string; }) => c.nomCanvas === 'Lean Canvas');
+          
+          if (leanCanvas) {
+            this.idBloc = leanCanvas.idCanvas;
+            console.log("ID du canvas lean getBlocksByCanvasId:", this.idBloc);
+            
+            this.blockService.getBlocksByCanvasId(this.idBloc).subscribe(
+              (blocks) => {
+                this.blocks = blocks;
   
-        if (this.blocks && this.blocks.length > 0) {
-          const firstBlockId = this.blocks[0]?.idBlock;
+                if (this.blocks && this.blocks.length > 0) {
+                  const firstBlockId = this.blocks[0]?.idBlock;
   
-          if (firstBlockId) {
-            this.toggleSelection(firstBlockId);
-            this.detectedBlockById(firstBlockId);
-            this.getDonneesByBloc(firstBlockId);
+                  if (firstBlockId) {
+                    this.toggleSelection(firstBlockId);
+                    this.detectedBlockById(firstBlockId);
+                    this.getDonneesByBloc(firstBlockId);
+                  } else {
+                    console.error('Block ID is undefined for the first block.');
+                  }
+  
+                  for (let i = 1; i < this.blocks.length; i++) {
+                    const currentBlockId = this.blocks[i]?.idBlock;
+  
+                    if (currentBlockId) {
+                      this.getDonneesByBloc(currentBlockId);
+                    } else {
+                      console.error(`Block ID is undefined for block at index ${i}.`);
+                    }
+                  }
+                } else {
+                  console.error('Blocks array is empty.');
+                }
+  
+                console.log('Blocks', this.blocks);
+              },
+              (error) => {
+                console.error('Error fetching blocks:', error);
+              }
+            );
           } else {
-            console.error('Block ID is undefined for the first block.');
-          }
-  
-          for (let i = 1; i < this.blocks.length; i++) {
-            const currentBlockId = this.blocks[i]?.idBlock;
-  
-            if (currentBlockId) {
-              this.getDonneesByBloc(currentBlockId);
-            } else {
-              console.error(`Block ID is undefined for block at index ${i}.`);
-            }
+            console.error('Canvas lean non trouvé.');
           }
         } else {
-          console.error('Blocks array is empty.');
+          console.error('Format de données inattendu:', data);
         }
-  
-        console.log('Blocks', this.blocks);
       },
       (error) => {
-        console.error('Error fetching blocks:', error);
+        console.error('Erreur lors de la récupération des canvases:', error);
       }
     );
   }
+  
   
     //affichage les donnees de chaque block
     getDonneesByBloc(blockId: number): void {
@@ -521,15 +553,35 @@ precedent(): void {
 
 
 //Role invitation dans canvas
-GetRole():void{
-  this.blockService.getRoleByUserIdAndCanvasId(this.users.user.idUser, this.idBloc)
-  .subscribe(
-    (role: any) => {
-      this.userRole = role;
-      console.log('User Role:', this.userRole);
+GetRole(): void {
+  this.canvasService.getCanvases(this.users.user.idUser, this.selectProject).subscribe(
+    (data) => {
+      if (data && Array.isArray(data.Canvas)) {
+        const leanCanvas = data.Canvas.find((c: { nomCanvas: string; }) => c.nomCanvas === 'Lean Canvas');
+        if (leanCanvas) {
+          console.log("ID du canvas lean:", leanCanvas.idCanvas);
+          this.idBloc = leanCanvas.idCanvas;
+          console.log("idddd", this.idBloc);
+
+          this.blockService.getRoleByUserIdAndCanvasId(this.users.user.idUser, this.idBloc)
+            .subscribe(
+              (role: any) => {
+                this.userRole = role;
+                console.log('User Role:', this.userRole);
+              },
+              error => {
+                console.error('Error fetching user role:', error);
+              }
+            );
+        } else {
+          console.warn('Canvas lean non trouvé.');
+        }
+      } else {
+        console.error('Format de données inattendu:', data);
+      }
     },
-    error => {
-      console.error('Error fetching user role:', error);
+    (error) => {
+      console.error('Erreur lors de la récupération des canvases:', error);
     }
   );
 }
@@ -633,6 +685,30 @@ telechargerPDF(): void {
 
 //partie header
 
+listeCanvases(): void {
+  this.canvasService.getCanvases(this.users.user.idUser, this.selectProject).subscribe(
+    (data) => {
+      if (data && Array.isArray(data.Canvas)) {
+        const leanCanvas = data.Canvas.find((c: { nomCanvas: string; }) => c.nomCanvas === 'Lean Canvas');
+        if (leanCanvas) {
+          console.log("ID du canvas Lean:", leanCanvas.idCanvas);
+          this.idBloc = leanCanvas.idCanvas;
+          console.log("idddd", this.idBloc);
+          
+          this.getBlocksByCanvasId();
+        } else {
+          console.warn('Canvas lean non trouvé.');
+        }
+      } else {
+        console.error('Format de données inattendu:', data);
+      }
+    },
+    (error) => {
+      console.error('Erreur lors de la récupération des canvases:', error);
+    }
+  );
+}
+
 togglePendingInvitesDropdown() {
   this.showPendingInvitesDropdown = !this.showPendingInvitesDropdown;
 }
@@ -642,7 +718,7 @@ toggleDropdown() {
 }
 
 logout() {
-  localStorage.removeItem('currentUser');
+  localStorage.clear();
 
   this.router.navigateByUrl('/login')
 }
@@ -667,20 +743,31 @@ ListProjectsAndCanvas() {
     .subscribe(
       response => {
         this.projects = response.projects;
-        console.log("aaaapprrroje", this.projects);
+        console.log("Projets récupérés:", this.projects);
 
-        this.idBloc = this.activatedRoute.snapshot.params['id'];
 
+        if (!this.idBloc && this.projects.length > 0) {
+          for (const project of this.projects) {
+            const leanCanvas = project.canvas.find((canvas: { nomCanvas: string; }) => canvas.nomCanvas === 'Lean Canvas');
+            if (leanCanvas) {
+              this.idBloc = leanCanvas.idCanvas;
+              break; 
+            }
+          }
+        }
         this.currentProject = this.projects.find((project: { canvas: any[]; }) => {
           return project.canvas.some(canvas => canvas.idCanvas === this.idBloc);
         });
 
+        console.log("ID du canvas sélectionné:", this.idBloc);
+
       },
       error => {
-        console.error('Une erreur est survenue lors du chargement des projets :', error);
+        console.error('Erreur lors du chargement des projets :', error);
       }
     );
 }
+
 getCanvasId(projectId: string, type: string): string | undefined {
   const project = this.projects.find((p: { idProjet: string; }) => p.idProjet === projectId);
   if (project) {
@@ -692,16 +779,24 @@ getCanvasId(projectId: string, type: string): string | undefined {
 
 //routerlink
 navigateToLean(project: any): void {
-  const idCanvas = this.getCanvasId(project.idProjet, 'Lean Canvas');
+  localStorage.setItem('selectedProjectId', project.idProjet);
+  
+  this.selectProject = project.idProjet;
+  
+  this.listeCanvases();
+  
+  const idCanvas = this.getCanvasId(project.idProjet, 'lean');
   if (idCanvas) {
-    this.router.navigateByUrl(`/lean/${idCanvas}`)
+    this.router.navigateByUrl(`/lean`)
     .then(() => {
-this.updateLeanData(idCanvas)   
- });
+      this.updateLeanData(idCanvas);
+    });
   } else {
     console.error('Canvas de type "lean" non trouvé pour le projet donné.');
   }
 }
+
+
 
 updateLeanData(idCanvas: string) {
   this.idBloc = idCanvas;
@@ -710,7 +805,7 @@ updateLeanData(idCanvas: string) {
   });
   this.getBlocksByCanvasId();
   this.GetRole()
-  this.detectedBlockById(1)
+
 }
 getPendingInvites() {
   return this.http.get<any>(`${environment.backendHost}/projet/invites/${this.users.user.idUser}/etat`);

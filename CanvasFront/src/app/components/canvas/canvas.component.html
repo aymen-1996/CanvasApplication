@@ -20,12 +20,11 @@
               {{ getCanvasRoleInvite('bmc') }}
             </ng-template>
           </div>
-          <button routerLink="/bmc/{{getCanvasId('bmc')}}">
-
+          <button (click)="onCanvasClick('bmc')" routerLink="/bmc">
             <img src="assets/imgs/bmc.png" height="160" alt="BMC">
-
             <h3>{{getCanvasName('bmc')}}</h3>
           </button>
+          
         </div>
       
      <div class="canvas-item" *ngIf="shouldDisplayLean()">
@@ -41,7 +40,7 @@
         </ng-template>
       </div>
       
-  <button routerLink="/lean/{{getCanvasId('Lean Canvas')}}">
+  <button (click)="onCanvasClick('Lean Canvas')" routerLink="/lean">
     <img src="assets/imgs/lean.png" height="160" alt="Lean">
     <h3>{{getCanvasName('Lean Canvas')}}</h3>
 
@@ -62,7 +61,7 @@
             {{ getCanvasRoleInvite('VP Canvas') }}
           </ng-template>
         </div>
-        <button routerLink="/vp/{{getCanvasId('VP Canvas')}}">
+        <button (click)="onCanvasClick('VP Canvas')" routerLink="/vp">
           <img src="assets/imgs/vp.png" height="160" alt="VP">
           <h3>{{getCanvasName('VP Canvas')}}</h3>
         </button>
@@ -81,7 +80,7 @@
             {{ getCanvasRoleInvite('swot') }}
           </ng-template>
         </div>
-        <button [routerLink]="'/swot/' + getCanvasId('swot')">
+        <button (click)="onCanvasClick('swot')" [routerLink]="'/swot'">
           <img src="assets/imgs/swot.png" height="160" alt="SWOT">
           <h3>{{getCanvasName('swot')}}</h3>
         </button>
@@ -99,7 +98,7 @@
               {{ getCanvasRoleInvite('empathy map canvas') }}
             </ng-template>
           </div>
-          <button [routerLink]="'/empathie/'+ getCanvasId('empathy map canvas')">
+          <button (click)="onCanvasClick('empathy map canvas')" [routerLink]="'/empathie'">
             <img src="assets/imgs/empathie.png" height="160" alt="Empathie">
             <h3>{{getCanvasName('empathy map canvas')}}</h3>
           </button>
@@ -118,7 +117,7 @@
             {{ getCanvasRoleInvite('persona canvas') }}
           </ng-template>
         </div>
-        <button [routerLink]="'/persona/' + getCanvasId('persona canvas')">
+        <button (click)="onCanvasClick('persona canvas')" [routerLink]="'/persona'">
           <img src="assets/imgs/persona.png" height="160" alt="Persona">
           <h3>{{getCanvasName('persona canvas')}}</h3>
         </button>

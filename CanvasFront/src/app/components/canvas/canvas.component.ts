@@ -17,17 +17,17 @@ export class CanvasComponent implements OnInit {
   project:any
   selectProject:any;
   constructor(private activatedRoute: ActivatedRoute, private canvasService: CanvasService ,private PojectService:ProjetService  ) {
-    this.projet = this.activatedRoute.snapshot.params['id'];
   }
 
   ngOnInit(): void {
+    this.users = JSON.parse(localStorage.getItem('currentUser') as string);
+
     this.selectProject =  localStorage.getItem('selectedProjectId');
 
     this.activatedRoute.data.subscribe((data: any) => {
       const title = data.title || 'Titre par défaut';
       document.title = `Canvas | ${title}`;
     });
-    this.users = JSON.parse(localStorage.getItem('currentUser') as string);
     this.PojectService.canvasUpdated$.subscribe(() => {
       this.listeCanvases(this.selectProject);
     });
@@ -38,6 +38,12 @@ export class CanvasComponent implements OnInit {
   onShowFirstChange(value: boolean) {
     this.showFirst = value;
   }
+
+
+onCanvasClick(type: string): void {
+this.getCanvasId(type);
+}
+
 
   listeCanvases(projet: number): void {
     this.canvasService.getCanvases(this.users.user.idUser, projet).subscribe(
