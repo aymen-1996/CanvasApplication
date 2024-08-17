@@ -17,8 +17,9 @@
 #### Page Forget Password
 ![Page Forget Password](screenshots/Forget.png)
 
-#### Page Forget Password
+#### Page Change Password
 ![Page change Password](screenshots/ChangePass.png)
+
 #### Page Creat Project
 ![Page ListProj](screenshots/list_proj.png)
 
