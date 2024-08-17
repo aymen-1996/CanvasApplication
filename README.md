@@ -4,7 +4,7 @@
 
 - User Registration: Users can register for a new account.
 - User Authentication: Existing users can log in to their accounts securely.
-- Forget Password: Users can recover their password by requesting a password reset code.
+- Forget Password: Users can recover their password by requesting a recovery link sent via email.
 - Creat Project: Allows the user to create a project with 6 predefined canvas.
 - Invite User to Project: Allows the user to invite another user to view specific canvas within the project.
 
