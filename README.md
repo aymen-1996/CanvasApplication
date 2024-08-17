@@ -15,15 +15,15 @@
 ![Page Signup](screenshots/Signup.png)
 
 #### Page Forget Password
-![Page Forget Password](screenshots/reintialiser mot de passe.png)
+![Page Forget Password](screenshots/Forget.png)
 
 #### Page Forget Password
-![Page change Password](screenshots/chnage mot de passe.png)
+![Page change Password](screenshots/ChangePass.png)
 #### Page Creat Project
-![Page ListProj](screenshots/list proj.png)
+![Page ListProj](screenshots/list_proj.png)
 
 #### Canvas List Page
-![Page ListCanv](screenshots/list canvas.png)
+![Page ListCanv](screenshots/list_canvas.png)
 
 #### Bmc Canvas Page
 ![Page bmc](screenshots/bmc.png)
@@ -38,7 +38,7 @@
 ![Page Swot](screenshots/swot.png)
 
 #### Empathy Map Canvas Page
-![Page empthie](screenshots/swot.png)
+![Page empthie](screenshots/empthie.png)
 
 #### Persona Canvas Page
 ![Page Persona](screenshots/persona.png)
@@ -52,8 +52,6 @@
 - GitHub Actions
 - MicroService
 - Mysql
-
-
 
 ### Frontend (frontEnd)
 
