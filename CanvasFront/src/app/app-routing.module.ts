@@ -16,6 +16,7 @@ import { EmpathieComponent } from './components/canvas/empathie/empathie.compone
 import { PersonaComponent } from './components/canvas/persona/persona.component';
 import { VpCanvasComponent } from './components/canvas/vp-canvas/vp-canvas.component';
 import { LeanCanvasComponent } from './components/canvas/lean-canvas/lean-canvas.component';
+import { ChatComponent } from './components/chat/chat.component';
 
 
 const routes: Routes = [
@@ -24,6 +25,12 @@ const routes: Routes = [
     path: 'login',
     component: LoginComponent,
     data: { title: 'Login' }
+  },
+  {
+    path: 'chat',
+    component: ChatComponent,
+    canActivate: [AuthGuard],
+    data: { title: 'Chat' }
   },
   {
     path: 'projects',

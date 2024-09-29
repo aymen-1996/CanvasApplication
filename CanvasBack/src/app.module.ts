@@ -18,24 +18,32 @@ import { block } from './block/Block.entity';
 import { DonneesModule } from './donnees/donnees.module';
 import { donnees } from './donnees/donnees.entity';
 import { UserController } from './user/user.controller';
+import { message } from './Message/message.entity';
 
 import { UserService } from './user/user.service';
 import { AuthModule } from './auth/auth.module';
 import { EmailService } from './user/email/email.service';
+import { ChatGateway } from './Gateway/chatGateway';
+import { UploadController } from './Gateway/upload.controller';
+import { ChatService } from './Gateway/chat.service';
+import { Token } from './Token/token';
+import { ScheduleModule } from '@nestjs/schedule';
 
 
 @Module({
   imports: [
-   
+ 
+    TypeOrmModule.forFeature([message]), 
     ConfigModule.forRoot(),
+    ScheduleModule.forRoot(),
     TypeOrmModule.forRoot({
       type: 'mysql',
       host: 'localhost',
       port: 3306,
       username: 'root',
       password: '',
-      database: 'Canvas',
-      entities: [invite,projet,user,canvas,block,donnees],
+      database: 'Canvas1',
+      entities: [invite,projet,user,canvas,block,donnees , message , Token] ,
       synchronize: false,
     }),
     UserModule,
@@ -49,7 +57,7 @@ import { EmailService } from './user/email/email.service';
    
     
   ],
-  controllers: [AppController],
-  providers: [AppService,JwtService,UserService,EmailService],
+  controllers: [AppController , UploadController],
+  providers: [AppService,JwtService,UserService,EmailService , ChatGateway , ChatService],
 })
 export class AppModule {}

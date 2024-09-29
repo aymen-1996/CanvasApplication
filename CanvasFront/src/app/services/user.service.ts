@@ -28,7 +28,7 @@ export class UserService {
   }
   
   getUser(id: number): Observable<any> {
-    const url = `${environment.backendHost}/user/${id}/user`; // Modifier l'URL selon votre API
+    const url = `${environment.backendHost}/user/${id}/user`;
     return this.http.get<any>(url);
   }
 
@@ -37,7 +37,13 @@ export class UserService {
     const formData: FormData = new FormData();
     formData.append('file', file, file.name);
 
-    const url = `${environment.backendHost}/user/${userId}/updatephoto`; // Modifier l'URL selon votre API
+    const url = `${environment.backendHost}/user/${userId}/updatephoto`;
     return this.http.post<any>(url, formData);
   }
+
+
+  uploadImage(formData: FormData): Observable<any> {
+    return this.http.post(`${environment.backendHost}/upload/image`, formData);
+  }
+
 }

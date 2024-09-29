@@ -9,12 +9,13 @@ import { user } from './user.entity';
 import { ConfigService } from '@nestjs/config';
 import { EmailService } from './email/email.service';
 import { AuthModule } from 'src/auth/auth.module';
+import { Token } from 'src/Token/token';
 
 @Module({
   imports: [JwtModule.register({
     secret:'secret',
     signOptions:{expiresIn:'3d'}
-  }),TypeOrmModule.forFeature([user]) ],
+  }),TypeOrmModule.forFeature([user ,Token]) ],
   providers: [UserService, EmailService],
   controllers: [UserController],
   exports: [TypeOrmModule],

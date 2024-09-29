@@ -69,17 +69,66 @@ export class UserController {
 
 
     //create 
-   @Post('signup')
-    async register(@Body() body ){
-        
-        const user = await this.userService.create({       
-            ...body
-        })
-        return user
-
+    @Post('signup')
+    async register(@Body() body) {
+      const user = await this.userService.create(body);
+      return user;
     }
 
-  
+    //pour activer compte selon token
+    @Get('confirm/:token')
+    async confirmEmail(@Param('token') token: string, @Res() res: Response) {
+        const result = await this.userService.confirmEmail(token);
+    
+        if (result && result.user) {
+          return res.status(200).send(`
+            <html>
+                <head>
+                    <title>Email Confirmation</title>
+                    <style>
+                        body {
+                            display: flex;
+                            flex-direction: column;
+                            justify-content: center;
+                            align-items: center;
+                            height: 100vh;
+                            margin: 0;
+                            text-align: center;
+                        }
+                        .message {
+                            color: green;
+                            font-size: 24px;
+                            margin-bottom: 20px;
+                        }
+                        .button {
+                            padding: 10px 20px;
+                            font-size: 16px;
+                            background-color: #007BFF;
+                            color: white;
+                            border: none;
+                            border-radius: 5px;
+                            cursor: pointer;
+                            text-decoration: none;
+                        }
+                        .button:hover {
+                            background-color: #0056b3;
+                        }
+                    </style>
+                </head>
+                <body>
+                    <div class="message">account confirmed successfully!</div>
+                    <a href="http://localhost:4200/login" class="button">Return to Login</a>
+                </body>
+            </html>
+        `);
+              } else {
+            const message = result?.message || 'Invalid token.';
+            const color = result?.color || 'red';
+            return res.status(404).send(`<span style="color: ${color};">${message}</span>`);
+        }
+    }
+    
+    
 
     //getuser 
 @Get(':iduser/user')

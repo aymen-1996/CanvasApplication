@@ -1,58 +1,65 @@
 /* eslint-disable prettier/prettier */
 import { invite } from "src/invite/invite.entity";
+import { message } from "src/Message/message.entity";
 import { projet } from "src/projet/projet.entity";
+import { Token } from "src/Token/token";
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 
-@Entity({name: 'user'})
+@Entity({ name: 'user' })
 export class user {
-    @PrimaryGeneratedColumn({ type: 'bigint'})
+    @PrimaryGeneratedColumn({ type: 'bigint' })
     idUser: number;
 
     @Column({ nullable: true }) 
-    nomUser:string; 
+    nomUser: string; 
 
     @Column({ nullable: true }) 
-    prenomUser:string; 
+    prenomUser: string; 
 
     @Column({ nullable: true }) 
-    emailUser:string; 
+    emailUser: string; 
 
     @Column({ nullable: true }) 
-    passwordUser:string; 
+    passwordUser: string; 
 
     @Column({ nullable: true }) 
-    gov:string; 
+    gov: string; 
 
-    @Column({  type: 'date', nullable: true }) 
-    datenaissance:Date; 
-
-    @Column({ nullable: true }) 
-    adresse:string; 
+    @Column({ type: 'date', nullable: true }) 
+    datenaissance: Date; 
 
     @Column({ nullable: true }) 
-    education:string; 
+    adresse: string; 
 
     @Column({ nullable: true }) 
-    qualification:string; 
+    education: string; 
 
     @Column({ nullable: true }) 
-    cv:string; 
+    qualification: string; 
 
     @Column({ nullable: true }) 
-    imageUser:string; 
+    cv: string; 
 
     @Column({ nullable: true }) 
-    genre:string; 
+    imageUser: string; 
 
     @Column({ nullable: true }) 
-    role:string; 
+    genre: string; 
 
+    @Column({ nullable: true }) 
+    role: string; 
 
     @Column({ nullable: true })
     resetToken: string;
   
     @Column({ nullable: true })
     resetTokenExpiration: Date;
+
+    @Column({ default: false })
+    enabled: boolean;
+
+    @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
+    createdDate: Date; 
     
     @OneToMany(() => projet, (projet) => projet.user)
     Projet: projet[];
@@ -60,7 +67,11 @@ export class user {
     @Column({ nullable: true })
     resetCode: number;
 
-        @OneToMany(() => invite, (invite) => invite.user)
-        invite: invite[];
-
+    @OneToMany(() => invite, (invite) => invite.user)
+    invite: invite[];
+    @OneToMany(() => Token, (token) => token.user) // Assuming a one-to-many relationship
+    tokens: Token[]; // This should be properly defined
+ 
+    
+ 
 }

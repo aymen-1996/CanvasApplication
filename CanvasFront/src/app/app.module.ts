@@ -36,6 +36,7 @@ import { LeanCanvasComponent } from './components/canvas/lean-canvas/lean-canvas
 import { SwotComponent } from './components/canvas/swot/swot.component';
 import { PopupInviteComponent } from './components/popup/popup-invite/popup-invite.component';
 import { PopupAcceptedComponent } from './components/popup/popup-accepted/popup-accepted.component';
+import { ChatComponent } from './components/chat/chat.component';
 
 @NgModule({
   declarations: [
@@ -57,7 +58,8 @@ import { PopupAcceptedComponent } from './components/popup/popup-accepted/popup-
     PersonaComponent,
     LeanCanvasComponent,
     PopupInviteComponent,
-    PopupAcceptedComponent
+    PopupAcceptedComponent,
+    ChatComponent
   ],
   imports: [
     BrowserModule,

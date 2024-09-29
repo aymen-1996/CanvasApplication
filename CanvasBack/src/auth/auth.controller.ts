@@ -20,27 +20,30 @@ export class AuthController {
 
   @Post('login')
   async login(
-      @Body('emailUser') email:string,
-      @Body('passwordUser') password:string,
-      @Res({passthrough:true}) response:Response
-  ){
-      const user=await this.userService.findOneByEmail(email);
+      @Body('emailUser') email: string,
+      @Body('passwordUser') password: string,
+      @Res({ passthrough: true }) response: Response
+  ) {
+      const user = await this.userService.findOneByEmail(email);
       if (!user) {
-        return { user: null, message: 'Email not found!', success: false, token: '' };
+          return { user: null, message: 'Email not found!', success: false, token: '' };
       }
-
+  
+      if (!user.enabled) {
+          return { user: null, message: 'Votre compte n\'est pas activé. Activez-le selon le lien envoyé à votre email.', success: false, token: '' };
+      }
+  
       const isPasswordValid = await bcrypt.compare(password, user.passwordUser);
-
       if (!isPasswordValid) {
-        return { user: null, message: 'Incorrect password!', success: false, token: '' };
+          return { user: null, message: 'Incorrect password!', success: false, token: '' };
       }
-
-      const jwt =await this.jwtService.signAsync({id:user.idUser});
-
-      response.cookie('jwt',jwt,{httpOnly:true});
-
-      return ({jwt,user});
+  
+      const jwt = await this.jwtService.signAsync({ id: user.idUser });
+      response.cookie('jwt', jwt, { httpOnly: true });
+  
+      return { jwt, user };
   }
+  
 
 
 //envoyer lien

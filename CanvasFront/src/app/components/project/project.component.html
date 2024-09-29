@@ -10,9 +10,9 @@
             </a>    <div class="MuiBox-root css-i9gxme"></div>
             <div class="css-1x4nai">
               <mat-icon></mat-icon>
-              <mat-icon class="maticon1">info</mat-icon>
+              <mat-icon routerLink="/chat" class="maticon1">chat</mat-icon>
            
-        
+
         <div class="dropdown-container">
           <mat-icon class="maticons" (click)="togglePendingInvitesDropdown()">email</mat-icon>
         
@@ -30,7 +30,7 @@
               </div>
             </ng-template>
           
-           
+
           </div>
         </div>
         
@@ -137,7 +137,6 @@
   <dialog *ngIf="showPopup" class="popup-container" (click)="closeDialog($event)">
        <div class="popup" (click)="preventClose($event)">
       <p class="titre">Nouveau projet</p>
-      <!-- You can add more content to your popup here -->
       <form  [formGroup]="projectForm" (ngSubmit)="onSubmit()"> 
       <div class="inputpopup">
       
@@ -163,7 +162,6 @@
       <p class="warning">Cette action est irréversible</p>
           </div>
       
-      <!-- You can add more content to your popup here -->
       <div class="buttondete">
       <button (click)="closeDeletePopup()" class="annuler">Annuler</button>
       <button (click)="onDelete()" class="suppr">Supprimer</button>

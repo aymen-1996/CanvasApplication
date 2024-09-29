@@ -1,0 +1,89 @@
+<div class="header">
+
+  <div class="navbar">
+    <div class="css-1ir47a1">
+      <a routerLink="/projects" class="no-underline">
+        <h2 class="logo"><span style="color: rgb(33, 150, 243)">Canvas</span></h2>
+      </a>    <div class="MuiBox-root css-i9gxme"></div>
+      <div class="css-1x4nai">
+        <mat-icon></mat-icon>
+        <mat-icon class="maticon1">info</mat-icon>
+     
+  
+  <div class="dropdown-container">
+    <mat-icon class="maticons" (click)="togglePendingInvitesDropdown()">email</mat-icon>
+  
+    <div *ngIf="pendingInvitesCount > 0" class="badge">{{ pendingInvitesCount }}</div>
+  
+    <div class="dropdown-content" *ngIf="showPendingInvitesDropdown">
+      <ng-container *ngIf="pendingInvites && pendingInvites.length > 0; else noInvites">
+        <div *ngFor="let invite of pendingInvites" class="dropdown-item" (click)="openPopup1(invite.idInvite)">
+          <p class="invite">Vous avez une Invitation dans <br><strong>{{ invite.canvas.nomCanvas}}</strong> de projet <strong>{{ invite.projet.nomProjet }}</strong></p>
+        </div>
+      </ng-container>
+      <ng-template #noInvites>
+        <div class="dropdown-item">
+          <p class="no-invite">Aucune invitation en attente.</p>
+        </div>
+      </ng-template>
+    
+     
+    </div>
+  </div>
+  
+        <div class="dropdown-container">
+          <mat-icon  (click)="toggleDropdown()">
+            <img class="circular-image" [src]="userPhotoUrl1" alt="User Photo">
+          </mat-icon>
+        
+          <div class="dropdown-content" *ngIf="showDropdown">
+            <div (click)="logout()" class="dropdown-item">
+              <mat-icon>logout</mat-icon> <p class="mat">Deconnexion</p>
+            </div>
+            <div routerLink="/profil"  class="dropdown-item">
+              <mat-icon>settings</mat-icon> <p class="mat">Paramétre</p>
+            </div>
+          </div>
+        </div>
+        
+        
+        
+            </div>
+     
+  
+    </div>  
+  
+  </div>
+      </div> 
+
+<body>
+    <div class="chat-container">
+      <h2>Chat</h2>
+      
+      <input type="text" [(ngModel)]="username" class="input-username" placeholder="Votre nom" disabled />
+      
+      <div class="messages-container" style="overflow-y: auto; max-height: 200px;">
+        <div *ngFor="let msg of messages" class="message">
+            <img *ngIf="msg.userPhotoUrl" [src]="msg.userPhotoUrl" alt="Photo de l'utilisateur" class="user-photo" />
+            <strong>{{ msg.username }}:</strong>
+            <span *ngIf="msg.messageType === 'text'">{{ msg.message }}</span>
+            <div class="message-container" *ngIf="msg.messageType === 'image'">
+                <div class="image-message-container">
+                    <img [src]="msg.imageUrl" alt="Image du message" />
+                </div>
+            </div>
+        </div>
+      </div>
+      
+      <div class="input-group">
+        <input type="text" [(ngModel)]="message" class="input-message" placeholder="Tapez votre message..." />
+        <label class="upload-icon">
+          <input type="file" (change)="onFileSelected($event)" style="display: none;" />
+          <mat-icon class="upload-icon">attach_file</mat-icon>
+        </label>
+      </div>
+      
+      <button class="send-button" (click)="send()">Envoyer</button>
+    </div>
+  </body>
+  
