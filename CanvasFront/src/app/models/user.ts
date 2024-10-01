@@ -1,3 +1,4 @@
+import { SafeUrl } from "@angular/platform-browser";
 
 export interface User {
     idUser: number;
@@ -11,7 +12,7 @@ export interface User {
     education?: string;
     qualification?: string;
     cv?: string;
-    imageUser?: string;
+    imageUser?: SafeUrl | null;  // Modifier ici pour accepter SafeUrl
     genre?: string;
     role?: string;
     jwt: string  | null;

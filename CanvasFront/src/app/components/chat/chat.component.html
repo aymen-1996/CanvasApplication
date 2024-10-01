@@ -56,34 +56,103 @@
   </div>
       </div> 
 
-<body>
-    <div class="chat-container">
-      <h2>Chat</h2>
-      
-      <input type="text" [(ngModel)]="username" class="input-username" placeholder="Votre nom" disabled />
-      
-      <div class="messages-container" style="overflow-y: auto; max-height: 200px;">
-        <div *ngFor="let msg of messages" class="message">
-            <img *ngIf="msg.userPhotoUrl" [src]="msg.userPhotoUrl" alt="Photo de l'utilisateur" class="user-photo" />
-            <strong>{{ msg.username }}:</strong>
-            <span *ngIf="msg.messageType === 'text'">{{ msg.message }}</span>
-            <div class="message-container" *ngIf="msg.messageType === 'image'">
-                <div class="image-message-container">
-                    <img [src]="msg.imageUrl" alt="Image du message" />
+
+  <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" />
+
+  <div class="top">
+<div class="container">
+<div class="row clearfix">
+    <div class="col-lg-12">
+        <div class="card chat-app">
+            <div id="plist" class="people-list">
+              <div class="input-group">
+                <div class="input-group-prepend">
+                    <span class="input-group-text"><i class="fa fa-search"></i></span>
+                </div>
+                <input type="text" class="form-control" placeholder="Rechercher..." [(ngModel)]="searchTerm" (input)="onSearchChange()">
+            </div>
+                <ul class="list-unstyled chat-list mt-2 mb-0">
+                  <li *ngIf="users.length === 0" class="no-users">
+                    <p>Envoyer une invitation à un certain utilisateur pour discuter.</p>
+                  </li>
+                  <li class="clearfix" *ngFor="let user of users" (click)="selectUser(user)">
+                    <img [src]="user.imageUser " alt="avatar">
+                    <div class="about">
+                        <div class="name">{{ user.nomUser }}</div>
+                        <div class="status"><i class="fa fa-circle offline"></i> </div>
+                    </div>
+                </li>
+                  
+                </ul>
+            </div>
+            <div class="chat"  >
+              
+              <div class="chat-header clearfix">
+                <div class="row"  >
+                        <div class="col-lg-6" >
+                            <a href="javascript:void(0);" data-toggle="modal" data-target="#view_info" >
+                                <img  *ngIf="userselect" [src]="userPhotoUrl" alt="avatar">
+                            </a>
+                            <div class="chat-about" *ngIf="userselect">
+                              <div *ngIf="user">
+                                <h6 class="m-b-0">{{ user.nomUser }} {{ user.prenomUser }}</h6>
+                              </div>                            </div>
+                        </div>
+                        <div class="col-lg-6 hidden-sm text-right">
+                        
+                        </div>
+                    </div>
+                </div>
+                <div class="chat-history" *ngIf="userselect">
+                    <ul class="m-b-0">
+                      <ul>
+                       
+                        <li class="clearfix" *ngFor="let msg of messages">
+                         
+                          <div [ngClass]="{
+                                'message other-message float-right': msg.senderId != senderId,
+                                'message my-message': msg.senderId == senderId
+                              }">
+                                   <span class="message-sender">
+                                    {{ msg.senderId == senderId ? 'Vous' : msg.username }}
+                                  </span>
+                                  <span *ngIf="msg.message">{{ msg.message }}</span>
+                                  <img *ngIf="msg.messageType === 'image'" [src]="msg.imageUrl" alt="Image message" style="width: 210px; height: 250px;" />
+                                
+                          </div>
+                        </li>
+                        
+                      </ul>                              
+                  
+                    </ul>
+                </div>
+                <div class="chat-message clearfix" 
+                [ngStyle]="{ 
+                  'min-height': !userselect ? '400px' : 'auto', 
+                  'background-color': !userselect ? '#e5ebe9' : 'transparent'
+              }">       
+                   <div *ngIf="!userselect" class="no-recipient">
+                    <p>Aucun destinataire sélectionné.</p>
+                </div>
+
+                 <div class="input-group mb-0" *ngIf="userselect">
+              
+                        <div class="input-group-prepend">
+                            <span (click)="send()" class="input-group-text"><i class="fa fa-send" ></i></span>
+                          
+                        </div>
+                        <label class="btn btn-outline-primary"><i class="fa fa-image">  <input type="file" (change)="onFileSelected($event)" (input)="send()" style="display: none;" /></i>
+                            
+                        </label>
+
+                        <input type="text" [(ngModel)]="message" class="form-control" placeholder="Enter text here...">                                    
+                    </div>
                 </div>
             </div>
+           
         </div>
-      </div>
-      
-      <div class="input-group">
-        <input type="text" [(ngModel)]="message" class="input-message" placeholder="Tapez votre message..." />
-        <label class="upload-icon">
-          <input type="file" (change)="onFileSelected($event)" style="display: none;" />
-          <mat-icon class="upload-icon">attach_file</mat-icon>
-        </label>
-      </div>
-      
-      <button class="send-button" (click)="send()">Envoyer</button>
     </div>
-  </body>
-  
+</div>
+</div>
+
+</div>

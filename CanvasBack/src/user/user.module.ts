@@ -4,18 +4,16 @@ import { UserService } from './user.service';
 import { UserController } from './user.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { user } from './user.entity';
-
-
-import { ConfigService } from '@nestjs/config';
 import { EmailService } from './email/email.service';
-import { AuthModule } from 'src/auth/auth.module';
 import { Token } from 'src/Token/token';
+import { message } from 'src/Message/message.entity';
+import { invite } from 'src/invite/invite.entity';
 
 @Module({
   imports: [JwtModule.register({
     secret:'secret',
     signOptions:{expiresIn:'3d'}
-  }),TypeOrmModule.forFeature([user ,Token]) ],
+  }),TypeOrmModule.forFeature([user ,Token , message , invite]) ],
   providers: [UserService, EmailService],
   controllers: [UserController],
   exports: [TypeOrmModule],

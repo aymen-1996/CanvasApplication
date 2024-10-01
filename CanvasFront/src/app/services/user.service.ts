@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
+import { User } from '../models/user';
 
 @Injectable({
   providedIn: 'root'
@@ -45,5 +46,11 @@ export class UserService {
   uploadImage(formData: FormData): Observable<any> {
     return this.http.post(`${environment.backendHost}/upload/image`, formData);
   }
+
+
+  getUsersByInvitations(idUser: number, nomUser?: string): Observable<User[]> {
+    const params = nomUser ? { params: { nomUser } } : {};
+    return this.http.get<User[]>(`${environment.backendHost}/user/invitations/${idUser}`, params);
+}
 
 }

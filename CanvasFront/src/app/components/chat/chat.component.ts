@@ -10,15 +10,8 @@ import { ProjetService } from 'src/app/services/projet.service';
 import { UserService } from 'src/app/services/user.service';
 import { environment } from 'src/environments/environment';
 import { PopupAcceptedComponent } from '../popup/popup-accepted/popup-accepted.component';
-
-interface ChatMessage {
-  username: string;
-  message: string;
-  messageType: string;
-  senderId: number;
-  imageUrl?: string | null; // Propriété optionnelle pour les images
-  userPhotoUrl?: any; // Propriété optionnelle pour la photo de l'utilisateur
-}
+import { User } from 'src/app/models/user';
+import { ChatMessage } from 'src/app/models/Chatmessage';
 
 @Component({
   selector: 'app-chat',
@@ -33,8 +26,8 @@ export class ChatComponent {
   selectedImage: File | null = null; 
   userId!: any; 
   userPhotoUrl: any; 
-  recipientId: number = 2; 
-  senderId: number = 44; 
+  recipientId: number = 45; 
+  senderId!: number
   addProjectModal: boolean = false;
 
   pendingInvites: any[] = [];
@@ -44,23 +37,23 @@ export class ChatComponent {
   userPhotoUrl1!: SafeUrl | string; 
   refreshSideBarProject: boolean = false;
   showFirst: boolean = true;
-
+  users: User[] = [];
+  user:any
+  iduser:any
   showPopup =false;
   constructor(private projectService: ProjetService ,private router: Router,private activatedRoute:ActivatedRoute ,private dialogue: MatDialog ,private http: HttpClient,private sanitizer: DomSanitizer, private userService: UserService, private chatService: ChatService) {}
 
   ngOnInit(): void {
-    // Récupérer le nom d'utilisateur depuis localStorage
     this.userId = JSON.parse(localStorage.getItem('currentUser') || '{}');
     this.username = this.userId.user.prenomUser;
-  
-    // Connexion au serveur WebSocket
+    this.senderId = this.userId.user.idUser; 
     this.socket = io('http://localhost:3000');
   
     this.socket.on('message', (data: { 
       content: string; 
       senderId: string; 
       recipientId: number; 
-      sentAt: string; 
+      sentAt: string;
       messageType: string; 
       imageUrl?: string | null; 
     }) => {
@@ -70,31 +63,17 @@ export class ChatComponent {
     
       this.userService.getUser(senderId).subscribe(user => {
         const username = user.prenomUser;
-        
-        this.getUserPhoto(senderId); 
     
-        if (data.messageType === 'image') {
-          const imageUrl = `http://localhost:3000/upload/image/${data.imageUrl?.replace('./uploads/', '')}`;
-          this.messages.push({
-            username: username,
-            message: '',
-            messageType: 'image',
-            senderId: senderId,
-            imageUrl: imageUrl,
-            userPhotoUrl: null
-          });
-        } else {
-          const formattedMessage = `${data.content}`;
-          this.messages.push({
-            username: username,
-            message: formattedMessage,
-            messageType: 'text',
-            senderId: senderId,
-            imageUrl: null,
-            userPhotoUrl: null
-          });
-        }
+        const formattedMessage = {
+          username: username,
+          message: data.messageType === 'image' ? '' : data.content,
+          messageType: data.messageType,
+          senderId: senderId,
+          imageUrl: data.messageType === 'image' ? `http://localhost:3000/upload/image/${data.imageUrl?.replace('./uploads/', '')}` : null,
+          timestamp: data.sentAt
+        };
     
+        this.messages.push(formattedMessage);
         console.log('Messages après ajout:', this.messages);
         this.scrollToBottom();
       }, error => {
@@ -109,7 +88,9 @@ export class ChatComponent {
       document.title = `Canvas | ${title}`;
     });
     this.getUserPhoto1()
-    this.loadMessages();
+    this.getUsersByInvitations()
+
+
 
    
     this.pollSubscription = interval(1000)
@@ -147,6 +128,49 @@ export class ChatComponent {
     }
   }
 
+
+  searchTerm: string = ''; 
+userselect!: any;
+getUsersByInvitations(): void {
+  this.userService.getUsersByInvitations(this.userId.user.idUser, this.searchTerm).subscribe(
+    (data: User[]) => {
+      this.users = data;
+      this.users.forEach(user => {
+        this.getUserPhoto2(user.idUser);
+      });
+      console.log("Users invite", this.users);
+    },
+    (error) => {
+      console.error('Erreur lors du chargement des utilisateurs', error);
+    }
+  );
+}
+getById(userid: number): void {
+  this.userService.getUser(userid).subscribe(
+    (data) => {
+      this.user = data; 
+      console.log('User data:', this.user);
+    },
+    (error) => {
+      console.error('Erreur lors de la récupération de l\'utilisateur:', error);
+    }
+  );
+}
+
+selectUser(user: User): void {
+  this.userselect = user.idUser;
+  this.iduser = user.idUser;
+  this.getUserPhoto(this.userselect);
+  this.loadMessages(this.userId.user.idUser, this.userselect);
+
+  console.log("Utilisateur sélectionné:", this.userselect);
+  this.getById(this.userselect);
+}
+
+onSearchChange(): void {
+    this.getUsersByInvitations();
+}
+
   send(): void {
     const senderId = this.userId.user.idUser;
 
@@ -159,7 +183,7 @@ export class ChatComponent {
                 message: this.message,  
                 messageType: 'text', 
                 senderId: senderId, 
-                recipientId: this.recipientId 
+                recipientId:  this.userselect
             };
 
             this.socket.emit('message', messageData);
@@ -169,7 +193,7 @@ export class ChatComponent {
             formData.append('file', this.selectedImage);
             formData.append('username', username);
             formData.append('senderId', senderId.toString());
-            formData.append('recipientId', this.recipientId.toString());
+            formData.append('recipientId', this.userselect.toString());
 
             this.userService.uploadImage(formData).subscribe(response => {
                 const imageUrl = `http://localhost:3000/upload/image/${response.filename}`;
@@ -188,60 +212,46 @@ export class ChatComponent {
        
     });
 }
-
-
-loadMessages(): void {
-  this.chatService.getMessagesBetweenUsers(this.senderId, this.recipientId).subscribe(
-    (data: any) => {
-      const userNames: { [key: number]: string } = {}; 
-
-      const messageObservables = data.map((msg: any) => {
-        const senderId = msg.senderId;
-
-        if (!userNames[senderId]) {
-          return this.userService.getUser(senderId).pipe(
-            map(user => {
-              userNames[senderId] = user.prenomUser; 
-            })
-          );
-        } else {
-          return of(null);
-        }
-      });
-
-      forkJoin(messageObservables).subscribe(() => {
-        this.messages = data.map((msg: any) => ({
-          username: userNames[msg.senderId] || 'Unknown User',
-          message: msg.content,
-          messageType: msg.filePath ? 'image' : 'text',
-          imageUrl: msg.filePath ? `http://localhost:3000/upload/image/${msg.filePath.replace('./uploads/', '')}` : null,
+loadMessages(senderId: any, recipientId: any): void {
+  this.chatService.getMessagesBetweenUsers(senderId, recipientId).subscribe(
+    (data) => {
+      this.messages = data.map((msg: { senderId: any; content: any; filePath: string | null; sentAt: string }) => {
+        const messageType = msg.filePath ? 'image' : 'text'; 
+        return {
           senderId: msg.senderId,
-          sentAt: msg.sentAt,
-          userPhotoUrl: null 
-        }));
-
-        this.loadUserPhotos();
-
-        console.log('Messages récupérés:', this.messages);
-        this.scrollToBottom(); 
+          message: msg.content, 
+          messageType: messageType,
+          imageUrl: msg.filePath ? `http://localhost:3000/upload/image/${msg.filePath.replace('./uploads/', '')}` : null,
+          timestamp: new Date(msg.sentAt).toLocaleString()
+        };
       });
-      
+
+      console.log("Mes messages après traitement:", this.messages); 
+
+      this.messages.forEach((msg) => {
+        this.userService.getUser(msg.senderId).subscribe(user => {
+          msg.username = user.prenomUser; 
+          console.log("Nom d'utilisateur pour le message:", msg.username); 
+        }, error => {
+          console.error('Erreur lors de la récupération du nom d\'utilisateur:', error);
+        });
+      });
+
+      this.scrollToBottom();
     },
     (error) => {
-      console.error('Erreur lors de la récupération des messages:', error);
+      console.error('Erreur lors de la récupération des messages', error);
     }
   );
 }
 
 
-  
-getUserPhoto(userId: number): void {
-  this.userService.getUserPhotoUrl(userId).subscribe(
+getUserPhoto(select:number): void {
+  this.userService.getUserPhotoUrl(select).subscribe(
     (res: Blob) => {
       const reader = new FileReader();
       reader.onloadend = () => {
-        const photoUrl = this.sanitizer.bypassSecurityTrustUrl(reader.result as string);
-        this.updateUserPhoto(userId, photoUrl); 
+        this.userPhotoUrl = this.sanitizer.bypassSecurityTrustUrl(reader.result as string);
       };
       reader.readAsDataURL(res);
     },
@@ -251,38 +261,28 @@ getUserPhoto(userId: number): void {
   );
 }
 
-private updateUserPhoto(userId: number, photoUrl: any): void {
-  this.messages = this.messages.map(msg => {
-    if (msg.senderId === userId) {
-      return { ...msg, userPhotoUrl: photoUrl };
+getUserPhoto2(userId: number): void {
+  this.userService.getUserPhotoUrl(userId).subscribe(
+    (res: Blob) => {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        const user = this.users.find(u => u.idUser === userId);
+        if (user) {
+          user.imageUser = this.sanitizer.bypassSecurityTrustUrl(reader.result as string);
+        }
+      };
+      reader.readAsDataURL(res);
+    },
+    error => {
+      console.error('Error getting user photo:', error);
     }
-    return msg;
-  });
-}
-private loadUserPhotos(): void {
-  const photoObservables = this.messages.map(msg => 
-    this.userService.getUserPhotoUrl(msg.senderId).pipe(
-      map(photoBlob => {
-        const reader = new FileReader();
-        reader.onloadend = () => {
-          const photoUrl = this.sanitizer.bypassSecurityTrustUrl(reader.result as string);
-          this.updateUserPhoto(msg.senderId, photoUrl); 
-        };
-        reader.readAsDataURL(photoBlob);
-      })
-    )
   );
-
-  forkJoin(photoObservables).subscribe();
 }
 
   scrollToBottom(): void {
     const messagesContainer = document.querySelector('.messages-container') as HTMLElement;
     messagesContainer.scrollTop = messagesContainer.scrollHeight;
   }
-
-
-
 
   //partie header
 showPendingInvitesDropdown: boolean = false;
@@ -402,3 +402,4 @@ delete(idInvite: number,userId: number): void {
     );
 }
 }
+

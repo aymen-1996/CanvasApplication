@@ -29,6 +29,9 @@
 #### Page Creat Project
 ![Page ListProj](screenshots/list_proj.png)
 
+#### Chat Page
+![Page Chat](screenshots/chat.png)
+
 #### Canvas List Page
 ![Page ListCanv](screenshots/list_canvas.png)
 

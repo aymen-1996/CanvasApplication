@@ -19,9 +19,4 @@ export class message {
 
   @Column()
   sentAt: Date;
-
-  @Column()
-  senderIdUser: number; 
-  @Column()
-  recipientIdUser: number;
 }

@@ -69,9 +69,7 @@ export class user {
 
     @OneToMany(() => invite, (invite) => invite.user)
     invite: invite[];
-    @OneToMany(() => Token, (token) => token.user) // Assuming a one-to-many relationship
-    tokens: Token[]; // This should be properly defined
- 
-    
+    @OneToMany(() => Token, (token) => token.user) 
+    tokens: Token[];
  
 }

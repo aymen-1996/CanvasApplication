@@ -1,5 +1,5 @@
 /* eslint-disable prettier/prettier */
-import { BadRequestException, Body, Controller, Get, HttpStatus, InternalServerErrorException, NotFoundException, Param, Patch, Post, Put, Req, Res, UnauthorizedException, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common';
+import { BadRequestException, Body, Controller, Get, HttpStatus, InternalServerErrorException, NotFoundException, Param, Patch, Post, Put, Query, Req, Res, UnauthorizedException, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { error } from 'console';
 import { diskStorage } from 'multer';
@@ -147,8 +147,14 @@ async getUser(@Param('iduser')iduser :number, @Req() request:Request){
    
 }
 
-    //updateusser
-
+//Liste des utilisateurs associés au même projet.
+    @Get('invitations/:idUser')
+    async getUsersByInvitations(
+        @Param('idUser') idUser: number,
+        @Query('nomUser') nomUser?: string, 
+    ): Promise<user[]> {
+        return this.userService.getUsersByLastMessage(idUser, nomUser); 
+    }
 
     //requestrest
     @Post('request-password-reset')

@@ -9,6 +9,9 @@ import * as crypto from 'crypto';
 import { Token } from 'src/Token/token';
 import { updateUserDto } from './DTO/updateUser.dto';
 import { Cron } from '@nestjs/schedule';
+import { message } from 'src/Message/message.entity';
+import { projet } from 'src/projet/projet.entity';
+import { invite } from 'src/invite/invite.entity';
 
 interface ConfirmEmailResponse {
   user?: user;
@@ -22,7 +25,10 @@ export class UserService {
         private tokenRepository: Repository<Token >,
         @InjectRepository(user)
         private readonly userRep: Repository<user>,
-        private readonly emailService: EmailService,
+        @InjectRepository(message) private readonly messageRepository: Repository<message>,
+        @InjectRepository(invite)
+        private inviteRepository: Repository<invite>,      
+          private readonly emailService: EmailService,
     ) {}
 
     async findOneByEmail(emailUser: string): Promise<user | undefined> {
@@ -172,31 +178,26 @@ async deleteInactiveUsers() {
       enabled: false,
       createdDate: LessThan(checkDate),
     },
-    relations: ['tokens'], // Assurez-vous de charger les tokens associés
+    relations: ['tokens'], 
   });
 
   console.log(`Found ${usersToDelete.length} inactive users to delete.`);
 
-  // استخدام مجموعة لتجنب تكرار البريد الإلكتروني
   const userEmails = new Set<string>(); 
 
   if (usersToDelete.length > 0) {
     for (const user of usersToDelete) {
-      // جمع البريد الإلكتروني الفريد
       userEmails.add(user.emailUser);
 
-      // حذف الرموز المرتبطة بالمستخدم (إذا كان هناك)
       if (user.tokens && user.tokens.length > 0) {
         await this.tokenRepository.remove(user.tokens);
         console.log(`Deleted tokens for user: ${user.emailUser}`);
       }
     }
 
-    // حذف المستخدمين بعد معالجة الرموز
     await this.userRep.remove(usersToDelete);
     console.log(`Deleted users: ${usersToDelete.map(u => u.emailUser).join(', ')}`);
 
-    // إرسال البريد الإلكتروني لكل عنوان بريد إلكتروني مرة واحدة فقط
     for (const email of userEmails) {
       console.log(`Sending deletion email to: ${email}`);
       try {
@@ -214,12 +215,42 @@ async deleteInactiveUsers() {
 
 private getCheckDate(): Date {
     const currentDate = new Date();
-    currentDate.setDate(currentDate.getDate() - 7); // Une semaine plus tôt
+    currentDate.setDate(currentDate.getDate() - 7); 
     return currentDate;
 }
 
- 
-    
+async getUserById(idUser: number): Promise<user> {
+    return this.userRep.findOne({ where: { idUser } });
+}
+
+async getUsersByLastMessage(idUser: number, nomUser?: string): Promise<user[]> {
+    const userInvitations = await this.inviteRepository.find({
+        where: { user: { idUser } },
+        relations: ['projet'] 
+    });
+
+    const projectIds = userInvitations.map(invite => invite.projet.idProjet);
+
+    const usersQuery = this.inviteRepository
+    .createQueryBuilder('invite')
+    .innerJoinAndSelect('invite.user', 'user')
+    .where('invite.projetId IN (:...projectIds)', { projectIds })
+    .andWhere('user.idUser != :idUser', { idUser });
+
+    if (nomUser) {
+        usersQuery.andWhere('user.nomUser LIKE :nomUser', { nomUser: `%${nomUser}%` });
+    }
+
+    const messages = await usersQuery.getMany();
+
+    const users = await usersQuery.getMany();
+
+    const uniqueUsers = Array.from(new Set(users.map(invite => invite.user.idUser)))
+        .map(id => users.find(invite => invite.user.idUser === id).user);
+
+    return uniqueUsers;
+}
+
     async changephoto(userId: number, photoName: string): Promise<user> {
         try {
             const user = await this.userRep.findOne({ where: { idUser: userId } });

@@ -7,12 +7,14 @@ import { user } from 'src/user/user.entity';
 import { UserService } from 'src/user/user.service';
 import { EmailService } from 'src/user/email/email.service';
 import { Token } from 'src/Token/token';
+import { message } from 'src/Message/message.entity';
+import { invite } from 'src/invite/invite.entity';
 
 @Module({
   imports: [JwtModule.register({
     secret:'secret',
     signOptions:{expiresIn:'3d'}
-  }),TypeOrmModule.forFeature([user , Token]) ],
+  }),TypeOrmModule.forFeature([user , Token , message , invite]) ],
   controllers: [AuthController],
   providers: [AuthService, UserService, EmailService],
   exports: [TypeOrmModule],
