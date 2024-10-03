@@ -42,7 +42,7 @@ import { ScheduleModule } from '@nestjs/schedule';
       port: 3306,
       username: 'root',
       password: '',
-      database: 'Canvas1',
+      database: 'Canvas3',
       entities: [invite,projet,user,canvas,block,donnees , message , Token] ,
       synchronize: false,
     }),

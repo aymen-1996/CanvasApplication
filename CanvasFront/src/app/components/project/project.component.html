@@ -10,8 +10,17 @@
             </a>    <div class="MuiBox-root css-i9gxme"></div>
             <div class="css-1x4nai">
               <mat-icon></mat-icon>
-              <mat-icon routerLink="/chat" class="maticon1">chat</mat-icon>
-           
+              <mat-icon 
+              routerLink="/chat" 
+              class="maticon1" 
+              matBadge="{{ messageCount }}" 
+              matBadgeColor="warn" 
+              matBadgePosition="above after" 
+              [matBadgeHidden]="messageCount === 0"> 
+              chat
+            </mat-icon>
+            
+                       
 
         <div class="dropdown-container">
           <mat-icon class="maticons" (click)="togglePendingInvitesDropdown()">email</mat-icon>

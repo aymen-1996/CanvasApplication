@@ -11,7 +11,7 @@ import { UserService } from 'src/app/services/user.service';
 import { environment } from 'src/environments/environment';
 import { PopupAcceptedComponent } from '../popup/popup-accepted/popup-accepted.component';
 import { User } from 'src/app/models/user';
-import { ChatMessage } from 'src/app/models/Chatmessage';
+import { ChatMessage } from 'src/app/models/ChatMessage';
 
 @Component({
   selector: 'app-chat',
@@ -41,6 +41,9 @@ export class ChatComponent {
   user:any
   iduser:any
   showPopup =false;
+  lastMessage:any
+  searchTerm: string = ''; 
+  userselect!: any;  
   constructor(private projectService: ProjetService ,private router: Router,private activatedRoute:ActivatedRoute ,private dialogue: MatDialog ,private http: HttpClient,private sanitizer: DomSanitizer, private userService: UserService, private chatService: ChatService) {}
 
   ngOnInit(): void {
@@ -49,40 +52,6 @@ export class ChatComponent {
     this.senderId = this.userId.user.idUser; 
     this.socket = io('http://localhost:3000');
   
-    this.socket.on('message', (data: { 
-      content: string; 
-      senderId: string; 
-      recipientId: number; 
-      sentAt: string;
-      messageType: string; 
-      imageUrl?: string | null; 
-    }) => {
-      console.log('Message reçu:', data);
-    
-      const senderId = parseInt(data.senderId, 10);
-    
-      this.userService.getUser(senderId).subscribe(user => {
-        const username = user.prenomUser;
-    
-        const formattedMessage = {
-          username: username,
-          message: data.messageType === 'image' ? '' : data.content,
-          messageType: data.messageType,
-          senderId: senderId,
-          imageUrl: data.messageType === 'image' ? `http://localhost:3000/upload/image/${data.imageUrl?.replace('./uploads/', '')}` : null,
-          timestamp: data.sentAt
-        };
-    
-        this.messages.push(formattedMessage);
-        console.log('Messages après ajout:', this.messages);
-        this.scrollToBottom();
-      }, error => {
-        console.error('Erreur lors de la récupération du nom d\'utilisateur:', error);
-      });
-    });
-    
-
-
     this.activatedRoute.data.subscribe((data: any) => {
       const title = data.title || 'Titre par défaut';
       document.title = `Canvas | ${title}`;
@@ -118,7 +87,40 @@ export class ChatComponent {
     }
     
   );
-    this.getPendingInvites()
+
+    this.socket.on('message',
+      (data: { 
+     content: string; 
+     senderId: string; 
+     recipientId: number; 
+     sentAt: string;
+     messageType: string; 
+     imageUrl?: string | null; 
+   }) => {
+     console.log('Message reçu:', data);
+     this.getUsersByInvitations();
+
+     const senderId = parseInt(data.senderId, 10);
+   
+     this.userService.getUser(senderId).subscribe(user => {
+       const username = user.prenomUser;
+   
+       const formattedMessage = {
+         username: username,
+         message: data.messageType === 'image' ? '' : data.content,
+         messageType: data.messageType,
+         senderId: senderId,
+         imageUrl: data.messageType === 'image' ? `http://localhost:3000/upload/image/${data.imageUrl?.replace('./uploads/', '')}` : null,
+         timestamp: data.sentAt
+       };
+   
+       this.messages.push(formattedMessage);
+       console.log('Messages après ajout:', this.messages);
+       this.scrollToBottom();
+     }, error => {
+       console.error('Erreur lors de la récupération du nom d\'utilisateur:', error);
+     });
+   });
   }
   
   onFileSelected(event: Event): void {
@@ -129,22 +131,80 @@ export class ChatComponent {
   }
 
 
-  searchTerm: string = ''; 
-userselect!: any;
+//liste user selon invitation
 getUsersByInvitations(): void {
   this.userService.getUsersByInvitations(this.userId.user.idUser, this.searchTerm).subscribe(
     (data: User[]) => {
       this.users = data;
-      this.users.forEach(user => {
-        this.getUserPhoto2(user.idUser);
-      });
-      console.log("Users invite", this.users);
+      const messageRequests = this.users.map(user =>
+        
+        this.chatService.getLastMessage(user.idUser, this.userId.user.idUser)
+      );
+
+     
+      forkJoin(messageRequests).subscribe(
+        (messages: any[]) => {
+          this.users.forEach((user, index) => {
+            user.lastMessage = messages[index] ? messages[index].content : '';
+            user.etat = messages[index] ? messages[index].etat : 'true';
+            this.getUserPhoto2(user.idUser);
+            this.getLastMessage(user.idUser, this.userId.user.idUser)
+          });
+        },
+        (error) => {
+          console.error('Error fetching last messages:', error);
+        }
+      );
     },
     (error) => {
       console.error('Erreur lors du chargement des utilisateurs', error);
     }
   );
 }
+
+//update etat msg
+onMarkAllAsRead(userId: number) {
+  this.chatService.markMessagesAsReadByUser(userId).subscribe({
+    next: (response) => {
+      this.getUsersByInvitations()
+      console.log('All messages marked as read for user:', response);
+    },
+    error: (error) => {
+      console.error('Error marking all messages as read for user:', error);
+    }
+  });
+}
+
+
+//detecte user
+selectUser(user: User): void {
+  this.userselect = user.idUser;
+  this.iduser = user.idUser;
+  this.getUserPhoto(this.userselect);
+  this.loadMessages(this.userId.user.idUser, this.userselect);
+  this.onMarkAllAsRead(this.userselect);
+
+  console.log("Utilisateur sélectionné:", this.userselect);
+  this.getById(this.userselect);
+}
+
+onSearchChange(): void {
+    this.getUsersByInvitations();
+}
+
+//dernier msg envoyer
+getLastMessage(senderId:any ,recipientId:any ): void {
+  this.chatService.getLastMessage(senderId, recipientId).subscribe(
+    (message) => {
+      this.lastMessage = message;
+      console.log("user lest msg " ,this.lastMessage)
+    },
+    (error) => {
+      console.error('Error fetching last message:', error);
+    }
+  );
+}
+
 getById(userid: number): void {
   this.userService.getUser(userid).subscribe(
     (data) => {
@@ -155,20 +215,6 @@ getById(userid: number): void {
       console.error('Erreur lors de la récupération de l\'utilisateur:', error);
     }
   );
-}
-
-selectUser(user: User): void {
-  this.userselect = user.idUser;
-  this.iduser = user.idUser;
-  this.getUserPhoto(this.userselect);
-  this.loadMessages(this.userId.user.idUser, this.userselect);
-
-  console.log("Utilisateur sélectionné:", this.userselect);
-  this.getById(this.userselect);
-}
-
-onSearchChange(): void {
-    this.getUsersByInvitations();
 }
 
   send(): void {
@@ -279,10 +325,18 @@ getUserPhoto2(userId: number): void {
   );
 }
 
-  scrollToBottom(): void {
-    const messagesContainer = document.querySelector('.messages-container') as HTMLElement;
-    messagesContainer.scrollTop = messagesContainer.scrollHeight;
+scrollToBottom(): void {
+  const chatHistory = document.querySelector('.chat-history'); 
+  if (chatHistory) {
+    setTimeout(() => {
+      chatHistory.scrollTop = chatHistory.scrollHeight; 
+      window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+    }, 0);
   }
+}
+
+
+
 
   //partie header
 showPendingInvitesDropdown: boolean = false;

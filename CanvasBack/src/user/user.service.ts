@@ -223,33 +223,64 @@ async getUserById(idUser: number): Promise<user> {
     return this.userRep.findOne({ where: { idUser } });
 }
 
-async getUsersByLastMessage(idUser: number, nomUser?: string): Promise<user[]> {
+//liste user selon invite orderBy lastMessage
+async getUniqueUsersByLastMessage(idUser: number, nomUser?: string): Promise<user[]> {
     const userInvitations = await this.inviteRepository.find({
         where: { user: { idUser } },
-        relations: ['projet'] 
+        relations: ['projet'],
     });
 
     const projectIds = userInvitations.map(invite => invite.projet.idProjet);
 
     const usersQuery = this.inviteRepository
-    .createQueryBuilder('invite')
-    .innerJoinAndSelect('invite.user', 'user')
-    .where('invite.projetId IN (:...projectIds)', { projectIds })
-    .andWhere('user.idUser != :idUser', { idUser });
+        .createQueryBuilder('invite')
+        .innerJoinAndSelect('invite.user', 'user')
+        .where('invite.projetId IN (:...projectIds)', { projectIds })
+        .andWhere('user.idUser != :idUser', { idUser });
 
     if (nomUser) {
         usersQuery.andWhere('user.nomUser LIKE :nomUser', { nomUser: `%${nomUser}%` });
     }
 
-    const messages = await usersQuery.getMany();
-
     const users = await usersQuery.getMany();
 
-    const uniqueUsers = Array.from(new Set(users.map(invite => invite.user.idUser)))
-        .map(id => users.find(invite => invite.user.idUser === id).user);
+    const messages = await this.messageRepository.find({
+        where: { recipientId: idUser },
+    });
 
-    return uniqueUsers;
+    const lastMessageMap = messages.reduce((acc, message) => {
+        if (!acc[message.senderId] || message.sentAt > acc[message.senderId].sentAt) {
+            acc[message.senderId] = message;
+        }
+        return acc;
+    }, {});
+
+    const uniqueUsersMap = new Map<number, { user: user, lastMessageDate: Date | null }>();
+
+    users.forEach(invite => {
+        const lastMessage = lastMessageMap[invite.user.idUser];
+        const lastMessageDate = lastMessage ? lastMessage.sentAt : null;
+
+        if (!uniqueUsersMap.has(invite.user.idUser)) {
+            uniqueUsersMap.set(invite.user.idUser, {
+                user: invite.user,
+                lastMessageDate,
+            });
+        }
+    });
+
+    const sortedUsers = Array.from(uniqueUsersMap.values()).sort((a, b) => {
+        if (a.lastMessageDate && b.lastMessageDate) {
+            return b.lastMessageDate.getTime() - a.lastMessageDate.getTime();
+        }
+        return a.lastMessageDate ? -1 : 1;
+    });
+
+    return sortedUsers.map(item => item.user);
 }
+
+
+
 
     async changephoto(userId: number, photoName: string): Promise<user> {
         try {
@@ -367,4 +398,45 @@ async getUsersByLastMessage(idUser: number, nomUser?: string): Promise<user[]> {
         updatedUser = { ...updatedUser, ...UpdateUserDto };
         return await this.userRep.save(updatedUser);
     }
+
+
+    async findMessagesByRecipientId(recipientId: number): Promise<number> {
+        const result = await this.messageRepository
+          .createQueryBuilder('message')
+          .select('COUNT(DISTINCT message.senderId)', 'count')
+          .where('message.recipientId = :recipientId', { recipientId })
+          .andWhere('message.etat = :etat', { etat: false })
+          .getRawOne();
+      
+        return parseInt(result.count, 10); 
+      }
+
+      async getLastMessage(senderId: number, recipientId: number): Promise<message> {
+        return await this.messageRepository
+          .createQueryBuilder('message')
+          .where('(message.senderId = :senderId AND message.recipientId = :recipientId)', 
+            { senderId, recipientId })
+          .orderBy('message.sentAt', 'DESC')
+          .getOne();
+      }
+      
+      async markMessagesAsReadByUser(userId: number): Promise<void> {
+        const messages = await this.messageRepository.find({
+            where: { senderId: userId } 
+        });
+    
+        if (!messages || messages.length === 0) {
+            throw new Error('No messages found for this user');
+        }
+    
+        messages.forEach((message) => {
+            message.etat = true;
+        });
+    
+        await this.messageRepository.save(messages);
+    }
+    
+    
+      
+      
 }

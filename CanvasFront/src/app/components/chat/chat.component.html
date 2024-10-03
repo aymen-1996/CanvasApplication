@@ -75,13 +75,23 @@
                   <li *ngIf="users.length === 0" class="no-users">
                     <p>Envoyer une invitation à un certain utilisateur pour discuter.</p>
                   </li>
-                  <li class="clearfix" *ngFor="let user of users" (click)="selectUser(user)">
-                    <img [src]="user.imageUser " alt="avatar">
-                    <div class="about">
-                        <div class="name">{{ user.nomUser }}</div>
-                        <div class="status"><i class="fa fa-circle offline"></i> </div>
-                    </div>
-                </li>
+                  <li class="clearfix" 
+                  [ngClass]="{ 
+                      'active': userselect === user.idUser, 
+                      'unread': user.etat === false 
+                  }" 
+                  *ngFor="let user of users" 
+                  (click)="selectUser(user)">
+                <img [src]="user.imageUser" alt="avatar">
+                <div class="about">
+                  <div class="name">{{ user.nomUser }}</div>
+                  <div class="status" 
+                       [ngStyle]="{ 'font-weight': user?.etat === false ? 'bold' : 'normal' }">
+                    {{ user.lastMessage?.slice(0,10) }}
+                  </div>
+                </div>
+              </li>
+              
                   
                 </ul>
             </div>
@@ -116,7 +126,7 @@
                                    <span class="message-sender">
                                     {{ msg.senderId == senderId ? 'Vous' : msg.username }}
                                   </span>
-                                  <span *ngIf="msg.message">{{ msg.message }}</span>
+                                  <span class="message" *ngIf="msg.message">{{ msg.message }}</span>
                                   <img *ngIf="msg.messageType === 'image'" [src]="msg.imageUrl" alt="Image message" style="width: 210px; height: 250px;" />
                                 
                           </div>

@@ -37,6 +37,7 @@ import { SwotComponent } from './components/canvas/swot/swot.component';
 import { PopupInviteComponent } from './components/popup/popup-invite/popup-invite.component';
 import { PopupAcceptedComponent } from './components/popup/popup-accepted/popup-accepted.component';
 import { ChatComponent } from './components/chat/chat.component';
+import { MatBadgeModule } from '@angular/material/badge';
 
 @NgModule({
   declarations: [
@@ -65,7 +66,7 @@ import { ChatComponent } from './components/chat/chat.component';
     BrowserModule,
     AppRoutingModule,
     MatDialogModule,
-
+    MatBadgeModule,
     MatFormFieldModule, 
     FormsModule,
     HttpClientModule,

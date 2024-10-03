@@ -19,4 +19,7 @@ export class message {
 
   @Column()
   sentAt: Date;
+
+  @Column({ default: false })
+  etat: boolean;
 }

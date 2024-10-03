@@ -12,6 +12,7 @@ import { ProjetService } from 'src/app/services/projet.service';
 import { UserService } from 'src/app/services/user.service';
 import { environment } from 'src/environments/environment';
 import { PopupAcceptedComponent } from '../popup/popup-accepted/popup-accepted.component';
+import { ChatService } from 'src/app/services/chat.service';
 interface BlockData {
   block: any; // Remplacez 'any' par le type approprié pour votre bloc
   donnees: any[]; // Remplacez 'any' par le type approprié pour vos données
@@ -46,11 +47,14 @@ userproject!:User
   sanitizer: any;
   projectForm!: FormGroup;
   showPopupdelte=false
-  defaultImage = 'assets/project.jpg'; // Replace with your default image URL
+  defaultImage = 'assets/project.jpg';
   selectedImage: File | null = null;
   users:any
+   intervalId: any; 
+  messageCount: number = 0;
 projectProgress: { [key: number]: number } = {};
-  constructor(private activatedRoute:ActivatedRoute ,private dialogue: MatDialog ,private http: HttpClient,private sanitilzer: DomSanitizer,private userService:UserService ,private router: Router,private fb:FormBuilder ,
+projectIdToDelete: number | null = null;
+  constructor(private activatedRoute:ActivatedRoute ,private chatService:ChatService ,private dialogue: MatDialog ,private http: HttpClient,private sanitilzer: DomSanitizer,private userService:UserService ,private router: Router,private fb:FormBuilder ,
     private projectService: ProjetService ,private authService:AuthService){}
    ngOnInit(): void {
 
@@ -95,7 +99,10 @@ projectProgress: { [key: number]: number } = {};
       image: [null]
     });
     this.getAllProjectByUser();
-
+    this.getMessageCount()
+  this.intervalId = setInterval(() => {
+    this.getMessageCount();
+  }, 5000);
   }
   onShowFirstChange(value: boolean) {
     this.showFirst = value;
@@ -116,6 +123,18 @@ projectProgress: { [key: number]: number } = {};
     }
   }
 
+  //nombre msg
+  getMessageCount() {
+    this.chatService.getMessagesCountByRecipientId(this.users.user.idUser).subscribe(
+      (count: number) => {
+        this.messageCount = count;
+        console.log("count" , this.messageCount)
+      },
+      (error) => {
+        console.error('Error fetching message count', error);
+      }
+    );
+  }
   preventClose(event: MouseEvent) {
     event.stopPropagation(); 
   }
@@ -155,18 +174,16 @@ onSubmit() {
   if (this.projectForm.valid) {
     const userIdObject = this.authService.getStoredUserId();
     const formData = this.projectForm.value;
-    const image = this.projectForm.get('image')?.value; // Retrieve image data
+    const image = this.projectForm.get('image')?.value;
 
     this.projectService.createProjectWithImage(userIdObject.idUser, formData.nomProjet, image)
       .subscribe(response => {
         console.log('Project created successfully:', response);
-        // Reset form if needed
         this.projectForm.reset();
         this.closeCreate();
         this.getAllProjectByUser();
       }, error => {
         console.error('Error creating project:', error);
-        // Handle error as needed
       });
   } else {
     console.error('Form is invalid.');
@@ -189,11 +206,9 @@ getImageSrc(file: File): string {
 }
 onDelete() {
   if (this.projectIdToDelete !== null) {
-    // Call the delete function with the project ID
     this.projectService.deleteProject(this.projectIdToDelete, this.users.user.idUser)
       .subscribe(response => {
         console.log('Project deleted successfully:', response);
-        // Optionally, you can update the UI to reflect the deletion
         this.projectIdToDelete = null;
         this.showPopupdelte = false;
         this.getAllProjectByUser();
@@ -210,25 +225,14 @@ onDelete() {
 }
 
 
-projectIdToDelete: number | null = null;
 openDelete(projectId: number){
  this.showPopupdelte=!this.showPopupdelte
  this.projectIdToDelete = projectId;
 }
 
 closeDeletePopup() {
-  // Hide the popup
   this.showPopupdelte = false;
 }
-
-
-invites: any
-progressPercentage: number = 0;
-totalBlocks: number = 37; // Nombre total de blocs dans votre projet
-filledBlocks: number = 0; // Nombre de blocs remplis par des données
-blocks: any[] = []; // Tableau de blocs
-// TypeScript
-
 
 
 getAllProjectByUser() {

@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { io, Socket } from 'socket.io-client';
 import { environment } from 'src/environments/environment';
 
@@ -9,7 +9,8 @@ import { environment } from 'src/environments/environment';
 })
 export class ChatService {
   private socket: Socket;
-
+  private messageCountSubject = new BehaviorSubject<number>(0);
+  public messageCount$ = this.messageCountSubject.asObservable();
   constructor(private http:HttpClient) {
     this.socket = io('http://localhost:3000'); 
   }
@@ -33,5 +34,21 @@ export class ChatService {
 
   getMessagesBetweenUsers(senderId: number, recipientId: number): Observable<any> {
     return this.http.get<any>(`${environment.backendHost}/upload/${senderId}/${recipientId}`);
+  }
+
+  getMessagesCountByRecipientId(recipientId: number): Observable<number> {
+    return this.http.get<number>(`${environment.backendHost}/user/${recipientId}/message`);
+  }
+
+
+  getLastMessage(senderId: number, recipientId: number): Observable<any> {
+    return this.http.get(`${environment.backendHost}/user/last/${senderId}/${recipientId}`);
+  }
+
+  markMessagesAsReadByUser(userId: number) {
+    return this.http.put(`${environment.backendHost}/user/read/${userId}`, {});
+  }
+  updateMessageCount(count: number) {
+    this.messageCountSubject.next(count);
   }
 }

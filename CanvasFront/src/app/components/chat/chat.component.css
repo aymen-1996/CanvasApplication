@@ -89,6 +89,7 @@ height: 65px;
   .dropdown-container {
     position: relative;
     display: inline-block;
+    
   
 }
 
@@ -219,7 +220,8 @@ height: 65px;
     left: 0;
     top: 0;
     padding: 20px;
-    z-index: 7
+    z-index: 7;
+
 }
 
 .chat-app .chat {
@@ -231,13 +233,14 @@ height: 65px;
     -moz-transition: .5s;
     -o-transition: .5s;
     -webkit-transition: .5s;
-    transition: .5s
+    transition: .5s;
+
 }
 
 .people-list .chat-list li {
     padding: 10px 15px;
     list-style: none;
-    border-radius: 3px
+    border-radius: 3px;
 }
 
 .people-list .chat-list li:hover {
@@ -253,6 +256,16 @@ height: 65px;
     font-size: 15px
 }
 
+.message {
+    display: inline-block; 
+    white-space: normal;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    word-break: break-all; 
+    max-width: 100%; 
+}
+
+
 .people-list .chat-list img {
     width: 45px;
     border-radius: 50%
@@ -267,11 +280,7 @@ height: 65px;
     float: left;
     padding-left: 8px
 }
-
-.people-list .status {
-    color: #999;
-    font-size: 13px
-}
+  
 
 .chat .chat-header {
     padding: 15px 20px;
@@ -305,12 +314,17 @@ height: 65px;
 
 .chat .chat-history {
     padding: 20px;
-    border-bottom: 2px solid #fff
+    border-bottom: 2px solid #fff;
+    max-height: 580px;
+    overflow-y: auto; 
+    overflow-x: hidden;
 }
 
 .chat .chat-history ul {
-    padding: 0
+    padding: 0;
+
 }
+
 
 .chat .chat-history ul li {
     list-style: none;
@@ -426,6 +440,19 @@ height: 65px;
     height: 0
 }
 
+.clearfix.active {
+    background-color: #f0f8ff;
+    border-left: 4px solid #007bff;
+  }
+
+  .clearfix.unread {
+    background-color: #d0dde9; 
+    border-bottom: 4px solid white;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+
+  
 @media only screen and (max-width: 767px) {
     .chat-app .people-list {
         height: 465px;

@@ -12,9 +12,11 @@ export interface User {
     education?: string;
     qualification?: string;
     cv?: string;
-    imageUser?: SafeUrl | null;  // Modifier ici pour accepter SafeUrl
+    imageUser?: SafeUrl | null;
     genre?: string;
     role?: string;
     jwt: string  | null;
+    lastMessage:any
+    etat:any
   }
   
