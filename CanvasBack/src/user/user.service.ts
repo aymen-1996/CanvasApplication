@@ -280,8 +280,6 @@ async getUniqueUsersByLastMessage(idUser: number, nomUser?: string): Promise<use
 }
 
 
-
-
     async changephoto(userId: number, photoName: string): Promise<user> {
         try {
             const user = await this.userRep.findOne({ where: { idUser: userId } });
@@ -400,43 +398,4 @@ async getUniqueUsersByLastMessage(idUser: number, nomUser?: string): Promise<use
     }
 
 
-    async findMessagesByRecipientId(recipientId: number): Promise<number> {
-        const result = await this.messageRepository
-          .createQueryBuilder('message')
-          .select('COUNT(DISTINCT message.senderId)', 'count')
-          .where('message.recipientId = :recipientId', { recipientId })
-          .andWhere('message.etat = :etat', { etat: false })
-          .getRawOne();
-      
-        return parseInt(result.count, 10); 
-      }
-
-      async getLastMessage(senderId: number, recipientId: number): Promise<message> {
-        return await this.messageRepository
-          .createQueryBuilder('message')
-          .where('(message.senderId = :senderId AND message.recipientId = :recipientId)', 
-            { senderId, recipientId })
-          .orderBy('message.sentAt', 'DESC')
-          .getOne();
-      }
-      
-      async markMessagesAsReadByUser(userId: number): Promise<void> {
-        const messages = await this.messageRepository.find({
-            where: { senderId: userId } 
-        });
-    
-        if (!messages || messages.length === 0) {
-            throw new Error('No messages found for this user');
-        }
-    
-        messages.forEach((message) => {
-            message.etat = true;
-        });
-    
-        await this.messageRepository.save(messages);
-    }
-    
-    
-      
-      
 }

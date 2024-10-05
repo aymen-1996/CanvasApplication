@@ -25,9 +25,13 @@ import { AuthModule } from './auth/auth.module';
 import { EmailService } from './user/email/email.service';
 import { ChatGateway } from './Gateway/chatGateway';
 import { UploadController } from './Gateway/upload.controller';
-import { ChatService } from './Gateway/chat.service';
+import { ChatService } from './Message/chat.service';
 import { Token } from './Token/token';
 import { ScheduleModule } from '@nestjs/schedule';
+import { Notification } from './notif/notif.entity';
+import { NotificationModule } from './notif/notif.module';
+import { ChatModule } from './Message/chat.module';
+
 
 
 @Module({
@@ -43,7 +47,7 @@ import { ScheduleModule } from '@nestjs/schedule';
       username: 'root',
       password: '',
       database: 'Canvas3',
-      entities: [invite,projet,user,canvas,block,donnees , message , Token] ,
+      entities: [invite,projet,user,canvas,block,donnees , message , Token ,Notification] ,
       synchronize: false,
     }),
     UserModule,
@@ -53,11 +57,13 @@ import { ScheduleModule } from '@nestjs/schedule';
     BlockModule,
     DonneesModule,
     JwtModule,
-    AuthModule
+    AuthModule,
+    ChatModule,
+    NotificationModule
    
     
   ],
   controllers: [AppController , UploadController],
-  providers: [AppService,JwtService,UserService,EmailService , ChatGateway , ChatService],
+  providers: [AppService,JwtService,UserService,EmailService , ChatGateway , ChatService ],
 })
 export class AppModule {}

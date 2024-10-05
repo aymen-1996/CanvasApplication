@@ -1,13 +1,16 @@
-import { BadRequestException, Body, Controller, Delete, Get, NotFoundException, Param, ParseIntPipe, Post, Put, Res, UploadedFile, UseInterceptors } from '@nestjs/common';
+import { BadRequestException, Body, Controller, Delete, Get, NotFoundException, Param, ParseIntPipe, Patch, Post, Put, Res, UploadedFile, UseInterceptors } from '@nestjs/common';
 import { ProjetService } from './projet.service';
 import { FileInterceptor } from '@nestjs/platform-express';
 import * as path from 'path';
 import {Response, Request} from 'express';
 import { invite } from 'src/invite/invite.entity';
+import { projet } from './projet.entity';
+import { user } from 'src/user/user.entity';
 
 
 @Controller('projet')
-export class ProjetController { constructor(private readonly projetService: ProjetService) {}
+export class ProjetController { constructor(private readonly projetService: ProjetService
+) {}
 
 //creation projet (upload image n est pas obligatoir)
 @Post(':userId/create')
@@ -150,12 +153,25 @@ async getProjetByUserIdAndCanvasId(
 async updateInviteState(
   @Param('userId') userId: number,
   @Param('inviteId') inviteId: number,
-): Promise<{ success: boolean, message: string }> {
+): Promise<{ success: boolean; message: string; invite: invite | null; project: projet | null; user: user | null }> {
   try {
-    await this.projetService.updateInviteState(userId, inviteId);
-    return { success: true, message: 'Invitation state updated successfully.' };
+    const { invite, project, user } = await this.projetService.updateInviteState(userId, inviteId);
+
+    return {
+      success: true,
+      message: 'Invitation updated successfully',
+      invite,
+      project, 
+      user, 
+    };
   } catch (error) {
-    return { success: false, message: error.message };
+    return { 
+      success: false, 
+      message: error.message,
+      invite: null,
+      project: null,
+      user: null 
+    };
   }
 }
 

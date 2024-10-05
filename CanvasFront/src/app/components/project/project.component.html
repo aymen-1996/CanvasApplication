@@ -9,8 +9,47 @@
               <h2 class="logo"><span style="color: rgb(33, 150, 243)">Canvas</span></h2>
             </a>    <div class="MuiBox-root css-i9gxme"></div>
             <div class="css-1x4nai">
-              <mat-icon></mat-icon>
-              <mat-icon 
+              <div class="dropdown-container">
+
+<mat-icon class="maticon2" 
+[matMenuTriggerFor]="notificationsMenu" (click)="toggleDropdown1()">
+  notifications
+</mat-icon>
+<mat-badge [matBadge]="unreadNotificationCount"  [matBadgeHidden]="unreadNotificationCount === 0" matBadgeColor="accent" matBadgePosition="above after"></mat-badge>
+
+<mat-menu #notificationsMenu="matMenu" class="notifications-menu">
+  <div class="menu-container">
+    <div *ngIf="notifications.length > 0; else noNotifications" >
+      <button mat-menu-item *ngFor="let notification of notifications" class="dropdown-item" 
+        [ngStyle]="{ 'background-color':notification.isRead ?'transparent': '#d0dde9' }">
+        <div 
+        [ngStyle]="{
+          
+
+          'position': 'absolute',
+          'bottom': '0',
+          'left': '0',
+          'width': '100%',
+          'height': '3px', 
+          'background-color': notification.isRead ?'transparent': 'white' 
+        
+      }">
+    </div>
+        <p class="invite">{{ notification.message }}</p>
+      </button>
+    </div>
+    <ng-template #noNotifications>
+      <button mat-menu-item disabled>
+        Aucune notification à afficher.
+      </button>
+    </ng-template>
+  </div>
+</mat-menu>
+
+
+
+              </div>
+                <mat-icon 
               routerLink="/chat" 
               class="maticon1" 
               matBadge="{{ messageCount }}" 
@@ -20,7 +59,8 @@
               chat
             </mat-icon>
             
-                       
+
+      
 
         <div class="dropdown-container">
           <mat-icon class="maticons" (click)="togglePendingInvitesDropdown()">email</mat-icon>

@@ -13,6 +13,9 @@ import { UserService } from 'src/app/services/user.service';
 import { environment } from 'src/environments/environment';
 import { PopupAcceptedComponent } from '../popup/popup-accepted/popup-accepted.component';
 import { ChatService } from 'src/app/services/chat.service';
+import { NotifService } from 'src/app/services/notif.service';
+import { Notification } from 'src/app/models/notification'; // Assurez-vous d'importer votre modèle de notification
+import { io } from 'socket.io-client';
 interface BlockData {
   block: any; // Remplacez 'any' par le type approprié pour votre bloc
   donnees: any[]; // Remplacez 'any' par le type approprié pour vos données
@@ -54,12 +57,21 @@ userproject!:User
   messageCount: number = 0;
 projectProgress: { [key: number]: number } = {};
 projectIdToDelete: number | null = null;
-  constructor(private activatedRoute:ActivatedRoute ,private chatService:ChatService ,private dialogue: MatDialog ,private http: HttpClient,private sanitilzer: DomSanitizer,private userService:UserService ,private router: Router,private fb:FormBuilder ,
+notifications: Notification[] = [];
+isDropdownVisible = false;
+unreadNotificationCount = 0;
+
+  constructor(private activatedRoute:ActivatedRoute ,private chatService:ChatService , private notifService:NotifService ,private dialogue: MatDialog ,private http: HttpClient,private sanitilzer: DomSanitizer,private userService:UserService ,private router: Router,private fb:FormBuilder ,
     private projectService: ProjetService ,private authService:AuthService){}
    ngOnInit(): void {
 
     this.users = JSON.parse(localStorage.getItem('currentUser') as string);
 
+    this.GetNotif()
+ 
+    
+      
+    
     this.activatedRoute.data.subscribe((data: any) => {
       const title = data.title || 'Titre par défaut';
       document.title = `Canvas | ${title}`;
@@ -135,6 +147,43 @@ projectIdToDelete: number | null = null;
       }
     );
   }
+  GetNotif() {
+    this.notifService.getLiveNotifications(this.users.user.idUser)
+      .subscribe((newNotifications: Notification[]) => {
+        newNotifications.forEach((notification) => {
+          const exists = this.notifications.some(existingNotification => existingNotification.id === notification.id);
+          
+          if (!exists) {
+            this.notifications.push(notification);
+          }
+        });
+        
+        this.notifications.sort((a, b) => +new Date(b.createdAt) - +new Date(a.createdAt));
+  
+        this.unreadNotificationCount = this.notifications.filter(notification => !notification.isRead).length;
+      });
+  }
+  
+  
+  markNotificationsAsRead(): void {
+    this.notifService.markAsRead(this.users.user.idUser).subscribe(() => {
+      console.log('All notifications marked as read');
+      this.notifications.forEach(notification => notification.isRead = true);
+      this.GetNotif()
+    });
+  }
+
+  toggleDropdown1(): void {
+
+    this.isDropdownVisible = !this.isDropdownVisible;
+  
+    if (this.isDropdownVisible) {
+      setTimeout(() => {
+        this.markNotificationsAsRead();
+      }, 2000); 
+    }
+  }
+
   preventClose(event: MouseEvent) {
     event.stopPropagation(); 
   }

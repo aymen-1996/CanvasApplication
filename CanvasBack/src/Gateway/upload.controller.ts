@@ -4,7 +4,7 @@ import { diskStorage } from 'multer';
 import { v4 as uuidv4 } from 'uuid';
 import * as path from 'path';
 import { Response } from 'express';
-import { ChatService } from './chat.service';
+import { ChatService } from '../Message/chat.service';
 import { message } from 'src/Message/message.entity';
 
 @Controller('upload')

@@ -38,6 +38,9 @@ import { PopupInviteComponent } from './components/popup/popup-invite/popup-invi
 import { PopupAcceptedComponent } from './components/popup/popup-accepted/popup-accepted.component';
 import { ChatComponent } from './components/chat/chat.component';
 import { MatBadgeModule } from '@angular/material/badge';
+import { MatMenuModule } from '@angular/material/menu';
+
+
 
 @NgModule({
   declarations: [
@@ -67,6 +70,7 @@ import { MatBadgeModule } from '@angular/material/badge';
     AppRoutingModule,
     MatDialogModule,
     MatBadgeModule,
+    MatMenuModule,
     MatFormFieldModule, 
     FormsModule,
     HttpClientModule,

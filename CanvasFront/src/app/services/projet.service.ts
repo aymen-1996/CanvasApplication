@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, Subject, catchError, map } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { project } from '../models/project';
+import { User } from '../models/user';
 
 @Injectable({
   providedIn: 'root'
@@ -48,10 +49,11 @@ export class ProjetService {
     return this.http.get<any>(url);
   }
 
-  updateInviteState(userId: number, inviteId: number): Observable<{ success: boolean, message: string }> {
+  updateInviteState(userId: number, inviteId: number): Observable<{ success: boolean, message: string, invite: any, project: project, user: User }> {
     const url = `${environment.backendHost}/projet/invites/${userId}/${inviteId}/updateState`;
-    return this.http.put<{ success: boolean, message: string }>(url, {});
-  }
+    return this.http.put<{ success: boolean, message: string, invite: any, project: project, user: User }>(url, {});
+}
+
   updateProject() {
     this.projectUpdatedSource.next(true);
   }

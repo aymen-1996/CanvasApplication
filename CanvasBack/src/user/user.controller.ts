@@ -156,21 +156,6 @@ async getUser(@Param('iduser')iduser :number, @Req() request:Request){
         return this.userService.getUniqueUsersByLastMessage(idUser, nomUser); 
     }
 
-    //dernier message entre sener et recipientuser
-    @Get('last/:senderId/:recipientId')
-  async getLastMessage(
-    @Param('senderId') senderId: number,
-    @Param('recipientId') recipientId: number,
-  ) {
-    return await this.userService.getLastMessage(senderId, recipientId);
-  }
-
-  //update etat user
-  @Put('read/:userId')
-async markMessagesAsReadByUser(@Param('userId') userId: number) {
-  return this.userService.markMessagesAsReadByUser(userId);
-}
-
     //requestrest
     @Post('request-password-reset')
     async requestPasswordReset(@Body('email') email: string): Promise<{ message: string }> {
@@ -311,11 +296,6 @@ async markMessagesAsReadByUser(@Param('userId') userId: number) {
     }
   
 
-    @Get(':recipientId/message')
-    async getMessagesByRecipientId(@Param('recipientId') recipientId: number) {
-      return this.userService.findMessagesByRecipientId(recipientId);
-    }
-    
     //logout
     @Post('logout') 
     async logout( @Res({passthrough:true}) response:Response){

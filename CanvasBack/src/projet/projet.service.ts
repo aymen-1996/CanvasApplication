@@ -11,6 +11,11 @@ import * as path from 'path';
 
 import * as fs from 'fs/promises';
 import { donnees } from 'src/donnees/donnees.entity';
+import { user } from 'src/user/user.entity';
+import { Notification } from 'src/notif/notif.entity';
+import { ChatGateway } from 'src/Gateway/chatGateway';
+import { NotificationGateway } from 'src/Gateway/NotificationGateway';
+import { NotificationService } from 'src/notif/notif.service';
 
 @Injectable()
 export class ProjetService {
@@ -25,9 +30,10 @@ export class ProjetService {
         private readonly inviteRepository: Repository<invite>,
         @InjectRepository(donnees)
         private readonly donneesRepository: Repository<donnees>,
+
+        private readonly notifService: NotificationService,
+ 
     ) {}
-
-
 
     //Creation Projet
     async createProject(
@@ -291,9 +297,9 @@ async getRoleByUserIdAndCanvasId(
     }
   }
 
-  //change etat invite 
 
-async updateInviteState(userId: number, inviteId: number): Promise<void> {
+  //change etat invite 
+  async updateInviteState(userId: number, inviteId: number): Promise<{ invite: invite; project: projet; user: user }> {
     try {
       const inviteToUpdate = await this.inviteRepository.findOne({
         where: {
@@ -301,6 +307,7 @@ async updateInviteState(userId: number, inviteId: number): Promise<void> {
           idInvite: inviteId,
           etat: 'en attente',
         },
+        relations: ['projet', 'projet.user', 'user'],
       });
   
       if (!inviteToUpdate) {
@@ -309,11 +316,26 @@ async updateInviteState(userId: number, inviteId: number): Promise<void> {
   
       inviteToUpdate.etat = 'accepted';
       await this.inviteRepository.save(inviteToUpdate);
+  
+      const project = inviteToUpdate.projet;
+      const projectUser = project.user;
+      const invitingUser = inviteToUpdate.user; 
+  
+      const notificationMessage = `${invitingUser.nomUser} a accepté l'invitation !`; 
+  
+      await this.notifService.createNotification(projectUser.idUser, notificationMessage);
+  
+      return {
+        invite: inviteToUpdate,
+        project: project, 
+        user: projectUser,
+      };
     } catch (error) {
       throw new BadRequestException('Failed to update invite state.');
     }
   }
-
+  
+  
   async progress(projectId: number): Promise<any[]> {
     const invites = await this.inviteRepository.find({
         where: { projet: { idProjet: projectId }},
