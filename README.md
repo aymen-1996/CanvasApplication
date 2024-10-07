@@ -31,7 +31,7 @@
 ![Page ListProj](screenshots/list_proj.png)
 
 #### Chat Page
-![Page Chat](screenshots/chat.png)
+![Page Chat](screenshots/chatimg.png)
 
 #### Canvas List Page
 ![Page ListCanv](screenshots/list_canvas.png)
