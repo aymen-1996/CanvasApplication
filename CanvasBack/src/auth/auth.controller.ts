@@ -40,9 +40,8 @@ async updateUserStatus(userId: number, status: { enLigne: boolean, lastLogout: D
       const isPasswordValid = await bcrypt.compare(password, user.passwordUser);
       if (!isPasswordValid) {
           return { user: null, message: 'Incorrect password!', success: false, token: '' };
-      }
-  
-      // تحديث حالة المستخدم إلى 'متصل' وتعيين `lastLogout` إلى null
+
+        
       await this.updateUserStatus(user.idUser, { enLigne: true, lastLogout: null });
   
       const jwt = await this.jwtService.signAsync({ id: user.idUser });
