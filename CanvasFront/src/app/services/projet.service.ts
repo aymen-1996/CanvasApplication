@@ -25,11 +25,12 @@ export class ProjetService {
   }
 
  
-
-  getImageForProject(projectId: number): Observable<Blob> {
-    return this.http.get(`${environment.backendHost}/projet/image/${projectId}/im`, { responseType: 'blob' });
+  loadImageForProject(projectId: number): Observable<{ imageUrl: string }> {
+    return this.http.get<{ imageUrl: string }>(
+      `${environment.backendHost}/projet/image/${projectId}/im`
+    );
   }
-
+  
   createProjectWithImage(userId: number, nomProjet: string, image: File) {
     const formData = new FormData();
     formData.append('nomProjet', nomProjet);

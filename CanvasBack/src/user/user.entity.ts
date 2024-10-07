@@ -60,7 +60,13 @@ export class user {
 
     @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
     createdDate: Date; 
-    
+
+    @Column({ default: false })
+    enLigne: boolean;
+
+    @Column({ type: 'timestamp', nullable: true })
+    lastLogout: Date;
+
     @OneToMany(() => projet, (projet) => projet.user)
     Projet: projet[];
 
@@ -69,7 +75,7 @@ export class user {
 
     @OneToMany(() => invite, (invite) => invite.user)
     invite: invite[];
+
     @OneToMany(() => Token, (token) => token.user) 
     tokens: Token[];
- 
 }

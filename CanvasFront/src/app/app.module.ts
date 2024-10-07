@@ -24,7 +24,7 @@ import { BmcComponent } from './components/canvas/bmc/bmc.component';
 import {MatStepperIntl, MatStepperModule} from '@angular/material/stepper';
 import { MatDialogModule } from '@angular/material/dialog';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { HttpClientModule } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { ChangePassComponent } from './components/change-pass/change-pass.component';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { ForgetPasswordComponent } from './components/forget-password/forget-password.component';
@@ -39,6 +39,7 @@ import { PopupAcceptedComponent } from './components/popup/popup-accepted/popup-
 import { ChatComponent } from './components/chat/chat.component';
 import { MatBadgeModule } from '@angular/material/badge';
 import { MatMenuModule } from '@angular/material/menu';
+import { CommentaireComponent } from './components/commentaire/commentaire.component';
 
 
 
@@ -63,7 +64,8 @@ import { MatMenuModule } from '@angular/material/menu';
     LeanCanvasComponent,
     PopupInviteComponent,
     PopupAcceptedComponent,
-    ChatComponent
+    ChatComponent,
+    CommentaireComponent
   ],
   imports: [
     BrowserModule,
@@ -88,7 +90,8 @@ import { MatMenuModule } from '@angular/material/menu';
     MatStepperModule,
     NgSelectModule,
   ],
-  providers: [],
+  providers: [
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

@@ -14,6 +14,8 @@ import { Notification } from 'src/notif/notif.entity';
 import { message } from 'src/Message/message.entity';
 import { NotificationGateway } from 'src/Gateway/NotificationGateway';
 import { NotificationService } from 'src/notif/notif.service';
+import { AuthService } from 'src/auth/auth.service';
+import { JwtService } from '@nestjs/jwt';
 
 
 @Module({
@@ -23,8 +25,8 @@ import { NotificationService } from 'src/notif/notif.service';
  ,) ,  MulterModule.register({
   dest: './uploads',
 })],
-  providers: [ProjetService , NotificationService , NotificationGateway ],
-  controllers: [ProjetController],
+  providers: [ProjetService , NotificationService , NotificationGateway , AuthService , JwtService],
+  controllers: [ProjetController ],
   exports: [TypeOrmModule],
 })
 export class ProjetModule {}

@@ -31,6 +31,8 @@ import { ScheduleModule } from '@nestjs/schedule';
 import { Notification } from './notif/notif.entity';
 import { NotificationModule } from './notif/notif.module';
 import { ChatModule } from './Message/chat.module';
+import { APP_INTERCEPTOR } from '@nestjs/core';
+
 
 
 
@@ -64,6 +66,7 @@ import { ChatModule } from './Message/chat.module';
     
   ],
   controllers: [AppController , UploadController],
-  providers: [AppService,JwtService,UserService,EmailService , ChatGateway , ChatService ],
+  providers: [
+  AppService,JwtService,UserService,EmailService , ChatGateway , ChatService ],
 })
 export class AppModule {}

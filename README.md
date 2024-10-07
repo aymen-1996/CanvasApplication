@@ -10,6 +10,7 @@
 - Invite User to Project: Allows the user to invite another user to view specific canvas within the project.
 - **Auto Delete Inactive Users**: Automatically deletes users if their accounts are not activated within one week of registration.
 - **Real-time Chat**: Users can engage in live conversations within the platform using WebSocket technology.
+- **Invitation Notifications**: Users receive real-time notifications when someone accepts their invitation to a project.
 
 #### Page Login
 ![# Page Login](screenshots/login.png)

@@ -1,8 +1,9 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, catchError, map } from 'rxjs';
+import { BehaviorSubject, Observable, catchError, map, tap } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { User } from '../models/user';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
@@ -11,7 +12,7 @@ export class AuthService {
   private currentUserSubject!: BehaviorSubject<User>;
   public currentUser!: Observable<User>;
 
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient ,  private router: Router) {
 
     this.currentUserSubject = new BehaviorSubject<User>(JSON.parse(localStorage.getItem('currentUser') as string));
     this.currentUser = this.currentUserSubject.asObservable();
@@ -88,5 +89,16 @@ export class AuthService {
     return this.http.put(url, { newpwd, comfpwd });
   }
 
-  
+  logout(): Observable<any> {
+    const currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
+    const idUser = currentUser?.user?.idUser;
+    console.log("userid", idUser)
+        return this.http.post(`${environment.backendHost}/auth/logout`, { idUser }).pipe(
+        tap(() => {
+            localStorage.clear();
+            this.router.navigateByUrl('/login');
+        })
+    );
+}
+
 }

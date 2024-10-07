@@ -17,16 +17,23 @@ export class ChatService {
     this.socket = io('http://localhost:3000'); 
   }
 
-  sendMessage(messageData: {
+   sendMessage(messageData: {
     username: string;
     message: string;
-    file?: File | null;
+    file?: File | null; // Permettre l'envoi d'un fichier
     senderId: number;
     recipientId: number;
-    senderIdUser: number;
-    recipientIdUser: number;
   }) {
-    this.socket.emit('message', messageData);
+    const formData = new FormData();
+    if (messageData.file) {
+      formData.append('file', messageData.file, messageData.file.name); // Ajouter le fichier au FormData
+    }
+    formData.append('username', messageData.username);
+    formData.append('message', messageData.message);
+    formData.append('senderId', messageData.senderId.toString());
+    formData.append('recipientId', messageData.recipientId.toString());
+
+    this.socket.emit('message', formData);
   }
 
   onMessage(callback: (message: any) => void) {
@@ -35,7 +42,7 @@ export class ChatService {
 
 
   getMessagesBetweenUsers(senderId: number, recipientId: number): Observable<any> {
-    return this.http.get<any>(`${environment.backendHost}/upload/${senderId}/${recipientId}`);
+    return this.http.get<any>(`${environment.backendHost}/chat/${senderId}/${recipientId}`);
   }
 
   getMessagesCountByRecipientId(recipientId: number): Observable<number> {

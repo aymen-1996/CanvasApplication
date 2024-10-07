@@ -473,6 +473,13 @@ height: 65px;
 }
 
 
+
+  .fa .fa-circle .online{
+    position: relative;
+    left: 80px;
+
+  }
+
   
 @media only screen and (max-width: 767px) {
     .chat-app .people-list {

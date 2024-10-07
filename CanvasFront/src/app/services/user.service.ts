@@ -26,6 +26,11 @@ export class UserService {
     return this.http.get(url, { responseType: 'blob' });
   }
 
+  getUserPhotoUrl1(userId: number): string {
+    return `${environment.backendHost}/user/${userId}/photo`;
+}
+
+
   updateUser(id: number, updateUserDto: any): Observable<any> {
     const url = `${environment.backendHost}/user/${id}`; 
     return this.http.patch<any>(url, updateUserDto);

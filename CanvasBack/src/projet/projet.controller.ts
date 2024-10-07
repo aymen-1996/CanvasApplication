@@ -1,4 +1,4 @@
-import { BadRequestException, Body, Controller, Delete, Get, NotFoundException, Param, ParseIntPipe, Patch, Post, Put, Res, UploadedFile, UseInterceptors } from '@nestjs/common';
+import { BadRequestException, Body, Controller, Delete, Get, Header, NotFoundException, Param, ParseIntPipe, Patch, Post, Put, Res, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common';
 import { ProjetService } from './projet.service';
 import { FileInterceptor } from '@nestjs/platform-express';
 import * as path from 'path';
@@ -6,7 +6,6 @@ import {Response, Request} from 'express';
 import { invite } from 'src/invite/invite.entity';
 import { projet } from './projet.entity';
 import { user } from 'src/user/user.entity';
-
 
 @Controller('projet')
 export class ProjetController { constructor(private readonly projetService: ProjetService
@@ -29,7 +28,6 @@ async createProjectWithImage(
   }
 }
 
-//liste Projet par id user selon class invite
 @Get(':userId')
 async getProjectsByUserId(@Param('userId') userId: number) {
     try {
@@ -88,24 +86,19 @@ async getCanvasesByUserIdAndProjetId(
 
 //afficher image projet
 @Get('image/:projetId/im')
-async serveImage(@Param('projetId') projetId: number, @Res() res: Response) {
+async serveImage(@Param('projetId') projetId: number): Promise<{ imageUrl: string }> {
   const user = await this.projetService.getProjectById(projetId);
 
   if (user && user.imageProjet) {
     const filename = user.imageProjet;
-    const imagePath = path.join(__dirname, '..', '..', 'uploads', filename);
+    const imageUrl = `http://localhost:3000/upload/image/${filename}`;
 
-    const exists = require('fs').existsSync(imagePath);
-
-    if (exists) {
-      res.sendFile(imagePath);
-    } else {
-      throw new NotFoundException('Image not found');
-    }
+    return { imageUrl }; 
   } else {
     throw new NotFoundException('User not found');
   }
 }
+
 
 //Delete Projet
 @Delete(':projectId/:userId')

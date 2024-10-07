@@ -82,9 +82,13 @@
                   }" 
                   *ngFor="let user of users" 
                   (click)="selectUser(user)">
-                <img [src]="user.imageUser" alt="avatar">
+                    <img [src]="user.imageUser" alt="avatar">
+                  
                 <div class="about">
-                  <div class="name">{{ user.nomUser }}</div>
+                  <div class="name">
+                    <i *ngIf="user.enLigne" class="fa fa-circle online"></i>
+                    <i *ngIf="!user.enLigne" class="fa fa-circle offline"></i>
+                    {{ user.nomUser }}</div>
                   <div class="status" 
                        [ngStyle]="{ 'font-weight': user?.etat === false ? 'bold' : 'normal' }">
                     {{ user.lastMessage?.slice(0,10) }}
@@ -106,7 +110,11 @@
                             <div class="chat-about" *ngIf="userselect">
                               <div *ngIf="user">
                                 <h6 class="m-b-0">{{ user.nomUser }} {{ user.prenomUser }}</h6>
-                              </div>                            </div>
+                                <div *ngIf="user.enLigne" class="status"> <i class="fa fa-circle online"></i> en ligne </div>
+                                <small *ngIf="!user.enLigne">{{ timeSince(user.lastLogout) }}</small>
+                               
+                              </div>                         
+                               </div>
                         </div>
                         <div class="col-lg-6 hidden-sm text-right">
                         

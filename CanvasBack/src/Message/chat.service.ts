@@ -67,10 +67,7 @@ export class ChatService {
         where: { senderId: userId } 
     });
 
-    if (!messages || messages.length === 0) {
-        throw new Error('No messages found for this user');
-    }
-
+   
     messages.forEach((message) => {
         message.etat = true;
     });

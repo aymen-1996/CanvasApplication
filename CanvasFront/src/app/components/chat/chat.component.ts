@@ -51,7 +51,6 @@ export class ChatComponent {
     this.username = this.userId.user.prenomUser;
     this.senderId = this.userId.user.idUser; 
     this.socket = io('http://localhost:3000');
-  
     this.activatedRoute.data.subscribe((data: any) => {
       const title = data.title || 'Titre par défaut';
       document.title = `Canvas | ${title}`;
@@ -101,7 +100,8 @@ export class ChatComponent {
      this.getUsersByInvitations();
 
      const senderId = parseInt(data.senderId, 10);
-   
+
+
      this.userService.getUser(senderId).subscribe(user => {
        const username = user.prenomUser;
    
@@ -292,38 +292,87 @@ loadMessages(senderId: any, recipientId: any): void {
 }
 
 
-getUserPhoto(select:number): void {
-  this.userService.getUserPhotoUrl(select).subscribe(
-    (res: Blob) => {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        this.userPhotoUrl = this.sanitizer.bypassSecurityTrustUrl(reader.result as string);
-      };
-      reader.readAsDataURL(res);
-    },
-    error => {
-      console.error('Error getting user photo:', error);
-    }
-  );
+
+timeSince(date: Date | string): string {
+
+  if (typeof date === 'string') {
+      date = new Date(date);
+  }
+
+  if (isNaN(date.getTime())) {
+      return 'Date invalide';
+  }
+
+  const now = new Date();
+  let seconds = Math.floor((now.getTime() - date.getTime()) / 1000);
+  
+  const inFuture = seconds < 0;
+  seconds = Math.abs(seconds); 
+
+  let interval = Math.floor(seconds / 31536000);
+  if (interval >= 1) return inFuture ? `en ligne il ya : ${interval} an${interval > 1 ? 's' : ''}` : `il y a ${interval} an${interval > 1 ? 's' : ''}`;
+
+  interval = Math.floor(seconds / 2592000);
+  if (interval >= 1) return inFuture ? `en ligne il ya : ${interval} mois` : `il y a ${interval} mois`;
+
+  interval = Math.floor(seconds / 86400);
+  if (interval >= 1) {
+      seconds -= interval * 86400;
+      const hours = Math.floor(seconds / 3600);
+      return inFuture 
+          ? `en ligne il ya : ${interval} jour${interval > 1 ? 's' : ''}${hours > 0 ? ` et ${hours} heure${hours > 1 ? 's' : ''}` : ''}`
+          : `il y a ${interval} jour${interval > 1 ? 's' : ''}${hours > 0 ? ` et ${hours} heure${hours > 1 ? 's' : ''}` : ''}`;
+  }
+
+  interval = Math.floor(seconds / 3600);
+  if (interval >= 1) {
+      seconds -= interval * 3600;
+      const minutes = Math.floor(seconds / 60);
+      return inFuture 
+          ? `en ligne il ya : ${interval} heure${interval > 1 ? 's' : ''}${minutes > 0 ? ` et ${minutes} minute${minutes > 1 ? 's' : ''}` : ''}`
+          : `il y a ${interval} heure${interval > 1 ? 's' : ''}${minutes > 0 ? ` et ${minutes} minute${minutes > 1 ? 's' : ''}` : ''}`;
+  }
+
+  interval = Math.floor(seconds / 60);
+  if (interval >= 1) {
+      seconds -= interval * 60;
+      return inFuture 
+          ? `en ligne il ya : ${interval} minute${interval > 1 ? 's' : ''}${seconds > 0 ? ` et ${seconds} seconde${seconds > 1 ? 's' : ''}` : ''}`
+          : `il y a ${interval} minute${interval > 1 ? 's' : ''}${seconds > 0 ? ` et ${seconds} seconde${seconds > 1 ? 's' : ''}` : ''}`;
+  }
+
+  return inFuture ? `en ligne il ya : ${seconds} seconde${seconds > 1 ? 's' : ''}` : `il y a ${seconds} seconde${seconds > 1 ? 's' : ''}`;
 }
 
-getUserPhoto2(userId: number): void {
-  this.userService.getUserPhotoUrl(userId).subscribe(
-    (res: Blob) => {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        const user = this.users.find(u => u.idUser === userId);
-        if (user) {
-          user.imageUser = this.sanitizer.bypassSecurityTrustUrl(reader.result as string);
-        }
-      };
-      reader.readAsDataURL(res);
-    },
-    error => {
-      console.error('Error getting user photo:', error);
-    }
-  );
+
+
+
+
+
+
+getUserPhoto(select: number): void {
+  this.userPhotoUrl = this.userService.getUserPhotoUrl1(select);
+
+  if (!this.userPhotoUrl) {
+    console.error('URL de la photo de l\'utilisateur est invalide');
+  }
 }
+
+getUserPhoto2(userId: number): void { 
+  const imageUrl = this.userService.getUserPhotoUrl1(userId);
+  console.log("Image URL:", imageUrl);
+  
+  const user = this.users.find(u => u.idUser === userId);
+  
+  if (user) {
+    user.imageUser = imageUrl;  
+    console.log("User photo assigned:", imageUrl); 
+
+  } else {
+    console.error('User not found:', userId);
+  }
+}
+
 
 scrollToBottom(): void {
   const chatHistory = document.querySelector('.chat-history'); 

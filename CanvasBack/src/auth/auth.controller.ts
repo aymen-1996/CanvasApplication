@@ -18,6 +18,10 @@ export class AuthController {
 
 
 
+async updateUserStatus(userId: number, status: { enLigne: boolean, lastLogout: Date | null }) {
+    await this.userRep.update(userId, status);
+}
+
   @Post('login')
   async login(
       @Body('emailUser') email: string,
@@ -37,6 +41,9 @@ export class AuthController {
       if (!isPasswordValid) {
           return { user: null, message: 'Incorrect password!', success: false, token: '' };
       }
+  
+      // تحديث حالة المستخدم إلى 'متصل' وتعيين `lastLogout` إلى null
+      await this.updateUserStatus(user.idUser, { enLigne: true, lastLogout: null });
   
       const jwt = await this.jwtService.signAsync({ id: user.idUser });
       response.cookie('jwt', jwt, { httpOnly: true });
@@ -120,12 +127,22 @@ export class AuthController {
   }
   //Api logout // localhost:3000/auth/logout
   @Post('logout')
-  async logout(@Req() request: any) {
-      if (request.session) {
-          request.session.destroy(); 
+  async logout(@Req() request: any, @Body('idUser') idUser: number) {
+      if (idUser) {
+          await this.updateUserStatus(idUser, {
+              enLigne: false,
+              lastLogout: new Date() 
+          });
       }
+  
+      if (request.session) {
+          request.session.destroy();
+      }
+  
       return { message: 'Déconnexion réussie' };
   }
+  
+  
 }
 
 

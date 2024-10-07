@@ -43,12 +43,5 @@ export class UploadController {
     return res.sendFile(filePath); 
   }
 
-  //afficher msg entre deux users
-  @Get(':senderId/:recipientId')
-  async getMessages(
-    @Param('senderId') senderId: number,
-    @Param('recipientId') recipientId: number,
-  ): Promise<message[]> {
-    return this.chatService.getMessagesBetweenUsers(senderId, recipientId);
-  }
+
 }

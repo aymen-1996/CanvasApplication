@@ -126,7 +126,6 @@
                   
                   <div class="container">
                       <div><img *ngIf="projectImages[project.idProjet]" [src]="projectImages[project.idProjet]" alt="Project Image" class="small-image">
-                          <!-- Use ngIf to ensure the image is only displayed when available -->
                           <span *ngIf="!projectImages[project.idProjet]">Image Loading...</span></div>
                   </div> 
                       <div>
@@ -194,7 +193,7 @@
      <div>
       <input type="file" class="image" id="fileInput" style="display: none;" formControlName="image" (change)="onFileSelected($event)" >
       <label for="fileInput" class="fileInputLabel">
-          <img  [src]="projectForm.get('image')?.value ? getImageSrc(projectForm.get('image')!.value) :  getImageSrc(projectForm.get('image')?.value)" alt="Selected file" height="200rem">
+        <img [src]="projectForm.get('image')?.value ? getImageSrc(projectForm.get('image')!.value) : 'assets/project.jpg'" alt="Selected file" height="200rem">
       </label>
   </div>
   </div>

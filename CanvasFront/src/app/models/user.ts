@@ -18,5 +18,7 @@ export interface User {
     jwt: string  | null;
     lastMessage:any
     etat:any
+    enLigne:boolean;
+    lastLogout:Date
   }
   

@@ -4,7 +4,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Subscription, interval, switchMap } from 'rxjs';
+import { BehaviorSubject, Subscription, interval, switchMap } from 'rxjs';
 import { project } from 'src/app/models/project';
 import { User } from 'src/app/models/user';
 import { AuthService } from 'src/app/services/auth.service';
@@ -211,14 +211,13 @@ unreadNotificationCount = 0;
   }
 
 
-
-loadImage(projectId: number) {
-  this.projectService.getImageForProject(projectId).subscribe(blob => {
-    const imageUrl = URL.createObjectURL(blob);
-    this.projectImages[projectId] = imageUrl;
-  });
-}
-
+  loadImage(projectId: number): void {
+    this.projectService.loadImageForProject(projectId).subscribe(response => {
+      this.projectImages[projectId] = response.imageUrl;
+    }, error => {
+      console.error('Error loading image:', error);
+    });
+  }
 onSubmit() {
   if (this.projectForm.valid) {
     const userIdObject = this.authService.getStoredUserId();
@@ -283,29 +282,30 @@ closeDeletePopup() {
   this.showPopupdelte = false;
 }
 
-
 getAllProjectByUser() {
   const userIdObject = this.authService.getStoredUserId();
-  if (userIdObject !== null && userIdObject.idUser) {
-    this.userId = userIdObject.idUser;
   
-    this.projectService.getallProjectByUser(this.userId).subscribe((response: any[]) => {
-      this.projects = response;
-
-      const selectedProjectId = localStorage.getItem('selectedProjectId');
-      if (selectedProjectId === null && this.projects.length > 0) {
-        this.saveProjectId(this.projects[0].idProjet);
-      }
-
-      this.projects.forEach(project => {
-        this.loadImage(project.idProjet);
-        this.getInvitesByUserId(project.idProjet);
-      });
-    });
-  } else {
-    console.error('Error: Unable to retrieve userId.');
+  if (!userIdObject || !userIdObject.idUser) {
+    console.info('User is not logged in. Skipping project load.');
+    return;
   }
+
+  this.userId = userIdObject.idUser;
+  this.projectService.getallProjectByUser(this.userId).subscribe((response: any[]) => {
+    this.projects = response;
+
+    const selectedProjectId = localStorage.getItem('selectedProjectId');
+    if (selectedProjectId === null && this.projects.length > 0) {
+      this.saveProjectId(this.projects[0].idProjet);
+    }
+
+    this.projects.forEach(project => {
+      this.loadImage(project.idProjet);
+      this.getInvitesByUserId(project.idProjet);
+    });
+  });
 }
+
 
 getInvitesByUserId(projId: number): void {
   this.projectService.getInvitesByUserId(projId)
@@ -338,9 +338,14 @@ toggleDropdown() {
 }
 
 logout() {
-  localStorage.removeItem('currentUser');
-
-  this.router.navigateByUrl('/login')
+  this.authService.logout().subscribe({
+      next: (response) => {
+          console.log("logout", response.message); 
+      },
+      error: (err) => {
+          console.error('Logout error:', err);
+      },
+  });
 }
 
 getUserPhoto(): void {

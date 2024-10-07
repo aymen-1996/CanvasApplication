@@ -130,12 +130,15 @@ idBlock:any
     }
   }
   
-loadImage(projectId: number) {
-  this.projectService.getImageForProject(projectId).subscribe(blob => {
-    const imageUrl = URL.createObjectURL(blob);
-    this.projectImages[projectId] = imageUrl;
-  });
-}
+  loadImage(projectId: number): void {
+    this.projectService.loadImageForProject(projectId).subscribe(response => {
+      this.projectImages[projectId] = response.imageUrl;
+    }, error => {
+      console.error('Error loading image:', error);
+    });
+  }
+  
+
 
 getUserPhoto(): void {
   this.userService.getUserPhotoUrl(this.userId).subscribe(
