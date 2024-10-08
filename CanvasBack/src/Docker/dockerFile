@@ -1,10 +1,10 @@
-# Utiliser une image Node.js comme base
-FROM node:18
+# Utiliser une image de base de Node.js
+FROM node:18 AS build
 
 # Définir le répertoire de travail dans le conteneur
 WORKDIR /app
 
-# Copier le package.json et le package-lock.json dans le répertoire de travail
+# Copier le package.json et le package-lock.json pour installer les dépendances
 COPY package*.json ./
 
 # Installer les dépendances
@@ -14,10 +14,16 @@ RUN npm install
 COPY . .
 
 # Construire l'application
-RUN npm run build
+RUN npm run build --prod
 
-# Exposer le port sur lequel NestJS écoute
-EXPOSE 3000
+# Étape de production
+FROM nginx:alpine
 
-# Démarrer l'application
-CMD ["npm", "run", "start:prod"]
+# Copier les fichiers construits dans le répertoire par défaut de Nginx
+COPY --from=build /app/dist /usr/share/nginx/html
+
+# Exposer le port sur lequel l'application sera accessible
+EXPOSE 80
+
+# Démarrer Nginx
+CMD ["nginx", "-g", "daemon off;"]
