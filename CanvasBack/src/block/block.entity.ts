@@ -3,7 +3,7 @@ import { canvas } from "src/canvas/canvas.entity";
 import { donnees } from "src/donnees/donnees.entity";
 import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 
-@Entity({name: 'Block'})
+@Entity({name: 'block'})
 export class block{
     @PrimaryGeneratedColumn({ type: 'bigint'})
     idBlock: number;

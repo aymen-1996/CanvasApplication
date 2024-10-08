@@ -6,7 +6,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { projet } from './projet.entity';
 import { MulterModule } from '@nestjs/platform-express';
 import { user } from 'src/user/user.entity';
-import { block } from 'src/block/Block.entity';
+import { block } from 'src/block/block.entity';
 import { canvas } from 'src/canvas/canvas.entity';
 import { invite } from 'src/invite/invite.entity';
 import { donnees } from 'src/donnees/donnees.entity';

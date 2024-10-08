@@ -1,5 +1,5 @@
 # Utiliser une image de base de Node.js
-FROM node:18 AS build
+FROM node:20
 
 # Définir le répertoire de travail dans le conteneur
 WORKDIR /app
@@ -14,16 +14,10 @@ RUN npm install
 COPY . .
 
 # Construire l'application
-RUN npm run build --prod
-
-# Étape de production
-FROM nginx:alpine
-
-# Copier les fichiers construits dans le répertoire par défaut de Nginx
-COPY --from=build /app/dist /usr/share/nginx/html
+RUN npm run build
 
 # Exposer le port sur lequel l'application sera accessible
-EXPOSE 80
+EXPOSE 3000
 
-# Démarrer Nginx
-CMD ["nginx", "-g", "daemon off;"]
+# Démarrer l'application en mode production
+CMD ["npm", "run", "start:prod"]

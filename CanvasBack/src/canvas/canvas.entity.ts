@@ -1,5 +1,5 @@
 /* eslint-disable prettier/prettier */
-import { block } from "src/block/Block.entity";
+import { block } from "src/block/block.entity";
 import { invite } from "src/invite/invite.entity";
 import { projet } from "src/projet/projet.entity";
 import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";

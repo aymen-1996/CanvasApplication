@@ -2,7 +2,7 @@
 import { Body, Controller, Post, Get, Param, ParseIntPipe, Patch, UsePipes, ValidationPipe } from '@nestjs/common';
 import { BlockService } from './block.service';
 import { CreateBlockDto } from './DTO/CreateBlock.dto';
-import { block } from './Block.entity';
+import { block } from './block.entity';
 import { UpdateBlockDto } from './DTO/UpdateBlock.dto';
 
 @Controller('block')

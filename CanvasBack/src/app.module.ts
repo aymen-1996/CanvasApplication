@@ -14,7 +14,7 @@ import { user } from './user/user.entity';
 import { CanvasModule } from './canvas/canvas.module';
 import { canvas } from './canvas/canvas.entity';
 import { BlockModule } from './block/block.module';
-import { block } from './block/Block.entity';
+import { block } from './block/block.entity';
 import { DonneesModule } from './donnees/donnees.module';
 import { donnees } from './donnees/donnees.entity';
 import { UserController } from './user/user.controller';
@@ -44,13 +44,13 @@ import { APP_INTERCEPTOR } from '@nestjs/core';
     ScheduleModule.forRoot(),
     TypeOrmModule.forRoot({
       type: 'mysql',
-      host: 'db',
+      host: 'localhost',
       port: 3306,
       username: 'root',
       password: '',
-      database: 'Canvas3',
+      database: 'canvasback-db',
       entities: [invite,projet,user,canvas,block,donnees , message , Token ,Notification] ,
-      synchronize: true,
+      synchronize: false,
     }),
     UserModule,
     ProjetModule,

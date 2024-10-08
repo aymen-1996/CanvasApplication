@@ -4,7 +4,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { projet } from './projet.entity';
 import { DeepPartial, FindOneOptions, Repository } from 'typeorm';
 import { canvas } from 'src/canvas/canvas.entity';
-import { block } from 'src/block/Block.entity';
+import { block } from 'src/block/block.entity';
 import { invite } from 'src/invite/invite.entity';
 import { Multer } from 'multer';
 import * as path from 'path';

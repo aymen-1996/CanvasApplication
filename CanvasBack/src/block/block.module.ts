@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { BlockService } from './block.service';
 import { BlockController } from './block.controller';
-import { block } from './Block.entity';
+import { block } from './block.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 @Module({

@@ -12,10 +12,10 @@ services:
   db:
     image: mysql:8
     environment:
-      MYSQL_ROOT_PASSWORD: 
-      MYSQL_DATABASE: Canvas3
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: canvasback-db
     ports:
-      - '3306:3306'
+      - "3307:3306"
     volumes:
       - mysql-data:/var/lib/mysql
 

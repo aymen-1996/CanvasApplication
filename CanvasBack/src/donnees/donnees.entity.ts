@@ -1,5 +1,5 @@
 /* eslint-disable prettier/prettier */
-import { block } from "src/block/Block.entity";
+import { block } from "src/block/block.entity";
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity({name: 'Donnees'})

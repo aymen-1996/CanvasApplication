@@ -3,7 +3,7 @@ import { Controller, Get, Post, Body, Param, Delete, BadRequestException, Res, N
 import { AuthService } from './auth.service';
 import { JwtService } from '@nestjs/jwt';
 import { UserService } from 'src/user/user.service';
-import * as bcrypt from 'bcrypt';
+import * as bcrypt from 'bcryptjs';
 import { Response } from 'express';
 import { user } from 'src/user/user.entity';
 import { EmailService } from 'src/user/email/email.service';
@@ -41,7 +41,7 @@ async updateUserStatus(userId: number, status: { enLigne: boolean, lastLogout: D
       if (!isPasswordValid) {
           return { user: null, message: 'Incorrect password!', success: false, token: '' };
 
-        
+      }
       await this.updateUserStatus(user.idUser, { enLigne: true, lastLogout: null });
   
       const jwt = await this.jwtService.signAsync({ id: user.idUser });
@@ -50,7 +50,7 @@ async updateUserStatus(userId: number, status: { enLigne: boolean, lastLogout: D
       return { jwt, user };
   }
   
-
+  
 
 //envoyer lien
   @Post('request')
