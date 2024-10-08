@@ -4,7 +4,7 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { error } from 'console';
 import { diskStorage } from 'multer';
 import { Observable, of, retry } from 'rxjs';
-import * as bcrypt from 'bcrypt';
+import * as bcrypt from 'bcryptjs';
 import { UserService } from './user.service';
 import { JwtService } from '@nestjs/jwt';
 import { Response ,Request} from 'express';

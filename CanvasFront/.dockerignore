@@ -1,0 +1,26 @@
+# Ignorer les dossiers de configuration et de cache locaux
+node_modules
+dist
+tmp
+out-tsc
+
+# Ignorer les fichiers de configuration spécifiques
+Dockerfile
+docker-compose.yml
+
+# Ignorer les fichiers de journalisation et de cache
+*.log
+*.tsbuildinfo
+
+# Ignorer les fichiers environnement
+.env
+.env.local
+
+# Ignorer les fichiers spécifiques à l'IDE
+.vscode/
+.idea/
+*.swp
+
+# Ignorer les fichiers spécifiques à macOS et Windows
+.DS_Store
+Thumbs.db

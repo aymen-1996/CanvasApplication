@@ -3,7 +3,7 @@ import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { user } from 'src/user/user.entity';
 import { In, LessThan, MoreThan, Repository } from 'typeorm';
-import * as bcrypt from 'bcrypt';
+import * as bcrypt from 'bcryptjs';
 import { EmailService } from './email/email.service';
 import * as crypto from 'crypto';
 import { Token } from 'src/Token/token';
