@@ -5,7 +5,7 @@ FROM node:20 AS build
 WORKDIR /app
 
 # Copier le fichier package.json et package-lock.json
-COPY package*.json ./
+COPY package*.json ./ 
 
 # Installer les dépendances
 RUN npm install --force
@@ -17,4 +17,4 @@ COPY . .
 RUN npm run build --prod
 
 # Étape 2 : Exécution de l'application Angular
-CMD [ "ng", "serve"]
+CMD ["npx", "ng", "serve", "--host", "0.0.0.0"]
