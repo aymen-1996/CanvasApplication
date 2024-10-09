@@ -50,7 +50,7 @@ import { APP_INTERCEPTOR } from '@nestjs/core';
       password: '',
       database: 'canvasback_mysql-data',
       entities: [invite,projet,user,canvas,block,donnees , message , Token ,Notification] ,
-      synchronize: true,
+      synchronize: false,
     }),
     UserModule,
     ProjetModule,

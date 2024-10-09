@@ -11,10 +11,12 @@
       "root": "",
       "sourceRoot": "src",
       "prefix": "app",
+      
       "architect": {
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
+            "allowedCommonJsDependencies": ["canvg", "core-js", "raf", "rgbcolor" , "html2canvas", "alertifyjs"],
             "outputPath": "dist/canvas-front",
             "index": "src/index.html",
             "main": "src/main.ts",
