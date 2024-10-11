@@ -17,6 +17,8 @@ import { HttpClient } from '@angular/common/http';
 import { PopupAcceptedComponent } from '../../popup/popup-accepted/popup-accepted.component';
 import { environment } from 'src/environments/environment';
 import { CanvasService } from 'src/app/services/canvas.service';
+import { NotifService } from 'src/app/services/notif.service';
+import { Notification } from 'src/app/models/notification';
 @Component({
   selector: 'app-empathie',
   templateUrl: './empathie.component.html',
@@ -57,13 +59,19 @@ export class EmpathieComponent implements OnInit {
   userRole:any
   positions: { top: string; left: string }[] = [];
   selectProject:any
+  notifications: Notification[] = [];
+isDropdownVisible = false;
+unreadNotificationCount = 0;
+showComments: boolean = false;
+isSliding: boolean = false; 
   @ViewChild(MatStepper) stepper!: MatStepper;
 
-    constructor(private dialogue: MatDialog ,private canvasService:CanvasService,private http: HttpClient,private projetService:ProjetService,private sanitizer: DomSanitizer,private userService:UserService ,private router: Router,private blockService:BlocksService , private dialog: MatDialog, private activatedRoute:ActivatedRoute ,private formBuilder: FormBuilder){
+    constructor(private dialogue: MatDialog , private notifService:NotifService,private canvasService:CanvasService,private http: HttpClient,private projetService:ProjetService,private sanitizer: DomSanitizer,private userService:UserService ,private router: Router,private blockService:BlocksService , private dialog: MatDialog, private activatedRoute:ActivatedRoute ,private formBuilder: FormBuilder){
 
   }
   ngOnInit(): void {
     this.users = JSON.parse(localStorage.getItem('currentUser') as string);
+    this.GetNotif()
 
     this.selectProject =  localStorage.getItem('selectedProjectId');
     this.activatedRoute.data.subscribe((data: any) => {
@@ -108,6 +116,55 @@ export class EmpathieComponent implements OnInit {
    
   }
  
+  toggleComments() {
+    this.showComments = !this.showComments;
+  
+    if (this.showComments) {
+      this.isSliding = false; 
+    } else {
+      this.isSliding = true;
+      setTimeout(() => {
+        this.isSliding = false; 
+      }, 500); 
+    }
+  }
+ 
+  GetNotif() {
+    this.notifService.getLiveNotifications(this.users.user.idUser)
+      .subscribe((newNotifications: Notification[]) => {
+        newNotifications.forEach((notification) => {
+          const exists = this.notifications.some(existingNotification => existingNotification.id === notification.id);
+          
+          if (!exists) {
+            this.notifications.push(notification);
+          }
+        });
+        
+        this.notifications.sort((a, b) => +new Date(b.createdAt) - +new Date(a.createdAt));
+  
+        this.unreadNotificationCount = this.notifications.filter(notification => !notification.isRead).length;
+      });
+  }
+
+  markNotificationsAsRead(): void {
+    this.notifService.markAsRead(this.users.user.idUser).subscribe(() => {
+      console.log('All notifications marked as read');
+      this.notifications.forEach(notification => notification.isRead = true);
+      this.GetNotif()
+    });
+  }
+
+  toggleDropdown1(): void {
+
+    this.isDropdownVisible = !this.isDropdownVisible;
+  
+    if (this.isDropdownVisible) {
+      setTimeout(() => {
+        this.markNotificationsAsRead();
+      }, 2000); 
+    }
+  }
+
 //affichage 6 couleurs pour update couleur
   groupColors(colors: string[]): string[][] {
     const groupedColors: string[][] = [];
@@ -664,7 +721,6 @@ telechargerPDF(): void {
 
 
 
-
 calculatePositionBlock1(index: number): { top: string, left: string } {
   let calculatedTop: string;
   let calculatedLeft: string;
@@ -683,8 +739,17 @@ calculatePositionBlock1(index: number): { top: string, left: string } {
     calculatedLeft = '0em';
   }
 
+  if (this.showComments && this.userRole.roleInvite !=='moniteur') {
+    calculatedLeft = `${parseFloat(calculatedLeft) - 21}em`; 
+  }
+
+  if (this.userRole.roleInvite ==='moniteur' ) {
+    calculatedLeft = `${parseFloat(calculatedLeft) - 5}em`;
+  }
+
   return { top: calculatedTop, left: calculatedLeft };
 }
+
 
 calculatePositionBlock2(index: number): { top: string, left: string } {
   let calculatedTop: string;
@@ -704,6 +769,9 @@ calculatePositionBlock2(index: number): { top: string, left: string } {
     calculatedLeft = '0em';
   }
 
+    if (this.showComments) {
+      calculatedLeft = `${parseFloat(calculatedLeft) - 28}em`; 
+    }
   return { top: calculatedTop, left: calculatedLeft };
 }
 
@@ -726,6 +794,9 @@ calculatePositionBlock3(index: number): { top: string, left: string } {
     calculatedLeft = '0em';
   }
 
+  if (this.showComments) {
+    calculatedLeft = `${parseFloat(calculatedLeft) - 26}em`; 
+  }
   return { top: calculatedTop, left: calculatedLeft };
 }
 
@@ -748,7 +819,9 @@ calculatePositionBlock7(index: number): { top: string, left: string } {
     calculatedTop = '0%';
     calculatedLeft = '0em';
   }
-
+  if (this.showComments) {
+    calculatedLeft = `${parseFloat(calculatedLeft) - 26}em`; 
+  }
   return { top: calculatedTop, left: calculatedLeft };
 }
 //tab2
@@ -771,6 +844,11 @@ calculatePositionBlock4(index: number): { top: string, left: string } {
     calculatedLeft = '0em';
   }
 
+  if (this.showComments ) {
+    calculatedLeft = `${parseFloat(calculatedLeft) - 40}em`;
+  }
+
+
   return { top: calculatedTop, left: calculatedLeft };
 }
 
@@ -791,7 +869,9 @@ calculatePositionBlock5(index: number): { top: string, left: string } {
     calculatedTop = '0%';
     calculatedLeft = '0em';
   }
-
+  if (this.showComments) {
+    calculatedLeft = `${parseFloat(calculatedLeft) - 40}em`; 
+  }
   return { top: calculatedTop, left: calculatedLeft };
 }
 
@@ -813,7 +893,9 @@ calculatePositionBlock6(index: number): { top: string, left: string } {
     calculatedTop = '0%';
     calculatedLeft = '0em';
   }
-
+  if (this.showComments) {
+    calculatedLeft = `${parseFloat(calculatedLeft) - 40}em`; 
+  }
   return { top: calculatedTop, left: calculatedLeft };
 }
 
@@ -834,7 +916,9 @@ calculatePositionBlock8(index: number): { top: string, left: string } {
     calculatedTop = '0%';
     calculatedLeft = '0em';
   }
-
+  if (this.showComments) {
+    calculatedLeft = `${parseFloat(calculatedLeft) - 40}em`; 
+  }
   return { top: calculatedTop, left: calculatedLeft };
 }
 

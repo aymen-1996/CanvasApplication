@@ -69,12 +69,67 @@
       </div>
           </div>
 
-              <!--Partie canvas-->
 
-  <div class="items-bmc" >
+<!-----------partie comment -------------------------------->
+
+<div class="chat-container"   *ngIf="showComments">
+  <div class="messages">
+    <div class="message">
+      <div class="message-header">
+        <div style="display: flex; align-items: center;">
+          <img src="https://funderapi.cynoia.com//media/avatar.png" class="avatar" alt="User Avatar">
+          <div class="username">You</div>
+        </div>
+        <div class="timestamp">Le 09/10/2024 à 09:02</div>
+      </div>
+      <audio src="https://funderapi.cynoia.com//media/audio.mp3" controls class="audio"></audio>
+    </div>
+    <div class="message">
+      <div class="message-header">
+        <div style="display: flex; align-items: center;">
+          <img src="https://funderapi.cynoia.com//media/avatar.png" class="avatar" alt="User Avatar">
+          <div class="username">You</div>
+        </div>
+        <div class="timestamp">Le 09/10/2024 à 09:00</div>
+      </div>
+      <p>mmm</p>
+    </div>
+    <div class="message">
+      <div class="message-header">
+        <div style="display: flex; align-items: center;">
+          <img src="https://funderapi.cynoia.com//media/avatar.png" class="avatar" alt="User Avatar">
+          <div class="username">You</div>
+        </div>
+        <div class="timestamp">Le 09/10/2024 à 09:00</div>
+      </div>
+      <p>aaa</p>
+    </div>
+  </div>
+  <form class="input-container">
+    <button type="button">
+      <span class="material-icons">attach_file</span>
+    </button>
+    <input type="text" placeholder="Type a message...">
+    <button type="submit">
+      <span class="material-icons">send</span>
+    </button>
+  </form>
+</div>
+
+
+   <!----------------Partie canvas------------------->
+
+  <div class="items-bmc"  class="items-bmc" [ngClass]="{'narrow': showComments}" >
     <div class="item-bmc" *ngIf="blocks  && blocks?.length > 0">
       <div *ngIf="shouldDisplayMesg()"><p class="css-tq1709">Enregistré <mat-icon>done</mat-icon></p></div>   
         <div>
+
+          <div class="icon-container" [ngClass]="{'shift-left': showComments , 'narrow': currentBlockIndex === 9}">
+            <span class="tooltip" *ngIf="!showComments">voir les commentaires</span> 
+            <i (click)="toggleComments()" class="material-icons" >comment</i>
+          </div>
+          
+          
           <mat-stepper *ngIf="userRole?.roleInvite === 'editor'" #stepper class="demo-stepper"  (selectionChange)="onStepChange($event)" >
           <mat-step >            
             <p class="css-vgwlcw">Etape 1: Segments</p>
@@ -201,7 +256,7 @@
 
           <div class="wrapper" *ngIf="!showTable && userRole?.roleInvite === 'editor'">
 
-            <div class="canvas" >
+            <div class="canvas"  [ngClass]="{ 'narrow': showComments }">
               <div (click)="detectedBlockById(blocks[7].idBlock)" id="canvas-key-partners" class="segment" [ngClass]="{ 'selected': isSelected(blocks[7].idBlock) }" (click)="toggleSelection(blocks[7].idBlock)">
               <div class="segment-header-key-partners"><span>{{blocks[7].nomBlock}}</span></div>
               <div *ngFor="let donnee of blocks[7]?.donnees?.slice(0, 3)" style="padding: 5px 10px; display: flex; flex-direction: column;">
@@ -324,7 +379,7 @@
             </div>
             
             <br>
-            <div  id="table" class="canvas" style="width: 96%">
+            <div class="canvas1" [ngClass]="{'narrow': showComments}"  id="table">
               <div (click)="detectedBlockById(blocks[7].idBlock)" id="canvas-key-partners" class="segment"  [ngClass]="{ 'selected': isSelected(blocks[7].idBlock) }"(click)="toggleSelection(blocks[7].idBlock)" >
               <div class="segment-header-key-partners"><span>{{blocks[7].nomBlock}}</span></div>
               <div class="conteneur">

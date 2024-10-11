@@ -66,12 +66,68 @@
             </div>
                 </div>
   
-                <div class="button-container">
+
+                <!----------------partie commentaire--------------->
+                <div class="chat-container"   *ngIf="showComments">
+                  <div class="messages">
+                    <div class="message">
+                      <div class="message-header">
+                        <div style="display: flex; align-items: center;">
+                          <img src="https://funderapi.cynoia.com//media/avatar.png" class="avatar" alt="User Avatar">
+                          <div class="username">You</div>
+                        </div>
+                        <div class="timestamp">Le 09/10/2024 à 09:02</div>
+                      </div>
+                      <audio src="https://funderapi.cynoia.com//media/audio.mp3" controls class="audio"></audio>
+                    </div>
+                    <div class="message">
+                      <div class="message-header">
+                        <div style="display: flex; align-items: center;">
+                          <img src="https://funderapi.cynoia.com//media/avatar.png" class="avatar" alt="User Avatar">
+                          <div class="username">You</div>
+                        </div>
+                        <div class="timestamp">Le 09/10/2024 à 09:00</div>
+                      </div>
+                      <p>mmm</p>
+                    </div>
+                    <div class="message">
+                      <div class="message-header">
+                        <div style="display: flex; align-items: center;">
+                          <img src="https://funderapi.cynoia.com//media/avatar.png" class="avatar" alt="User Avatar">
+                          <div class="username">You</div>
+                        </div>
+                        <div class="timestamp">Le 09/10/2024 à 09:00</div>
+                      </div>
+                      <p>aaa</p>
+                    </div>
+                  </div>
+                  <form class="input-container">
+                    <button type="button">
+                      <span class="material-icons">attach_file</span>
+                    </button>
+                    <input type="text" placeholder="Type a message...">
+                    <button type="submit">
+                      <span class="material-icons">send</span>
+                    </button>
+                  </form>
+                </div>
+
+                <!------------------------------------------------------------->
+                
+                <div class="icon-container" [ngClass]="{'shift-left': showComments}">
+                  <span class="tooltip" *ngIf="!showComments">voir les commentaires</span> 
+                  <i (click)="toggleComments()" class="material-icons" >comment</i>
+                </div>
+
+                <div class="button-container" [ngClass]="{'btn': showComments}">
                   <button class="download-button" mat-raised-button color="primary" (click)="telechargerPDF()">Télécharger en PDF</button>
                   <button *ngIf=" userRole?.roleInvite === 'editor'" class="download-button" mat-raised-button color="primary" (click)="openPopupInvite()">Envoyer Invitation</button>
                   <br>
-  
-       <div id="table" class="MuiBox-root css-0" style="border: 1px solid rgb(236, 236, 236); border-radius: 10px; padding: 1rem; height: 100%;"><div class="MuiGrid-root MuiGrid-container css-18pl0di">
+                </div>    
+
+       <div id="table" class="css-0"  [ngClass]="{'narrow': showComments}" style="   margin: 0 auto;
+  transition: width 0.3s ease; border: 1px solid rgb(236, 236, 236); border-radius: 10px; padding: 1rem; height: 100%;">
+        <div class="css-18pl0di">
         <div class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-1 css-1xhw2i0">
             <p style="position: absolute; text-align: center; top: 50%; left: 50%; transform-origin: left top; transform: rotate(270deg) translate(-50%, -50%);">Origine interne (organisationnelle)</p></div>
             <div  class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-6 css-tffj6s"><b>
@@ -331,5 +387,4 @@
                             </ul>
                         </div>
                         </div></div>     
-    </div>    
   </div>

@@ -14,7 +14,7 @@ import { environment } from 'src/environments/environment';
 import { PopupAcceptedComponent } from '../popup/popup-accepted/popup-accepted.component';
 import { ChatService } from 'src/app/services/chat.service';
 import { NotifService } from 'src/app/services/notif.service';
-import { Notification } from 'src/app/models/notification'; // Assurez-vous d'importer votre modèle de notification
+import { Notification } from 'src/app/models/notification'; 
 import { io } from 'socket.io-client';
 interface BlockData {
   block: any; // Remplacez 'any' par le type approprié pour votre bloc

@@ -55,6 +55,8 @@ export class PersonaComponent implements OnInit{
   showTable: boolean = false;
   userRole:any
   selectProject:any
+  showComments: boolean = false;
+  isSliding: boolean = false; 
   @ViewChild(MatStepper) stepper!: MatStepper;
 
     constructor(private dialogue: MatDialog ,private http: HttpClient,private canvasService:CanvasService,private projetService:ProjetService,private sanitizer: DomSanitizer,private userService:UserService ,private router: Router,private blockService:BlocksService , private dialog: MatDialog, private activatedRoute:ActivatedRoute ,private formBuilder: FormBuilder){
@@ -104,6 +106,19 @@ export class PersonaComponent implements OnInit{
       ticket: '',
     });
    
+  }
+
+  toggleComments() {
+    this.showComments = !this.showComments;
+  
+    if (this.showComments) {
+      this.isSliding = false; 
+    } else {
+      this.isSliding = true;
+      setTimeout(() => {
+        this.isSliding = false; 
+      }, 500); 
+    }
   }
  
 //affichage 6 couleurs pour update couleur

@@ -57,6 +57,8 @@ export class BmcComponent implements OnInit {
   showTable: boolean = false;
   userRole:any
   selectProject:any
+  showComments: boolean = false;
+  isSliding: boolean = false;
   @ViewChild(MatStepper) stepper!: MatStepper;
     constructor(private dialogue: MatDialog ,private canvasService:CanvasService,private http: HttpClient,private projetService:ProjetService,private sanitizer: DomSanitizer,private userService:UserService ,private router: Router ,private blockService:BlocksService , private dialog: MatDialog, private activatedRoute:ActivatedRoute ,private formBuilder: FormBuilder){
 
@@ -114,6 +116,21 @@ export class BmcComponent implements OnInit {
     });
    
   }
+
+  
+  toggleComments() {
+    this.showComments = !this.showComments;
+  
+    if (this.showComments) {
+      this.isSliding = false; 
+    } else {
+      this.isSliding = true;
+      setTimeout(() => {
+        this.isSliding = false; 
+      }, 500); 
+    }
+  }
+ 
  
 //affichage 6 couleurs pour update couleur
   groupColors(colors: string[]): string[][] {

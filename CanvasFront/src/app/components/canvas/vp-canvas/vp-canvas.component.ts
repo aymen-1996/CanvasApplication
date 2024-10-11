@@ -56,6 +56,8 @@ export class VpCanvasComponent implements OnInit {
   userRole:any
   selectProject:any
   positions: { top: string; left: string }[] = [];
+  showComments: boolean = false;
+  isSliding: boolean = false; 
   @ViewChild(MatStepper) stepper!: MatStepper;
 
     constructor(private dialogue: MatDialog ,private http: HttpClient,private canvasService:CanvasService,private projetService:ProjetService,private sanitizer: DomSanitizer,private userService:UserService ,private router: Router,private blockService:BlocksService , private dialog: MatDialog, private activatedRoute:ActivatedRoute ,private formBuilder: FormBuilder){
@@ -112,7 +114,21 @@ this.listeCanvases()
     });
    
   }
+  
+  toggleComments() {
+    this.showComments = !this.showComments;
+  
+    if (this.showComments) {
+      this.isSliding = false; 
+    } else {
+      this.isSliding = true;
+      setTimeout(() => {
+        this.isSliding = false; 
+      }, 500); 
+    }
+  }
  
+  
 //affichage 6 couleurs pour update couleur
   groupColors(colors: string[]): string[][] {
     const groupedColors: string[][] = [];
@@ -714,61 +730,71 @@ calculatePositionBlock2(index: number): { top: string, left: string } {
 
 
 
-calculatePositionBlock4(index: number): { top: string, left: string } {
-  const initialTop = 58; 
-  const initialLeft = -21.5; 
-  const leftOffset = 11; 
-  const topOffset =11; 
+calculatePositionBlock4(index: number, showComments: boolean): { top: string, left: string } {
+  const initialTop = 58;
+  const initialLeft = -21.5;
+  const leftOffset = 11;
+  const topOffset = 11;
+  const commentOffset = showComments ? 5 : 0; 
 
   const calculatedTop = `${initialTop + index * topOffset}%`;
-  const calculatedLeft = `${initialLeft - index * leftOffset}em`;
+  const calculatedLeft = `${initialLeft - index * leftOffset + commentOffset}em`;
 
   return { top: calculatedTop, left: calculatedLeft };
 }
 
 
-
-calculatePositionBlock3(index: number): { top: string, left: string } {
+calculatePositionBlock3(index: number, showComments: boolean, currentBlockIndex: number): { top: string, left: string } {
   let calculatedTop: string;
   let calculatedLeft: string;
+  
+  const commentOffset = showComments ? 13 : 0;
+  const topCommentOffset = showComments ? 20 : 0;
+  const leftSlideOffset = (showComments && currentBlockIndex === 6 ||showComments && this.userRole?.roleInvite === 'moniteur' ) ? -5 : 0;
 
   if (index === 0) {
-    calculatedTop = 'calc(15% + 12em)';
-    calculatedLeft = '-47em';
+    calculatedTop = `calc(15% + 12em + ${topCommentOffset}px)`;
+    calculatedLeft = `${-47 + commentOffset + leftSlideOffset}em`;
   } else if (index === 1) {
-    calculatedTop = '30%';
-    calculatedLeft = '-36.5em';
+    calculatedTop = `calc(30% + ${topCommentOffset}px)`;
+    calculatedLeft = `${-36.5 + commentOffset + leftSlideOffset}em`;
   } else if (index === 2) {
-    calculatedTop = '15%';
-    calculatedLeft = '-47em';
+    calculatedTop = `calc(15% + ${topCommentOffset}px)`;
+    calculatedLeft = `${-47 + commentOffset + leftSlideOffset}em`;
   } else {
-    calculatedTop = '0%';
-    calculatedLeft = '0em';
+    calculatedTop = `${topCommentOffset}%`;
+    calculatedLeft = `${commentOffset + leftSlideOffset}em`;
   }
 
   return { top: calculatedTop, left: calculatedLeft };
 }
 
-calculatePositionBlock5(index: number): { top: string, left: string } {
+
+calculatePositionBlock5(index: number, showComments: boolean, currentBlockIndex: number): { top: string, left: string } {
   let calculatedTop: string;
   let calculatedLeft: string;
+  
+  const commentOffset = showComments ? 19 : 0;
+  const leftSlideOffset = (showComments && currentBlockIndex === 6  ||showComments && this.userRole?.roleInvite === 'moniteur') ? -5 : 0;
 
   if (index === 0) {
     calculatedTop = '-5em';
-    calculatedLeft = 'calc(100% - 78em)';
+    calculatedLeft = `calc(100% - 78em + ${commentOffset + leftSlideOffset}em)`;
   } else if (index === 1) {
     calculatedTop = '-1em';
-    calculatedLeft = 'calc(100% - 67em';
+    calculatedLeft = `calc(100% - 67em + ${commentOffset + leftSlideOffset}em)`;
   } else if (index === 2) {
     calculatedTop = '4em';
-    calculatedLeft = 'calc(100% - 56em)';
+    calculatedLeft = `calc(100% - 56em + ${commentOffset + leftSlideOffset}em)`;
   } else {
     calculatedTop = '0%';
-    calculatedLeft = '0em';
+    calculatedLeft = `${commentOffset + leftSlideOffset}em`; 
   }
 
   return { top: calculatedTop, left: calculatedLeft };
 }
+
+
 
 calculatePosition(index: number): { top: string, left: string } {
   const initialTop = 75;
