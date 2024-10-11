@@ -59,6 +59,7 @@ export class BmcComponent implements OnInit {
   selectProject:any
   showComments: boolean = false;
   isSliding: boolean = false;
+  
   @ViewChild(MatStepper) stepper!: MatStepper;
     constructor(private dialogue: MatDialog ,private canvasService:CanvasService,private http: HttpClient,private projetService:ProjetService,private sanitizer: DomSanitizer,private userService:UserService ,private router: Router ,private blockService:BlocksService , private dialog: MatDialog, private activatedRoute:ActivatedRoute ,private formBuilder: FormBuilder){
 
