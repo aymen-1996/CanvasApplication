@@ -998,18 +998,6 @@ height: 65px;
   color: rgb(189, 39, 39);
 }
 
-  
-
-@media (min-width: 600px) {
-  .css-1x4nai  :not(style) + :not(style) {
-      margin: 0px 0px 0px 12px;
-  }
-}
-@media (min-width: 0px) {
-  .css-1x4nai > :not(style) + :not(style) {
-      margin: 0px 0px 0px 4px;
-  }
-}
 .css-w5qhhs {
   display: inline-flex;
   -webkit-box-align: center;
@@ -1378,6 +1366,10 @@ img {
   border-bottom: 1px solid #dfe4ea;
   cursor: pointer;
   transition: background-color 0.3s ease, box-shadow 0.3s ease;
+  max-width: 450px; 
+  white-space: normal;
+  word-wrap: break-word; 
+  overflow: hidden;
 }
 
 .dropdown-item:hover {
@@ -1647,6 +1639,18 @@ img {
   background: #555; 
 }
 
+
+
+.custom-badge {
+  position: absolute;
+  right: 60px;
+  background-color: #ff4081;
+  color: white;
+  padding: 2px 6px;
+  border-radius: 50%;
+  font-size: 12px;
+  line-height: 1;
+}
 
 /*----------partie comment ----------------*/
 

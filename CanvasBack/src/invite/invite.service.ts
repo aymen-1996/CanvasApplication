@@ -28,9 +28,13 @@ export class InviteService {
         throw new Error(`Utilisateur avec l'adresse e-mail ${emailUser} non trouvé.`);
     }
 
+    if (!user.enabled) {
+        throw new Error(`Vous ne pouvez pas envoyer une invitation à cet utilisateur, car son compte n'est pas activé.`);
+    }
+
     if (!role) {
       throw new Error("Veuillez choisir un rôle pour l'invitation.");
-  }
+    }
 
     const projet = await this.projetRepository.findOne({ where: { idProjet } });
     const canvas = await this.canvasRepository.findOne({ where: { idCanvas } });
@@ -60,7 +64,7 @@ export class InviteService {
             return `Le rôle de l'utilisateur dans l'invitation a été mis à jour avec succès`;
         } else {
             const invite = this.inviteRepository.create({
-                etat:'en attente',
+                etat: 'en attente',
                 nomInvite: user.nomUser,
                 emailInvite: user.emailUser,
                 roleInvite: role,
@@ -71,10 +75,10 @@ export class InviteService {
 
             await this.inviteRepository.save(invite);
             return `Invitation envoyée avec succès`;
-
         }
     }
 }
+
 
 async deleteInviteByIdAndUserId(idInvite: number, idUser: number): Promise<string> {
     const invite = await this.inviteRepository.findOne({ 

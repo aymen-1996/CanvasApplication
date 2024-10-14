@@ -737,16 +737,20 @@ calculateWidth3(totalItems: number, currentIndex: number): string {
 }
 
 calculateWidth4(totalItems: number, currentIndex: number): string {
+  const widthAdjustment = this.showComments ? '1%' : '0'; 
+
   if (totalItems === 1) {
-    return '97%';
+    return `calc(97%${this.showComments ? ' - ' + widthAdjustment : ''})`;
   } else if (totalItems <= 2) {
-    return 'calc(97% / ' + totalItems + ')';
+    return `calc((97% / ${totalItems})${this.showComments ? ' - ' + widthAdjustment : ''})`; 
   } else if (currentIndex < 2) {
-    return '48.5%';
+    return `calc(48.5%${this.showComments ? ' - ' + widthAdjustment : ''})`; 
   } else {
-    return 'calc(97% / 2)';
+    return `calc(97% / 2${this.showComments ? ' - ' + widthAdjustment : ''})`; 
   }
 }
+
+
 
 //telecharger pdf
  telechargerPDF(): void {

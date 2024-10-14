@@ -307,7 +307,7 @@ async getRoleByUserIdAndCanvasId(
           idInvite: inviteId,
           etat: 'en attente',
         },
-        relations: ['projet', 'projet.user', 'user'],
+        relations: ['projet', 'projet.user', 'canvas', 'user'],
       });
   
       if (!inviteToUpdate) {
@@ -319,15 +319,17 @@ async getRoleByUserIdAndCanvasId(
   
       const project = inviteToUpdate.projet;
       const projectUser = project.user;
-      const invitingUser = inviteToUpdate.user; 
+      const invitingUser = inviteToUpdate.user;
   
-      const notificationMessage = `${invitingUser.nomUser} a accepté l'invitation !`; 
+      const canvasName = inviteToUpdate.canvas ? inviteToUpdate.canvas.nomCanvas : 'canvas';
+  
+      const notificationMessage = `${invitingUser.nomUser} a accepté l'invitation au canvas ${canvasName}`;
   
       await this.notifService.createNotification(projectUser.idUser, notificationMessage);
   
       return {
         invite: inviteToUpdate,
-        project: project, 
+        project: project,
         user: projectUser,
       };
     } catch (error) {
