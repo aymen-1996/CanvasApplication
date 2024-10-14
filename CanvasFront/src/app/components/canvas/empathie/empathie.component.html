@@ -3,18 +3,18 @@
 
       <div class="header">
 
-        <div class="navbar">
+        <div class="css-1t1eosl">
           <div class="css-1ir47a1">
             <a routerLink="/projects" class="no-underline">
               <h2 class="logo"><span style="color: rgb(33, 150, 243)">Canvas</span></h2>
             </a>    <div class="MuiBox-root css-i9gxme"></div>
-
+  
            
-            <div >
-                      <button routerLink="/canvas" class="css-10ygcul" tabindex="0" 
+            <div class="css-1x4nai">
+            <button routerLink="/canvas" class="css-10ygcul" tabindex="0" 
               type="button" title="Canvas"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" class="MuiBox-root css-0 iconify iconify--codicon" sx="[object Object]" width="1em" height="1em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 16 16">
                 <path fill="currentColor" d="M13.5 2h-12l-.5.5v11l.5.5h12l.5-.5v-11zM2 3h11v1H2zm7 4H6V5h3zm0 1v2H6V8zM2 5h3v2H2zm0 3h3v2H2zm0 5v-2h3v2zm4 0v-2h3v2zm7 0h-3v-2h3zm0-3h-3V8h3zm-3-3V5h3v2z">
-
+  
                 </path>
               </svg>
                 <span class=" css-w0pj6f"></span></button>     
@@ -27,87 +27,179 @@
                   </mat-option>
                 </mat-select>
               </mat-form-field>
-        
-        <div class="dropdown-container">
-          <button class="css-tfolz5" tabindex="0" type="button" (click)="togglePendingInvitesDropdown()">
-            <span class="BaseBadge-root MuiBadge-root css-1rzb3uu">
-              <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" class="MuiBox-root css-1wl1iil iconify iconify--ant-design" sx="[object Object]" width="1em" height="1em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 1024 1024">
-                <path fill="currentColor" fill-opacity=".15" d="M477.5 536.3L135.9 270.7l-27.5-21.4l27.6 21.5V792h752V270.8L546.2 536.3a55.99 55.99 0 0 1-68.7 0"></path><path fill="currentColor" fill-opacity=".15" d="m876.3 198.8l39.3 50.5l-27.6 21.5l27.7-21.5l-39.3-50.5z"></path><path fill="currentColor" d="M928 160H96c-17.7 0-32 14.3-32 32v640c0 17.7 14.3 32 32 32h832c17.7 0 32-14.3 32-32V192c0-17.7-14.3-32-32-32m-94.5 72.1L512 482L190.5 232.1zm54.5 38.7V792H136V270.8l-27.6-21.5l27.5 21.4l341.6 265.6a55.99 55.99 0 0 0 68.7 0zl27.6-21.5l-39.3-50.5h.1l39.3 50.5z"></path>
-            </svg>
-            <span class="BaseBadge-badge BaseBadge-invisible MuiBadge-badge MuiBadge-standard MuiBadge-invisible MuiBadge-anchorOriginTopRight MuiBadge-anchorOriginTopRightRectangular MuiBadge-overlapRectangular MuiBadge-colorError css-1kr17ld">0</span></span>
-            <span class="MuiTouchRipple-root css-w0pj6f"></span>
-          </button>
-        
-          <div *ngIf="pendingInvitesCount > 0" class="badge">{{ pendingInvitesCount }}</div>
-        
-          <div class="dropdown-content" *ngIf="showPendingInvitesDropdown">
-            <ng-container *ngIf="pendingInvites && pendingInvites.length > 0; else noInvites">
-              <div *ngFor="let invite of pendingInvites" class="dropdown-item" (click)="openPopup1(invite.idInvite)">
-                <p class="invite">Vous avez une Invitation dans <br><strong>{{ invite.canvas.nomCanvas}}</strong> de projet <strong>{{ invite.projet.nomProjet }}</strong></p>
-              </div>
-            </ng-container>
-            <ng-template #noInvites>
-              <div class="dropdown-item">
-                <p class="no-invite">Aucune invitation en attente.</p>
-              </div>
-            </ng-template>
-          
+  
+              <mat-icon 
+              routerLink="/chat" 
+              class="maticon1" 
+              matBadge="{{ messageCount }}" 
+              matBadgeColor="warn" 
+              matBadgePosition="above after" 
+              [matBadgeHidden]="messageCount === 0"> 
+              chat
+            </mat-icon>
+  
+              <div class="dropdown-container">
+  
+                <button class="css-tfolz5" tabindex="0" type="button" (click)="togglePendingInvitesDropdown()">
+                  <span class="BaseBadge-root MuiBadge-root css-1rzb3uu">
+                    <svg 
+                    [ngStyle]="{'fill': showPendingInvitesDropdown ? 'rgb(33, 150, 243)' : 'currentColor'}"
+                    xmlns="http://www.w3.org/2000/svg" 
+                    xmlns:xlink="http://www.w3.org/1999/xlink" 
+                    aria-hidden="true" 
+                    role="img" 
+                    class="MuiBox-root css-1wl1iil iconify iconify--ant-design" 
+                    width="1em" 
+                    height="1em" 
+                    preserveAspectRatio="xMidYMid meet" 
+                    viewBox="0 0 1024 1024">
+                    <path 
+                      [ngStyle]="{'fill': showPendingInvitesDropdown ? 'rgb(33, 150, 243)' : 'currentColor'}" 
+                      fill-opacity=".15" 
+                      d="M477.5 536.3L135.9 270.7l-27.5-21.4l27.6 21.5V792h752V270.8L546.2 536.3a55.99 55.99 0 0 1-68.7 0">
+                    </path>
+                    <path 
+                      [ngStyle]="{'fill': showPendingInvitesDropdown ? 'rgb(33, 150, 243)' : 'currentColor'}" 
+                      fill-opacity=".15" 
+                      d="m876.3 198.8l39.3 50.5l-27.6 21.5l27.7-21.5l-39.3-50.5z">
+                    </path>
+                    <path 
+                      [ngStyle]="{'fill': showPendingInvitesDropdown ? 'rgb(33, 150, 243)' : 'currentColor'}" 
+                      d="M928 160H96c-17.7 0-32 14.3-32 32v640c0 17.7 14.3 32 32 32h832c17.7 0 32-14.3 32-32V192c0-17.7-14.3-32-32-32m-94.5 72.1L512 482L190.5 232.1zm54.5 38.7V792H136V270.8l-27.6-21.5l27.5 21.4l341.6 265.6a55.99 55.99 0 0 0 68.7 0zl27.6-21.5l-39.3-50.5h.1l39.3 50.5z">
+                    </path>
+                  </svg>
+                  
+                  <span class="BaseBadge-badge BaseBadge-invisible MuiBadge-badge MuiBadge-standard MuiBadge-invisible MuiBadge-anchorOriginTopRight MuiBadge-anchorOriginTopRightRectangular MuiBadge-overlapRectangular MuiBadge-colorError css-1kr17ld">0</span></span>
+                  <span class="MuiTouchRipple-root css-w0pj6f"></span>
+                </button>
+                        <div *ngIf="pendingInvitesCount > 0" class="badge">{{ pendingInvitesCount }}</div>
+  
+              </div >
+              
+              <div *ngIf="showPendingInvitesDropdown" class="css-1oknx5t">
+                <span class="arrow css-98b6ta"></span>
+                <div class="MuiBox-root css-3sojac">
+                  <div class="MuiBox-root css-i9gxme">
+                    <h6 class="MuiTypography-root MuiTypography-subtitle1 css-k9tjo5">Invitations</h6>
+                    <p class="MuiTypography-root MuiTypography-body2 css-11r9ii4">Vous avez {{ pendingInvitesCount }} invitations</p>
+                    <div class="scroll-container">
+                      <ul class="MuiList-root css-1uzmcsd">
+                        <ng-container *ngIf="pendingInvites && pendingInvites.length > 0">
+                          <li *ngFor="let invite of pendingInvites" class="MuiListItem-root css-1g5h4hs" (click)="openPopup1(invite.idInvite)">
+                            <div class="MuiListItemText-root css-1bbslg7">
+                              <span class="MuiTypography-root MuiTypography-body2 css-11r9ii4">
+                                Vous avez été invité à rejoindre le projet <strong>{{ invite.projet.nomProjet }}</strong> dans<strong>{{ invite.canvas.nomCanvas }}</strong>.
+                              </span>
+                            </div>
+                          </li>
+                        </ng-container>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+                <hr class="MuiDivider-root MuiDivider-fullWidth css-zg4d8h">
            
-          </div>
-        </div>
-        <button class="css-tfolz5" tabindex="0" type="button" [matMenuTriggerFor]="notificationsMenu" (click)="toggleDropdown1()"><span class=" css-1rzb3uu">
-          <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" class="MuiBox-root css-1wl1iil iconify iconify--clarity" sx="[object Object]" width="1em" height="1em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 36 36">
-            <path fill="currentColor" d="M32.51 27.83A14.4 14.4 0 0 1 30 24.9a12.6 12.6 0 0 1-1.35-4.81v-4.94A10.81 10.81 0 0 0 19.21 4.4V3.11a1.33 1.33 0 1 0-2.67 0v1.31a10.81 10.81 0 0 0-9.33 10.73v4.94a12.6 12.6 0 0 1-1.35 4.81a14.4 14.4 0 0 1-2.47 2.93a1 1 0 0 0-.34.75v1.36a1 1 0 0 0 1 1h27.8a1 1 0 0 0 1-1v-1.36a1 1 0 0 0-.34-.75M5.13 28.94a16.2 16.2 0 0 0 2.44-3a14.2 14.2 0 0 0 1.65-5.85v-4.94a8.74 8.74 0 1 1 17.47 0v4.94a14.2 14.2 0 0 0 1.65 5.85a16.2 16.2 0 0 0 2.44 3Z" class="clr-i-outline clr-i-outline-path-1">
-
-            </path>
-            <path fill="currentColor" d="M18 34.28A2.67 2.67 0 0 0 20.58 32h-5.26A2.67 2.67 0 0 0 18 34.28" class="clr-i-outline clr-i-outline-path-2"></path><path fill="none" d="M0 0h36v36H0z"></path></svg><span class="BaseBadge-badge BaseBadge-invisible MuiBadge-badge MuiBadge-standard MuiBadge-invisible MuiBadge-anchorOriginTopRight MuiBadge-anchorOriginTopRightRectangular MuiBadge-overlapRectangular MuiBadge-colorError css-1kr17ld">0</span></span>
+                </div>
+              
+              <div>
+        <button class="css-tfolz5" tabindex="0" type="button"  (click)="toggleDropdown1()"><span class=" css-1rzb3uu">
+          <svg 
+          [ngStyle]="{'fill': isDropdownVisible ? 'rgb(33, 150, 243)' : 'currentColor'}" 
+          xmlns="http://www.w3.org/2000/svg" 
+          aria-hidden="true" 
+          role="img" 
+          class="MuiBox-root css-1wl1iil iconify iconify--clarity" 
+          width="1em" 
+          height="1em" 
+          preserveAspectRatio="xMidYMid meet" 
+          viewBox="0 0 36 36">
+          <path 
+              [ngStyle]="{'fill': isDropdownVisible ? 'rgb(33, 150, 243)' : 'currentColor'}" 
+              d="M32.51 27.83A14.4 14.4 0 0 1 30 24.9a12.6 12.6 0 0 1-1.35-4.81v-4.94A10.81 10.81 0 0 0 19.21 4.4V3.11a1.33 1.33 0 1 0-2.67 0v1.31a10.81 10.81 0 0 0-9.33 10.73v4.94a12.6 12.6 0 0 1-1.35 4.81a14.4 14.4 0 0 1-2.47 2.93a1 1 0 0 0-.34.75v1.36a1 1 0 0 0 1 1h27.8a1 1 0 0 0 1-1v-1.36a1 1 0 0 0-.34-.75M5.13 28.94a16.2 16.2 0 0 0 2.44-3a14.2 14.2 0 0 0 1.65-5.85v-4.94a8.74 8.74 0 1 1 17.47 0v4.94a14.2 14.2 0 0 0 1.65 5.85a16.2 16.2 0 0 0 2.44 3Z" 
+              class="clr-i-outline clr-i-outline-path-1">
+          </path>
+          <path 
+              [ngStyle]="{'fill': isDropdownVisible ? 'rgb(33, 150, 243)' : 'currentColor'}" 
+              d="M18 34.28A2.67 2.67 0 0 0 20.58 32h-5.26A2.67 2.67 0 0 0 18 34.28" 
+              class="clr-i-outline clr-i-outline-path-2">
+          </path>
+          <path fill="none" d="M0 0h36v36H0z"></path>
+      </svg>
+            <span class="BaseBadge-badge BaseBadge-invisible MuiBadge-badge MuiBadge-standard MuiBadge-invisible MuiBadge-anchorOriginTopRight MuiBadge-anchorOriginTopRightRectangular MuiBadge-overlapRectangular MuiBadge-colorError css-1kr17ld">0</span></span>
           <span class="MuiTouchRipple-root css-w0pj6f">
-
+  
           </span>
         </button>
         <mat-badge [matBadge]="unreadNotificationCount"  [matBadgeHidden]="unreadNotificationCount === 0" matBadgeColor="accent" matBadgePosition="above after"></mat-badge>
-
-<mat-menu #notificationsMenu="matMenu" class="notifications-menu">
-<div class="menu-container">
-<div *ngIf="notifications.length > 0; else noNotifications" >
-<button mat-menu-item *ngFor="let notification of notifications" class="dropdown-item" 
-  [ngStyle]="{ 'background-color':notification.isRead ?'transparent': '#d0dde9' }">
-  <div 
-  [ngStyle]="{
-    
-
-    'position': 'absolute',
-    'bottom': '0',
-    'left': '0',
-    'width': '100%',
-    'height': '3px', 
-    'background-color': notification.isRead ?'transparent': 'white' 
+        <div *ngIf="isDropdownVisible" class="css-1oknx5t" tabindex="-1" style="opacity: 1; transform: none; transition: opacity 228ms cubic-bezier(0.4, 0, 0.2, 1), transform 152ms cubic-bezier(0.4, 0, 0.2, 1); top: 62px; margin-left: -322px !important; transform-origin: 360px 0px;">
+          <span class="arrow css-98b6ta">
   
-}">
-</div>
-  <p class="invite">{{ notification.message }}</p>
-</button>
-</div>
-<ng-template #noNotifications>
-<button mat-menu-item disabled>
-  Aucune notification à afficher.
-</button>
-</ng-template>
-</div>
-</mat-menu>
-        
-              <div class="dropdown-container">
-
+          </span>
+          <div class="css-3sojac" >
+            <div class="css-i9gxme">
+              <h6 class="css-k9tjo5">Notifications</h6>
+             
+              <ng-container *ngIf="notifications.length > 0; else noNotifications" >
+            <div class="notification-list">
+                    <div *ngFor="let notification of notifications" class="dropdown-item" [class.unread]="!notification.isRead"
+                         [ngStyle]="{ 'background-color': notification.isRead ? 'transparent' : '#d0dde9' }">
+                        <p class="css-11r9ii4" [ngStyle]="{
+                            'color': notification.isRead === false ? 'black' : 'black'}">{{ notification.message }}</p>
+                        <div [ngStyle]="{
+                            'position': 'absolute',
+                            'bottom': '0',
+                            'left': '0',
+                            'width': '100%',
+                            'height': '3px',
+                            'background-color': notification.isRead ? 'transparent' : 'white'
+                        }"></div>
+                  </div>
+                  </div>
+            </ng-container>
+  
+              <ng-template #noNotifications>
+                <p class="css-11r9ii4">Vous avez 0 notifications</p>
+              </ng-template>
+             
+            </div>
+          </div>
+          
+        </div>
+  </div>
+  
+  
+  <div class="popover-wrapper"  >
+  
                 <button (click)="toggleDropdown()" class="css-w5qhhs" tabindex="0" type="button"><div class="css-1ciwozm"><img alt="photoURL" [src]="userPhotoUrl" class="css-1hy9t21"></div><span class="css-w0pj6f"></span></button>
               
-                <div class="dropdown-content" *ngIf="showDropdown">
-                  <div (click)="logout()" class="dropdown-item">
-                    <mat-icon>logout</mat-icon> <p class="mat">Deconnexion</p>
+                <div *ngIf="showDropdown" class="popover-container" tabindex="-1">
+                  <span class="arrow css-98b6ta"></span>
+                                  <div class="popover-content">
+                    <h6 class="title">{{users.user.nomUser}} {{users.user.prenomUser}}</h6>
+                    <p class="email">{{users.user.emailUser}}</p>
                   </div>
-                  <div routerLink="/profil"  class="dropdown-item">
-                    <mat-icon>settings</mat-icon> <p class="mat">Paramétre</p>
+                  <hr class="divider">
+                  <div class="menu">
+                    <a routerLink="/projects" class="menu-item">
+                      <div class="menu-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" class="MuiBox-root css-1wit1pw iconify iconify--icons8" sx="[object Object]" width="1em" height="1em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 32 32"><path fill="currentColor" d="M12 5v8h3v2H5v4H2v8h8v-8H7v-2h8v2h-3v8h8v-8h-3v-2h8v2h-3v8h8v-8h-3v-4H17v-2h3V5zm2 2h4v4h-4zM4 21h4v4H4zm10 0h4v4h-4zm10 0h4v4h-4z"></path></svg>                    </div>
+                      Projets
+                    </a>
+                    <a routerLink="/profil" class="menu-item">
+                      <div class="menu-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" class="MuiBox-root css-1wit1pw iconify iconify--ant-design" sx="[object Object]" width="1em" height="1em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 1024 1024"><path fill="currentColor" d="M858.5 763.6a374 374 0 0 0-80.6-119.5a375.6 375.6 0 0 0-119.5-80.6c-.4-.2-.8-.3-1.2-.5C719.5 518 760 444.7 760 362c0-137-111-248-248-248S264 225 264 362c0 82.7 40.5 156 102.8 201.1c-.4.2-.8.3-1.2.5c-44.8 18.9-85 46-119.5 80.6a375.6 375.6 0 0 0-80.6 119.5A371.7 371.7 0 0 0 136 901.8a8 8 0 0 0 8 8.2h60c4.4 0 7.9-3.5 8-7.8c2-77.2 33-149.5 87.8-204.3c56.7-56.7 132-87.9 212.2-87.9s155.5 31.2 212.2 87.9C779 752.7 810 825 812 902.2c.1 4.4 3.6 7.8 8 7.8h60a8 8 0 0 0 8-8.2c-1-47.8-10.9-94.3-29.5-138.2M512 534c-45.9 0-89.1-17.9-121.6-50.4S340 407.9 340 362s17.9-89.1 50.4-121.6S466.1 190 512 190s89.1 17.9 121.6 50.4S684 316.1 684 362s-17.9 89.1-50.4 121.6S557.9 534 512 534"></path></svg>                    </div>
+                      Profile
+                    </a>
                   </div>
+                  <hr class="divider">
+                  <li (click)="logout()" class="menu-item logout">
+                    <div class="menu-icon">
+                      <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" class="MuiBox-root css-12z0wuy iconify iconify--ic" sx="[object Object]" width="1em" height="1em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24"><path fill="currentColor" d="M5 5h7V3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h7v-2H5zm16 7l-4-4v3H9v2h8v3z"></path></svg>                  </div>
+                    Déconnexion
+                  </li>
                 </div>
+                
+  
               </div>
               
               
@@ -119,6 +211,7 @@
         
         </div>
             </div>
+  
 
 
                    <!------------partie comment--------------------->
@@ -288,7 +381,7 @@
               
           
                                  </div>
-                     <div class="button-container" [ngClass]="{'centerbtn':userRole?.roleInvite === 'moniteur' }">
+                     <div class="button-container" [ngClass]="{'centerbtn':userRole?.roleInvite === 'moniteur' , 'narrow': showComments&& currentBlockIndex ===6 }">
                       <button class="download-button" *ngIf="showTable ||userRole?.roleInvite === 'moniteur' " mat-raised-button color="primary" (click)="telechargerPDF()">Télécharger en PDF</button>
                       <button *ngIf="showTable && userRole?.roleInvite === 'editor'" class="download-button" mat-raised-button color="primary" (click)="openPopupInvite()">Envoyer Invitation</button>
                     </div>

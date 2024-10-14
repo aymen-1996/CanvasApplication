@@ -17,6 +17,10 @@ import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { PopupAcceptedComponent } from '../../popup/popup-accepted/popup-accepted.component';
 import { CanvasService } from 'src/app/services/canvas.service';
+import { NotifService } from 'src/app/services/notif.service';
+import { Notification } from 'src/app/models/notification';
+import { ChatService } from 'src/app/services/chat.service';
+import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
   selector: 'app-bmc',
@@ -57,17 +61,22 @@ export class BmcComponent implements OnInit {
   showTable: boolean = false;
   userRole:any
   selectProject:any
-  showComments: boolean = false;
-  isSliding: boolean = false;
-  
+  notifications: Notification[] = [];
+isDropdownVisible = false;
+unreadNotificationCount = 0;
+showComments: boolean = false;
+isSliding: boolean = false; 
+messageCount: number = 0;
+intervalId: any; 
   @ViewChild(MatStepper) stepper!: MatStepper;
-    constructor(private dialogue: MatDialog ,private canvasService:CanvasService,private http: HttpClient,private projetService:ProjetService,private sanitizer: DomSanitizer,private userService:UserService ,private router: Router ,private blockService:BlocksService , private dialog: MatDialog, private activatedRoute:ActivatedRoute ,private formBuilder: FormBuilder){
+    constructor(private dialogue: MatDialog ,private authService:AuthService,private chatService:ChatService ,private notifService:NotifService,private canvasService:CanvasService,private http: HttpClient,private projetService:ProjetService,private sanitizer: DomSanitizer,private userService:UserService ,private router: Router ,private blockService:BlocksService , private dialog: MatDialog, private activatedRoute:ActivatedRoute ,private formBuilder: FormBuilder){
 
   }
   title!: string;
 
   ngOnInit(): void {
     this.users = JSON.parse(localStorage.getItem('currentUser') as string);
+    this.GetNotif()
 
     this.selectProject =  localStorage.getItem('selectedProjectId');
 
@@ -82,8 +91,10 @@ export class BmcComponent implements OnInit {
 
     this.getBlocksByCanvasId()
     this.GetRole()
-  
-  
+    this.getMessageCount()
+    this.intervalId = setInterval(() => {
+      this.getMessageCount();
+    }, 5000);  
     this.pollSubscription = interval(1000)
     .pipe(
       switchMap(() => this.getPendingInvites())
@@ -131,6 +142,46 @@ export class BmcComponent implements OnInit {
       }, 500); 
     }
   }
+ 
+    //nombre msg
+    getMessageCount() {
+      this.chatService.getMessagesCountByRecipientId(this.users.user.idUser).subscribe(
+        (count: number) => {
+          this.messageCount = count;
+          console.log("count" , this.messageCount)
+        },
+        (error) => {
+          console.error('Error fetching message count', error);
+        }
+      );
+    }
+
+  GetNotif() {
+    this.notifService.getLiveNotifications(this.users.user.idUser)
+      .subscribe((newNotifications: Notification[]) => {
+        newNotifications.forEach((notification) => {
+          const exists = this.notifications.some(existingNotification => existingNotification.id === notification.id);
+          
+          if (!exists) {
+            this.notifications.push(notification);
+          }
+        });
+        
+        this.notifications.sort((a, b) => +new Date(b.createdAt) - +new Date(a.createdAt));
+  
+        this.unreadNotificationCount = this.notifications.filter(notification => !notification.isRead).length;
+      });
+  }
+
+  markNotificationsAsRead(): void {
+    this.notifService.markAsRead(this.users.user.idUser).subscribe(() => {
+      console.log('All notifications marked as read');
+      this.notifications.forEach(notification => notification.isRead = true);
+      this.GetNotif()
+    });
+  }
+
+
  
  
 //affichage 6 couleurs pour update couleur
@@ -743,16 +794,37 @@ calculateWidth4(totalItems: number, currentIndex: number): string {
 
 togglePendingInvitesDropdown() {
   this.showPendingInvitesDropdown = !this.showPendingInvitesDropdown;
+  this.isDropdownVisible = false
+  this.showDropdown = false
 }
 
 toggleDropdown() {
   this.showDropdown = !this.showDropdown;
+  this.showPendingInvitesDropdown = false
+  this.isDropdownVisible = false
+}
+
+toggleDropdown1(): void {
+
+  this.isDropdownVisible = !this.isDropdownVisible;
+  this.showDropdown = false
+  this.showPendingInvitesDropdown = false
+  if (this.isDropdownVisible) {
+    setTimeout(() => {
+      this.markNotificationsAsRead();
+    }, 2000); 
+  }
 }
 
 logout() {
-  localStorage.clear();
-
-  this.router.navigateByUrl('/login')
+  this.authService.logout().subscribe({
+      next: (response) => {
+          console.log("logout", response.message); 
+      },
+      error: (err) => {
+          console.error('Logout error:', err);
+      },
+  });
 }
 
 getUserPhoto(): void {
@@ -854,6 +926,7 @@ openPopup1(idInvite: number): void {
     data: { confirmationMessage, idInvite },
   });
 
+  this.showPendingInvitesDropdown=false
   dialogRef.afterClosed().subscribe((result) => {
     if (result && result.action === 'delete') {
       console.log('Suppression confirmée');
