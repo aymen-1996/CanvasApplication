@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, HostListener, Input, OnInit, Output } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { project } from 'src/app/models/project';
 import { AuthService } from 'src/app/services/auth.service';
@@ -11,6 +11,9 @@ import { Subscription, interval, switchMap } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { CanvasComponent } from '../canvas/canvas.component';
+import { NotifService } from 'src/app/services/notif.service';
+import { ChatService } from 'src/app/services/chat.service';
+import { Notification } from 'src/app/models/notification';
 
 @Component({
   selector: 'app-header',
@@ -37,14 +40,27 @@ idBlock:any
   selectedProjectId: string | null = null; 
   userPhotoUrl!: SafeUrl | string; 
   selectedProject:any
-  constructor(private canvasComponent:CanvasComponent,private activatedRoute: ActivatedRoute,private http: HttpClient,private sanitizer: DomSanitizer,private dialogue: MatDialog ,private userService:UserService ,private projectService: ProjetService,private authService:AuthService,private router: Router ) {
+
+  notifications: Notification[] = [];
+  isDropdownVisible = false;
+  unreadNotificationCount = 0;
+  showComments: boolean = false;
+  isSliding: boolean = false; 
+  messageCount: number = 0;
+  intervalId: any; 
+
+  constructor(private canvasComponent:CanvasComponent,private notifService:NotifService,private chatService:ChatService,private activatedRoute: ActivatedRoute,private http: HttpClient,private sanitizer: DomSanitizer,private dialogue: MatDialog ,private userService:UserService ,private projectService: ProjetService,private authService:AuthService,private router: Router ) {
     this.idBlock = this.activatedRoute.snapshot.params['id'];
 
   }
   ngOnInit(): void {
     this.users = JSON.parse(localStorage.getItem('currentUser') as string);
     this.selectedProject =  localStorage.getItem('selectedProjectId');
-
+    this.GetNotif()
+    this.getMessageCount()
+    this.intervalId = setInterval(() => {
+      this.getMessageCount();
+    }, 5000);  
     this.pollSubscription = interval(1000)
     .pipe(
       switchMap(() => this.getPendingInvites())
@@ -73,6 +89,47 @@ idBlock:any
     this.getUserPhoto()
 
   }
+
+   //nombre msg
+   getMessageCount() {
+    this.chatService.getMessagesCountByRecipientId(this.users.user.idUser).subscribe(
+      (count: number) => {
+        this.messageCount = count;
+        console.log("count" , this.messageCount)
+      },
+      (error) => {
+        console.error('Error fetching message count', error);
+      }
+    );
+  }
+
+GetNotif() {
+  this.notifService.getLiveNotifications(this.users.user.idUser)
+    .subscribe((newNotifications: Notification[]) => {
+      newNotifications.forEach((notification) => {
+        const exists = this.notifications.some(existingNotification => existingNotification.id === notification.id);
+        
+        if (!exists) {
+          this.notifications.push(notification);
+        }
+      });
+      
+      this.notifications.sort((a, b) => +new Date(b.createdAt) - +new Date(a.createdAt));
+
+      this.unreadNotificationCount = this.notifications.filter(notification => !notification.isRead).length;
+    });
+}
+
+markNotificationsAsRead(): void {
+  this.notifService.markAsRead(this.users.user.idUser).subscribe(() => {
+    console.log('All notifications marked as read');
+    this.notifications.forEach(notification => notification.isRead = true);
+    this.GetNotif()
+  });
+}
+
+
+
   ngOnDestroy() {
     this.pollSubscription.unsubscribe();
   }
@@ -103,6 +160,31 @@ idBlock:any
       } else {
         console.error('Project ID is not a valid number.');
       }
+    }
+  }
+
+
+  togglePendingInvitesDropdown() {
+    this.showPendingInvitesDropdown = !this.showPendingInvitesDropdown;
+    this.isDropdownVisible = false
+    this.showDropdown = false
+  }
+  
+  toggleDropdown() {
+    this.showDropdown = !this.showDropdown;
+    this.showPendingInvitesDropdown = false
+    this.isDropdownVisible = false
+  }
+  
+  toggleDropdown1(): void {
+  
+    this.isDropdownVisible = !this.isDropdownVisible;
+    this.showDropdown = false
+    this.showPendingInvitesDropdown = false
+    if (this.isDropdownVisible) {
+      setTimeout(() => {
+        this.markNotificationsAsRead();
+      }, 2000); 
     }
   }
 
@@ -155,24 +237,37 @@ getUserPhoto(): void {
   );
 }
 
+@HostListener('document:click', ['$event'])
+onDocumentClick(event: MouseEvent) {
+  const button = document.querySelector('.css-w5qhhs');
+  const dropdownMenu = document.querySelector('.popover-container');
+  const pendingButton = document.querySelector('.css-tfolz5');
+  const dropdown1Menu = document.querySelector('.css-tfolz51'); 
 
-toggleDropdown() {
-  this.showDropdown = !this.showDropdown;
+  const clickedInsideDropdownMenu = dropdownMenu && dropdownMenu.contains(event.target as Node);
+  const clickedInsideDropdown1Menu = dropdown1Menu && dropdown1Menu.contains(event.target as Node);
+
+  const clickedInsideButton = (button && button.contains(event.target as Node)) || 
+                              (pendingButton && pendingButton.contains(event.target as Node));
+
+  if (!clickedInsideButton && !clickedInsideDropdownMenu && !clickedInsideDropdown1Menu) {
+    this.showDropdown = false;
+    this.showPendingInvitesDropdown = false;
+    this.isDropdownVisible = false;
+  }
 }
-
 logout() {
-  localStorage.clear();
-
-  this.router.navigateByUrl('/login')
+  this.authService.logout().subscribe({
+      next: (response) => {
+          console.log("logout", response.message); 
+      },
+      error: (err) => {
+          console.error('Logout error:', err);
+      },
+  });
 }
 
 
-
-
-
-togglePendingInvitesDropdown() {
-  this.showPendingInvitesDropdown = !this.showPendingInvitesDropdown;
-}
 
 
 openPopup(idInvite: number): void {

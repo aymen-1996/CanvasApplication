@@ -103,7 +103,7 @@
               </div>
             
             <div>
-      <button class="css-tfolz5" tabindex="0" type="button"  (click)="toggleDropdown1()"><span class=" css-1rzb3uu">
+      <button class="css-tfolz51" tabindex="0" type="button"  (click)="toggleDropdown1()"><span class=" css-1rzb3uu">
         <svg 
         [ngStyle]="{'fill': isDropdownVisible ? 'rgb(33, 150, 243)' : 'currentColor'}" 
         xmlns="http://www.w3.org/2000/svg" 
@@ -681,7 +681,7 @@
 </div>
 </div>
 
-<button *ngIf="showTable || userRole?.roleInvite === 'moniteur'" class="css-5357ut"  style="position: relative;top: 281px;"(click)="precedent()" >Précédent</button>
+<button *ngIf="showTable && userRole?.roleInvite !== 'moniteur'" class="css-5357ut"  style="position: relative;top: 281px;"(click)="precedent()" >Précédent</button>
 
 <div class="centered-message" *ngIf="userRole?.roleInvite === null">
   <p>tu n'as pas le droit dans cette canvas. Attendre une invitation ou contacter le superviseur de projet.</p>

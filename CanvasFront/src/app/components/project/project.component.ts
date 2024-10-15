@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, HostListener, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
@@ -60,7 +60,8 @@ projectIdToDelete: number | null = null;
 notifications: Notification[] = [];
 isDropdownVisible = false;
 unreadNotificationCount = 0;
-
+showPendingInvitesDropdown: boolean = false;
+showDropdown: boolean = false;
   constructor(private activatedRoute:ActivatedRoute ,private chatService:ChatService , private notifService:NotifService ,private dialogue: MatDialog ,private http: HttpClient,private sanitilzer: DomSanitizer,private userService:UserService ,private router: Router,private fb:FormBuilder ,
     private projectService: ProjetService ,private authService:AuthService){}
    ngOnInit(): void {
@@ -171,17 +172,6 @@ unreadNotificationCount = 0;
       this.notifications.forEach(notification => notification.isRead = true);
       this.GetNotif()
     });
-  }
-
-  toggleDropdown1(): void {
-
-    this.isDropdownVisible = !this.isDropdownVisible;
-  
-    if (this.isDropdownVisible) {
-      setTimeout(() => {
-        this.markNotificationsAsRead();
-      }, 2000); 
-    }
   }
 
   preventClose(event: MouseEvent) {
@@ -325,17 +315,50 @@ getInvitesByUserId(projId: number): void {
 
 
 //partie header
-showPendingInvitesDropdown: boolean = false;
 
 togglePendingInvitesDropdown() {
   this.showPendingInvitesDropdown = !this.showPendingInvitesDropdown;
+  this.isDropdownVisible = false
+  this.showDropdown = false
 }
-
-showDropdown: boolean = false;
 
 toggleDropdown() {
   this.showDropdown = !this.showDropdown;
+  this.showPendingInvitesDropdown = false
+  this.isDropdownVisible = false
 }
+
+@HostListener('document:click', ['$event'])
+onDocumentClick(event: MouseEvent) {
+  const button = document.querySelector('.css-w5qhhs');
+  const dropdownMenu = document.querySelector('.popover-container');
+  const pendingButton = document.querySelector('.css-tfolz5');
+  const dropdown1Menu = document.querySelector('.css-tfolz51'); 
+
+  const clickedInsideDropdownMenu = dropdownMenu && dropdownMenu.contains(event.target as Node);
+  const clickedInsideDropdown1Menu = dropdown1Menu && dropdown1Menu.contains(event.target as Node);
+
+  const clickedInsideButton = (button && button.contains(event.target as Node)) || 
+                              (pendingButton && pendingButton.contains(event.target as Node));
+
+  if (!clickedInsideButton && !clickedInsideDropdownMenu && !clickedInsideDropdown1Menu) {
+    this.showDropdown = false;
+    this.showPendingInvitesDropdown = false;
+    this.isDropdownVisible = false;
+  }
+}
+toggleDropdown1(): void {
+
+  this.isDropdownVisible = !this.isDropdownVisible;
+  this.showDropdown = false
+  this.showPendingInvitesDropdown = false
+  if (this.isDropdownVisible) {
+    setTimeout(() => {
+      this.markNotificationsAsRead();
+    }, 2000); 
+  }
+}
+
 
 logout() {
   this.authService.logout().subscribe({

@@ -101,7 +101,7 @@
                 </div>
               
               <div>
-        <button class="css-tfolz5" tabindex="0" type="button"  (click)="toggleDropdown1()"><span class=" css-1rzb3uu">
+        <button class="css-tfolz51" tabindex="0" type="button"  (click)="toggleDropdown1()"><span class=" css-1rzb3uu">
           <svg 
           [ngStyle]="{'fill': isDropdownVisible ? 'rgb(33, 150, 243)' : 'currentColor'}" 
           xmlns="http://www.w3.org/2000/svg" 
@@ -129,8 +129,10 @@
   
           </span>
         </button>
-        <mat-badge [matBadge]="unreadNotificationCount"  [matBadgeHidden]="unreadNotificationCount === 0" matBadgeColor="accent" matBadgePosition="above after"></mat-badge>
-        <div *ngIf="isDropdownVisible" class="css-1oknx5t" tabindex="-1" style="opacity: 1; transform: none; transition: opacity 228ms cubic-bezier(0.4, 0, 0.2, 1), transform 152ms cubic-bezier(0.4, 0, 0.2, 1); top: 62px; margin-left: -322px !important; transform-origin: 360px 0px;">
+        <span *ngIf="unreadNotificationCount > 0" class="custom-badge">
+          {{ unreadNotificationCount }}
+        </span>     
+                <div *ngIf="isDropdownVisible" class="css-1oknx5t" tabindex="-1" style="opacity: 1; transform: none; transition: opacity 228ms cubic-bezier(0.4, 0, 0.2, 1), transform 152ms cubic-bezier(0.4, 0, 0.2, 1); top: 62px; margin-left: -322px !important; transform-origin: 360px 0px;">
           <span class="arrow css-98b6ta">
   
           </span>

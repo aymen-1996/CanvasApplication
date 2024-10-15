@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, HostListener, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BlocksService } from 'src/app/services/blocks.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
@@ -645,6 +645,25 @@ toggleDropdown() {
   this.showDropdown = !this.showDropdown;
   this.showPendingInvitesDropdown = false
   this.isDropdownVisible = false
+}
+@HostListener('document:click', ['$event'])
+onDocumentClick(event: MouseEvent) {
+  const button = document.querySelector('.css-w5qhhs');
+  const dropdownMenu = document.querySelector('.popover-container');
+  const pendingButton = document.querySelector('.css-tfolz5');
+  const dropdown1Menu = document.querySelector('.css-tfolz51'); 
+
+  const clickedInsideDropdownMenu = dropdownMenu && dropdownMenu.contains(event.target as Node);
+  const clickedInsideDropdown1Menu = dropdown1Menu && dropdown1Menu.contains(event.target as Node);
+
+  const clickedInsideButton = (button && button.contains(event.target as Node)) || 
+                              (pendingButton && pendingButton.contains(event.target as Node));
+
+  if (!clickedInsideButton && !clickedInsideDropdownMenu && !clickedInsideDropdown1Menu) {
+    this.showDropdown = false;
+    this.showPendingInvitesDropdown = false;
+    this.isDropdownVisible = false;
+  }
 }
 
 toggleDropdown1(): void {

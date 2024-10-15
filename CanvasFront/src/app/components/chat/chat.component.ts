@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Component } from '@angular/core';
+import { Component, HostListener } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -12,6 +12,9 @@ import { environment } from 'src/environments/environment';
 import { PopupAcceptedComponent } from '../popup/popup-accepted/popup-accepted.component';
 import { User } from 'src/app/models/user';
 import { ChatMessage } from 'src/app/models/ChatMessage';
+import { AuthService } from 'src/app/services/auth.service';
+import { NotifService } from 'src/app/services/notif.service';
+import { Notification } from 'src/app/models/notification'; 
 
 @Component({
   selector: 'app-chat',
@@ -44,10 +47,18 @@ export class ChatComponent {
   lastMessage:any
   searchTerm: string = ''; 
   userselect!: any;  
-  constructor(private projectService: ProjetService ,private router: Router,private activatedRoute:ActivatedRoute ,private dialogue: MatDialog ,private http: HttpClient,private sanitizer: DomSanitizer, private userService: UserService, private chatService: ChatService) {}
+  showPendingInvitesDropdown: boolean = false;
+  showDropdown: boolean = false;
+  projectProgress: { [key: number]: number } = {};
+projectIdToDelete: number | null = null;
+notifications: Notification[] = [];
+isDropdownVisible = false;
+unreadNotificationCount = 0;
+  constructor(private projectService: ProjetService ,private notifService :NotifService,private authService:AuthService,private router: Router,private activatedRoute:ActivatedRoute ,private dialogue: MatDialog ,private http: HttpClient,private sanitizer: DomSanitizer, private userService: UserService, private chatService: ChatService) {}
 
   ngOnInit(): void {
     this.userId = JSON.parse(localStorage.getItem('currentUser') || '{}');
+    this.GetNotif()
     this.username = this.userId.user.prenomUser;
     this.senderId = this.userId.user.idUser; 
     this.socket = io('http://localhost:3000');
@@ -128,6 +139,32 @@ export class ChatComponent {
     if (input.files && input.files[0]) {
       this.selectedImage = input.files[0]; 
     }
+  }
+
+  GetNotif() {
+    this.notifService.getLiveNotifications(this.userId.user.idUser)
+      .subscribe((newNotifications: Notification[]) => {
+        newNotifications.forEach((notification) => {
+          const exists = this.notifications.some(existingNotification => existingNotification.id === notification.id);
+          
+          if (!exists) {
+            this.notifications.push(notification);
+          }
+        });
+        
+        this.notifications.sort((a, b) => +new Date(b.createdAt) - +new Date(a.createdAt));
+  
+        this.unreadNotificationCount = this.notifications.filter(notification => !notification.isRead).length;
+      });
+  }
+  
+  
+  markNotificationsAsRead(): void {
+    this.notifService.markAsRead(this.userId.user.idUser).subscribe(() => {
+      console.log('All notifications marked as read');
+      this.notifications.forEach(notification => notification.isRead = true);
+      this.GetNotif()
+    });
   }
 
 
@@ -388,22 +425,61 @@ scrollToBottom(): void {
 
 
   //partie header
-showPendingInvitesDropdown: boolean = false;
 
 togglePendingInvitesDropdown() {
   this.showPendingInvitesDropdown = !this.showPendingInvitesDropdown;
+  this.isDropdownVisible = false
+  this.showDropdown = false
 }
-
-showDropdown: boolean = false;
 
 toggleDropdown() {
   this.showDropdown = !this.showDropdown;
+  this.showPendingInvitesDropdown = false
+  this.isDropdownVisible = false
 }
 
-logout() {
-  localStorage.removeItem('currentUser');
+@HostListener('document:click', ['$event'])
+onDocumentClick(event: MouseEvent) {
+  const button = document.querySelector('.css-w5qhhs');
+  const dropdownMenu = document.querySelector('.popover-container');
+  const pendingButton = document.querySelector('.css-tfolz5');
+  const dropdown1Menu = document.querySelector('.css-tfolz51'); 
 
-  this.router.navigateByUrl('/login')
+  const clickedInsideDropdownMenu = dropdownMenu && dropdownMenu.contains(event.target as Node);
+  const clickedInsideDropdown1Menu = dropdown1Menu && dropdown1Menu.contains(event.target as Node);
+
+  const clickedInsideButton = (button && button.contains(event.target as Node)) || 
+                              (pendingButton && pendingButton.contains(event.target as Node));
+
+  if (!clickedInsideButton && !clickedInsideDropdownMenu && !clickedInsideDropdown1Menu) {
+    this.showDropdown = false;
+    this.showPendingInvitesDropdown = false;
+    this.isDropdownVisible = false;
+  }
+}
+
+toggleDropdown1(): void {
+
+  this.isDropdownVisible = !this.isDropdownVisible;
+  this.showDropdown = false
+  this.showPendingInvitesDropdown = false
+  if (this.isDropdownVisible) {
+    setTimeout(() => {
+      this.markNotificationsAsRead();
+    }, 2000); 
+  }
+}
+
+
+logout() {
+  this.authService.logout().subscribe({
+      next: (response) => {
+          console.log("logout", response.message); 
+      },
+      error: (err) => {
+          console.error('Logout error:', err);
+      },
+  });
 }
 
 getUserPhoto1(): void {
