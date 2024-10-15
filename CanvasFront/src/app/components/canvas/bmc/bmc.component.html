@@ -483,7 +483,7 @@
               
               </div>
 
-              <div style="padding: 5px 10px; display: flex;">
+              <div style="padding: 5px 10px; display: flex">
                 <div *ngFor="let donnee of blocks[8]?.donnees?.slice(0, 3); let i = index" 
                      [style.backgroundColor]="donnee?.coleur" 
                      class="kqsxjs1" 
@@ -657,7 +657,7 @@
 
     </div> 
 
-    <div class="css-1xto6kq" >
+    <div class="css-1xto6kq" [ngClass]="{'narrow': donnees?.length >2}" >
       <button class="css-5357ut" *ngIf="shouldDisplayButton()"
       tabindex="0" 
       type="button" 
@@ -669,7 +669,7 @@
           <div class="css-11qjisw" >
           </div> 
           <button *ngIf="shouldDisplayButton()"class="css-ivnzlx"  tabindex="0" type="button" (click)="suivant()">
-            {{ currentBlockIndex === 5 ? 'Terminer' : 'Suivant' }}
+            {{ currentBlockIndex === 8 ? 'Terminer' : 'Suivant' }}
             <span class="css-w0pj6f"></span>
   
           </button>
@@ -681,7 +681,7 @@
 </div>
 </div>
 
-<button *ngIf="showTable || userRole?.roleInvite === 'moniteur'" class="css-5357ut"  style="position: relative;top: 150px;"(click)="precedent()" >Précédent</button>
+<button *ngIf="showTable || userRole?.roleInvite === 'moniteur'" class="css-5357ut"  style="position: relative;top: 281px;"(click)="precedent()" >Précédent</button>
 
 <div class="centered-message" *ngIf="userRole?.roleInvite === null">
   <p>tu n'as pas le droit dans cette canvas. Attendre une invitation ou contacter le superviseur de projet.</p>

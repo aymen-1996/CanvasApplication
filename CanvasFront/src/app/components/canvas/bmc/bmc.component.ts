@@ -750,8 +750,6 @@ calculateWidth4(totalItems: number, currentIndex: number): string {
   }
 }
 
-
-
 //telecharger pdf
  telechargerPDF(): void {
   let DATA: any = document.getElementById('table');

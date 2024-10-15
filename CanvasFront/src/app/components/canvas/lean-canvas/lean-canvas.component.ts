@@ -176,13 +176,15 @@ intervalId: any;
   toggleDropdown1(): void {
 
     this.isDropdownVisible = !this.isDropdownVisible;
-  
+    this.showDropdown = false
+    this.showPendingInvitesDropdown = false
     if (this.isDropdownVisible) {
       setTimeout(() => {
         this.markNotificationsAsRead();
       }, 2000); 
     }
   }
+  
  
  
 //affichage 6 couleurs pour update couleur

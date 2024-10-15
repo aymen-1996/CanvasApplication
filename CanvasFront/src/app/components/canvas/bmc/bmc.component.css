@@ -189,7 +189,7 @@ body {
 .canvas {
   position: absolute;
   width: 55%; 
-  height: 60%;
+  height: 65%;
   overflow: hidden;
   transition: width 0.3s ease; 
 }
@@ -413,10 +413,17 @@ background: rgb(250, 226, 236);
   display: flex;
   flex-direction: row;
   justify-content: space-between; 
-  padding-top: 205px;
+  padding-top: 230px;
   margin: 0 8px; 
 }
 
+.css-1xto6kq.narrow {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between; 
+  padding-top: 65px;
+  margin: 0 8px; 
+}
 .css-5357ut {
   display: inline-flex;
   -webkit-box-align: center;
@@ -709,11 +716,12 @@ background: rgb(250, 226, 236);
   padding: 18px;
   word-break: break-word;
   font-size: 10px;
-  height: 5.1em;
-  overflow: hidden auto;
+  height: 4.7em;
+  overflow: hidden;
+  overflow-y: hidden;
   margin: 0px 0px 0.5em;
 position: relative;
-top: -4px;
+top: -20px;
   box-shadow: rgba(0, 0, 0, 0.16) 0px 3px 2px, rgba(0, 0, 0, 0.23) 0px 3px 2px;
   min-width: 0; 
 }

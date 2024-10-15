@@ -730,7 +730,7 @@
                 <div id="canvas-revenue-streams" class="segment" (click)="detectedBlockById(blocks[11].idBlock)" [ngClass]="{ 'selected': isSelected(blocks[11].idBlock) }" (click)="toggleSelection(blocks[11].idBlock)"><div class="segment-header-key"><span>Sources de revenus</span> <mat-icon>attach_money 
                 </mat-icon></div>
               
-                <div style="padding: 5px 10px; display: flex;">
+                <div style=" display: flex;">
                   <div *ngFor="let donnee of blocks[11]?.donnees; let i = index" 
                        [style.backgroundColor]="donnee?.coleur" 
                        class="kqsxjs1" 
@@ -749,7 +749,7 @@
          
       </div> 
       <br>
-      <div class="css-1xto6kq" >
+      <div class="css-1xto6kq" [ngClass]="{'narrow': donnees?.length >2}">
         <button class="css-5357ut" *ngIf="shouldDisplayButton()"
         tabindex="0" 
         type="button" 
@@ -761,7 +761,7 @@
             <div class="css-11qjisw" >
             </div> 
             <button *ngIf="shouldDisplayButton()"class="css-ivnzlx"  tabindex="0" type="button" (click)="suivant()">
-              {{ currentBlockIndex === 5 ? 'Terminer' : 'Suivant' }}
+              {{ currentBlockIndex === 11 ? 'Terminer' : 'Suivant' }}
               <span class="css-w0pj6f"></span>
     
             </button>
@@ -772,7 +772,7 @@
     </div>
   </div>
   </div>
-  <button *ngIf="showTable || userRole?.roleInvite === 'moniteur'" class="css-5357ut"  style="position: relative;top: 150px;"(click)="precedent()" >Précédent</button>
+  <button *ngIf="showTable || userRole?.roleInvite === 'moniteur'" class="css-5357ut"  style="position: relative;top: 307px;"(click)="precedent()" >Précédent</button>
 
   <div class="centered-message" *ngIf="userRole?.roleInvite === null">
     <p>tu n'as pas le droit dans cette canvas. Attendre une invitation ou contacter le superviseur de projet.</p>

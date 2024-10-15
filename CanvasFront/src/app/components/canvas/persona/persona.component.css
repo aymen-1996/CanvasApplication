@@ -1104,18 +1104,6 @@ font-size: 25px;
 color: rgb(189, 39, 39);
 }
 
-
-
-@media (min-width: 600px) {
-.css-1x4nai  :not(style) + :not(style) {
-    margin: 0px 0px 0px 12px;
-}
-}
-@media (min-width: 0px) {
-.css-1x4nai > :not(style) + :not(style) {
-    margin: 0px 0px 0px 4px;
-}
-}
 .css-w5qhhs {
 display: inline-flex;
 -webkit-box-align: center;
@@ -1479,13 +1467,16 @@ font-family: "Public Sans", sans-serif;
 }
 
 .dropdown-item {
-position: relative;
-padding: 15px;
-border-bottom: 1px solid #dfe4ea;
-cursor: pointer;
-transition: background-color 0.3s ease, box-shadow 0.3s ease;
+  position: relative;
+  padding: 15px;
+  border-bottom: 1px solid #dfe4ea;
+  cursor: pointer;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+  max-width: 450px; 
+  white-space: normal;
+  word-wrap: break-word; 
+  overflow: hidden;
 }
-
 .dropdown-item:hover {
 background-color: #e9eff6;
 box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
