@@ -1744,6 +1744,8 @@ justify-content: center;
 
 .logout {
 color: red;
+cursor: pointer;
+
 }
 
 .logout:hover {

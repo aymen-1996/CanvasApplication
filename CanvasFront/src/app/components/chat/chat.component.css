@@ -863,6 +863,7 @@ img {
 
 .logout {
   color: red;
+  cursor: pointer;
 }
 
 .logout:hover {
