@@ -32,6 +32,8 @@ import { Notification } from './notif/notif.entity';
 import { NotificationModule } from './notif/notif.module';
 import { ChatModule } from './Message/chat.module';
 import { APP_INTERCEPTOR } from '@nestjs/core';
+import { commentaire } from './commentaires/commentaire.entity';
+import { CommentaireModule } from './commentaires/commentaire.module';
 
 
 
@@ -48,12 +50,13 @@ import { APP_INTERCEPTOR } from '@nestjs/core';
       port: 3306,
       username: 'root',
       password: '',
-      database: 'canvasback_mysql-data',
-      entities: [invite,projet,user,canvas,block,donnees , message , Token ,Notification] ,
+      database: 'canvasback_mysql-data1',
+      entities: [invite,projet,user,canvas,block,donnees , message , Token ,Notification , commentaire] ,
       synchronize: false,
     }),
     UserModule,
     ProjetModule,
+    CommentaireModule,
     InviteModule,
     CanvasModule,
     BlockModule,

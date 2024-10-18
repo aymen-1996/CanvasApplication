@@ -1,4 +1,4 @@
-import { Component, EventEmitter, HostListener, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, ElementRef, EventEmitter, HostListener, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BlocksService } from 'src/app/services/blocks.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
@@ -21,6 +21,10 @@ import { NotifService } from 'src/app/services/notif.service';
 import { Notification } from 'src/app/models/notification';
 import { ChatService } from 'src/app/services/chat.service';
 import { AuthService } from 'src/app/services/auth.service';
+import { CommentaireService } from 'src/app/services/commentaire.service';
+import { User } from 'src/app/models/user';
+import { DatePipe } from '@angular/common';
+import { FileDialogComponent } from '../../file-dialog/file-dialog.component';
 
 @Component({
   selector: 'app-bmc',
@@ -40,6 +44,7 @@ export class BmcComponent implements OnInit {
   currentProject: any;
   showPendingInvitesDropdown: boolean = false;
   showDropdown: boolean = false;
+  user: User[] = [];
 
   showFirst:boolean=true;
   selectedId: string | null = null;
@@ -68,24 +73,32 @@ showComments: boolean = false;
 isSliding: boolean = false; 
 messageCount: number = 0;
 intervalId: any; 
+file: File | null = null;
+commentaires: any[] = [];
+canvasId: any
+commentCount: number = 0;
+contenu = '';
   @ViewChild(MatStepper) stepper!: MatStepper;
-    constructor(private dialogue: MatDialog ,private authService:AuthService,private chatService:ChatService ,private notifService:NotifService,private canvasService:CanvasService,private http: HttpClient,private projetService:ProjetService,private sanitizer: DomSanitizer,private userService:UserService ,private router: Router ,private blockService:BlocksService , private dialog: MatDialog, private activatedRoute:ActivatedRoute ,private formBuilder: FormBuilder){
+    constructor(private dialogue: MatDialog ,private datePipe: DatePipe,private commentaireService: CommentaireService,private authService:AuthService,private chatService:ChatService ,private notifService:NotifService,private canvasService:CanvasService,private http: HttpClient,private projetService:ProjetService,private sanitizer: DomSanitizer,private userService:UserService ,private router: Router ,private blockService:BlocksService , private dialog: MatDialog, private activatedRoute:ActivatedRoute ,private formBuilder: FormBuilder){
 
   }
   title!: string;
 
   ngOnInit(): void {
     this.users = JSON.parse(localStorage.getItem('currentUser') as string);
-    this.GetNotif()
-
     this.selectProject =  localStorage.getItem('selectedProjectId');
 
+    this.getCommentCount()
+    this.GetNotif()
+
+    
     this.activatedRoute.data.subscribe((data: any) => {
       const title = data.title || 'Titre par défaut';
       document.title = `Canvas | ${title}`;
     });
   
     this.listeCanvases()
+    this.loadCommentaires()
     this.getUserPhoto()
     this.ListProjectsAndCanvas()
 
@@ -1015,7 +1028,165 @@ delete(idInvite: number,userId: number): void {
       }
     );
 }
+
+
+
+//partie commentaire
+
+getUserPhoto2(userId: number): void { 
+  const imageUrl = this.userService.getUserPhotoUrl1(userId);
+  console.log("Image URL:", imageUrl);
+  
+  const user = this.user.find(u => u.idUser === userId);
+  
+  if (user) {
+    user.imageUser = imageUrl;  
+    console.log("User photo assigned:", imageUrl); 
+
+  } else {
+  }
 }
+loadCommentaires(): void {
+  this.canvasService.getCanvases(this.users.user.idUser, this.selectProject).subscribe(
+    (data) => {
+      if (data && Array.isArray(data.Canvas)) {
+        const bmcCanvas = data.Canvas.find((c: { nomCanvas: string; }) => c.nomCanvas === 'BMC');
+
+        if (bmcCanvas) {
+          this.canvasId = bmcCanvas.idCanvas;
+          console.log("ID du canvas BMC getBlocksByCanvasId:", this.canvasId);
+
+          this.commentaireService.getCommentaires(this.canvasId).subscribe(
+            (commentaires) => {
+              this.commentaires = commentaires;
+
+              this.commentaires.forEach(commentaire => {
+                this.getUserPhoto2(commentaire.user.idUser);
+                const imageUrl = this.userService.getUserPhotoUrl1(commentaire.user.idUser);
+                commentaire.user.imageUser = imageUrl;
+
+                if (commentaire.file) {
+                  const fileBaseUrl = `${environment.backendHost}/commentaire/file/`;
+                  commentaire.audioUrl = `${fileBaseUrl}${commentaire.file}`;
+                  commentaire.imageUrl = `${fileBaseUrl}${commentaire.file}`;
+                }
+              });
+
+              this.getCommentCount();
+
+           console.log("Commentaires:", this.commentaires);
+            },
+            (error) => {
+              console.error('Erreur lors de la récupération des commentaires:', error);
+            }
+          );
+        } else {
+          console.error('Canvas BMC non trouvé');
+        }
+      }
+    },
+    (error) => {
+      console.error('Erreur lors de la récupération des canvas:', error);
+    }
+  );
+}
+
+formatDate(date: Date): string {
+  return `Le ${this.datePipe.transform(date, 'dd/MM/yyyy')} à ${this.datePipe.transform(date, 'HH:mm')}`;
+}
+
+onFileChange(event: any): void {
+  this.file = event.target.files[0]; 
+}
+
+submitCommentaire(): void {
+  this.canvasService.getCanvases(this.users.user.idUser, this.selectProject).subscribe(
+    (data) => {
+      if (data && Array.isArray(data.Canvas)) {
+        const bmcCanvas = data.Canvas.find((c: { nomCanvas: string; }) => c.nomCanvas === 'BMC');
+        
+        if (bmcCanvas) {
+          this.canvasId = bmcCanvas.idCanvas;
+          console.log("ID du canvas BMC getBlocksByCanvasId:", this.canvasId);
+          
+          this.commentaireService.createCommentaire(this.users.user.idUser, this.canvasId, this.contenu, this.file).subscribe(
+            (response) => {
+              this.getCommentCount();
+              console.log('Commentaire créé:', response);
+              this.loadCommentaires();
+              this.contenu = ''; 
+              this.file = null;
+            },
+            (error) => {
+              console.error('Erreur lors de la création du commentaire:', error);
+            }
+          );
+        } else {
+          console.error('Canvas BMC non trouvé');
+        }
+      } else {
+        console.error('Aucun canevas trouvé');
+      }
+    },
+    (error) => {
+      console.error('Erreur lors du chargement des canevas:', error);
+    }
+  );
+}
+
+
+getCommentCount() {
+  this.canvasService.getCanvases(this.users.user.idUser, this.selectProject).subscribe(
+    (data) => {
+      if (data && Array.isArray(data.Canvas)) {
+        const bmcCanvas = data.Canvas.find((c: { nomCanvas: string; }) => c.nomCanvas === 'BMC');
+        
+        if (bmcCanvas) {
+          this.canvasId = bmcCanvas.idCanvas;
+          console.log("ID du canvas BMC getBlocksByCanvasId:", this.canvasId);
+  this.commentaireService.countCommentaires(  this.canvasId).subscribe(
+    (count) => {
+      this.commentCount = count;
+      console.log("countcomment", this.commentCount)
+    },
+    (error) => {
+      console.error('Erreur lors de la récupération du nombre de commentaires:', error);
+    }
+  );
+}else {
+  console.error('Canvas BMC non trouvé');
+}
+}
+})
+}
+
+openFile(fileName: string): void {
+  this.commentaireService.getFile(fileName).subscribe((blob) => {
+    const url = window.URL.createObjectURL(blob);
+    window.open(url);
+  });
+}
+
+isCurrentUser(commentaire: any): boolean {
+  return this.users && this.users.user.idUser === commentaire.user.idUser;
+}
+openDialog(): void {
+  const dialogRef = this.dialog.open(FileDialogComponent);
+
+  dialogRef.afterClosed().subscribe(file => {
+    if (file) {
+      this.file = file; 
+      console.log('Fichier reçu depuis le dialogue:', file);
+    }
+  });
+}
+  
+}
+
+
+
+
+
 
 
 

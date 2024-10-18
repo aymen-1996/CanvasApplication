@@ -1,5 +1,6 @@
 /* eslint-disable prettier/prettier */
 import { block } from "src/block/block.entity";
+import { commentaire } from "src/commentaires/commentaire.entity";
 import { invite } from "src/invite/invite.entity";
 import { projet } from "src/projet/projet.entity";
 import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
@@ -25,5 +26,8 @@ export class canvas {
 
     @OneToMany(() => invite, (invite) => invite.canvas)
     invite: invite[];
+    @OneToMany(() => commentaire, (commentaire) => commentaire.canvas)
+    commentaires: commentaire[];
+
 
 }

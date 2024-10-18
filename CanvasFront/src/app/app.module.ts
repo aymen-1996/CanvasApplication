@@ -8,7 +8,7 @@ import { InscriptionComponent } from './components/inscription/inscription.compo
 import { ProjectComponent } from './components/project/project.component';
 import { CanvasComponent } from './components/canvas/canvas.component';
 import { ProfilComponent } from './components/profil/profil.component';
-import { CommonModule } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import {MatSelectModule} from '@angular/material/select';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -40,6 +40,7 @@ import { ChatComponent } from './components/chat/chat.component';
 import { MatBadgeModule } from '@angular/material/badge';
 import { MatMenuModule } from '@angular/material/menu';
 import { CommentaireComponent } from './components/commentaire/commentaire.component';
+import { FileDialogComponent } from './components/file-dialog/file-dialog.component';
 
 
 
@@ -65,7 +66,8 @@ import { CommentaireComponent } from './components/commentaire/commentaire.compo
     PopupInviteComponent,
     PopupAcceptedComponent,
     ChatComponent,
-    CommentaireComponent
+    CommentaireComponent,
+    FileDialogComponent
   ],
   imports: [
     BrowserModule,
@@ -91,6 +93,7 @@ import { CommentaireComponent } from './components/commentaire/commentaire.compo
     NgSelectModule,
   ],
   providers: [
+    DatePipe
   ],
   bootstrap: [AppComponent]
 })

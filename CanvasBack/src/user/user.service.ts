@@ -167,7 +167,7 @@ export class UserService {
 }
 
 
-@Cron('* * * * *')
+@Cron('0 0 * * *')
 async deleteInactiveUsers() {
   console.log('Starting deleteInactiveUsers process...');
   const checkDate = this.getCheckDate();

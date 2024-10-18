@@ -218,50 +218,63 @@
 
 <!-----------partie comment -------------------------------->
 
-<div class="chat-container"   *ngIf="showComments">
+<div class="chat-container" *ngIf="showComments">
   <div class="messages">
-    <div class="message">
+    <div *ngFor="let commentaire of commentaires" class="message">
       <div class="message-header">
         <div style="display: flex; align-items: center;">
-          <img src="https://funderapi.cynoia.com//media/avatar.png" class="avatar" alt="User Avatar">
-          <div class="username">You</div>
-        </div>
-        <div class="timestamp">Le 09/10/2024 à 09:02</div>
+          <img [src]="commentaire.user.imageUser" class="avatar" alt="User Avatar">
+          <div class="username">
+            <span *ngIf="isCurrentUser(commentaire)">Vous</span>
+            <span *ngIf="!isCurrentUser(commentaire)">{{ commentaire.user.nomUser }}</span>
+          </div>
+         </div>
+        <div class="timestamp">{{ formatDate(commentaire.dateDeCommentaire) }}</div>
       </div>
-      <audio src="https://funderapi.cynoia.com//media/audio.mp3" controls class="audio"></audio>
-    </div>
-    <div class="message">
-      <div class="message-header">
-        <div style="display: flex; align-items: center;">
-          <img src="https://funderapi.cynoia.com//media/avatar.png" class="avatar" alt="User Avatar">
-          <div class="username">You</div>
-        </div>
-        <div class="timestamp">Le 09/10/2024 à 09:00</div>
+      <div *ngIf="commentaire.file && (commentaire.file.endsWith('.mp3') || commentaire.file.endsWith('.mpg'))">
+        <audio controls class="audio">
+          <source [src]="commentaire.audioUrl" type="audio/mpeg">
+          Votre navigateur ne prend pas en charge la lecture audio.
+        </audio>
       </div>
-      <p>mmm</p>
-    </div>
-    <div class="message">
-      <div class="message-header">
-        <div style="display: flex; align-items: center;">
-          <img src="https://funderapi.cynoia.com//media/avatar.png" class="avatar" alt="User Avatar">
-          <div class="username">You</div>
-        </div>
-        <div class="timestamp">Le 09/10/2024 à 09:00</div>
-      </div>
-      <p>aaa</p>
+
+    
+    <p *ngIf="commentaire.file && (commentaire.file.endsWith('.pdf') || commentaire.file.endsWith('.docx'))" 
+    style="padding: 0.5rem; border: 1px solid rgb(204, 204, 204); margin: 1rem 0;">
+    <a href="javascript:void(0)" (click)="openFile(commentaire.file)">{{ commentaire.file }}</a>
+ </p>
+
+ <div *ngIf="commentaire.imageUrl && 
+ (commentaire.imageUrl.endsWith('.jpg') || commentaire.imageUrl.endsWith('.jpeg') || commentaire.imageUrl.endsWith('.png') || commentaire.imageUrl.endsWith('.gif') || commentaire.imageUrl.endsWith('.bmp') ||  commentaire.imageUrl.endsWith('.webp'))">
+<img class="imgcomment" 
+[src]="commentaire.imageUrl" alt="file" style="margin: 1rem 0px; width: 100%; height: 5rem; object-fit: contain;">
+</div>
+ <p *ngIf="!commentaire.file">{{ commentaire.contenu }}</p>
     </div>
   </div>
-  <form class="input-container">
-    <button type="button">
-      <span class="material-icons">attach_file</span>
-    </button>
-    <input type="text" placeholder="Type a message...">
+  
+  <form class="input-container" (ngSubmit)="submitCommentaire()">
+    <ng-container *ngIf="file; else attachFileButton">
+      <button  class="css-vox4nh" tabindex="0" type="button" id="attachement-modal">
+        <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" class="MuiBox-root css-9uy14h iconify iconify--carbon" width="1em" height="1em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 32 32">
+          <path fill="currentColor" d="M30.94 15.66A16.69 16.69 0 0 0 16 5A16.69 16.69 0 0 0 1.06 15.66a1 1 0 0 0 0 .68A16.69 16.69 0 0 0 16 27a16.69 16.69 0 0 0 14.94-10.66a1 1 0 0 0 0-.68M16 25c-5.3 0-10.9-3.93-12.93-9C5.1 10.93 10.7 7 16 7s10.9 3.93 12.93 9C26.9 21.07 21.3 25 16 25"></path>
+          <path fill="currentColor" d="M16 10a6 6 0 1 0 6 6a6 6 0 0 0-6-6m0 10a4 4 0 1 1 4-4a4 4 0 0 1-4 4"></path>
+        </svg>
+      </button>
+    </ng-container>
+  
+    <ng-template #attachFileButton>
+      <button type="button" (click)="openDialog()">
+        <span class="material-icons">attach_file</span>
+      </button>
+    </ng-template>
+    <input type="text" [(ngModel)]="contenu" placeholder="Type a message..." name="contenu" required>
     <button type="submit">
-      <span class="material-icons">send</span>
+      <span class="material-icons send">send</span>
     </button>
   </form>
+  
 </div>
-
 
    <!----------------Partie canvas------------------->
 
@@ -272,12 +285,23 @@
 
           <div class="icon-container" [ngClass]="{'shift-left': showComments , 'narrow': currentBlockIndex === 9}">
             <span class="tooltip" *ngIf="!showComments">voir les commentaires</span> 
-            <i (click)="toggleComments()" class="material-icons" >comment</i>
+            <button (click)="toggleComments()"  class="css-1tb287z" [ngClass]="{'narrow': showComments}" tabindex="0" type="button">
+              <span class="css-1rzb3uu"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" class="css-9uy14h iconify iconify--codicon" sx="[object Object]" width="1em" height="1em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 16 16">
+                <path fill="currentColor" d="M14.5 2h-13l-.5.5v9l.5.5H4v2.5l.854.354L7.707 12H14.5l.5-.5v-9zm-.5 9H7.5l-.354.146L5 13.293V11.5l-.5-.5H2V3h12z">
+
+                </path>
+              </svg>
+</span>
+<span class="css-w0pj6f"></span>
+</button>
+          
+            <span  class="badge1" *ngIf="commentCount > 0">{{ commentCount }}</span>
           </div>
           
           
+          
           <mat-stepper *ngIf="userRole?.roleInvite === 'editor'" #stepper class="demo-stepper"  (selectionChange)="onStepChange($event)" >
-          <mat-step >            
+          <mat-step class="custom-step">            
             <p class="css-vgwlcw">Etape 1: Segments</p>
             <div class="css-igeghr">{{blocks[0].description}}</div>
           </mat-step>
