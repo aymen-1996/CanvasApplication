@@ -193,7 +193,6 @@
       </div>
 
 
-  <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" />
 
   <div class="top">
 <div class="container">
@@ -203,7 +202,7 @@
             <div id="plist" class="people-list">
               <div class="input-group">
                 <div class="input-group-prepend">
-                    <span class="input-group-text"><i class="fa fa-search"></i></span>
+                    <span class="input-group-text search"><i class="fa fa-search"></i></span>
                 </div>
                 <input type="text" class="form-control" placeholder="Rechercher..." [(ngModel)]="searchTerm" (input)="onSearchChange()">
             </div>
@@ -292,14 +291,15 @@
                  <div class="input-group mb-0" *ngIf="userselect">
               
                         <div class="input-group-prepend">
-                            <span (click)="send()" class="input-group-text"><i class="fa fa-send" ></i></span>
+                            <span (click)="send()" class="input-group-text text1"><mat-icon class="send">send</mat-icon>
+                            </span>
                           
                         </div>
                         <label class="btn btn-outline-primary"><i class="fa fa-image">  <input type="file" (change)="onFileSelected($event)" (input)="send()" style="display: none;" /></i>
                             
                         </label>
 
-                        <input type="text" [(ngModel)]="message" class="form-control" placeholder="Enter text here...">                                    
+                        <input type="text"     (keydown.enter)="send()"  [(ngModel)]="message" class="form-control" placeholder="Entrez le texte ici...">                                    
                     </div>
                 </div>
             </div>
