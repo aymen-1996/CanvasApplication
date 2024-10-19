@@ -88,7 +88,6 @@ contenu = '';
     this.users = JSON.parse(localStorage.getItem('currentUser') as string);
     this.selectProject =  localStorage.getItem('selectedProjectId');
 
-    this.getCommentCount()
     this.GetNotif()
 
     
@@ -99,6 +98,7 @@ contenu = '';
   
     this.listeCanvases()
     this.getCommentaires()
+    this.getCommentCount()
     this.getUserPhoto()
     this.ListProjectsAndCanvas()
 
@@ -923,6 +923,8 @@ navigateToBmc(project: any): void {
   this.selectProject = project.idProjet;
   
   this.listeCanvases();
+  this.getCommentCount()
+  this.getCommentaires()
   
   const idCanvas = this.getCanvasId(project.idProjet, 'BMC');
   if (idCanvas) {
