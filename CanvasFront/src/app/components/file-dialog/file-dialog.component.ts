@@ -63,7 +63,6 @@ export class FileDialogComponent {
       this.mediaRecorder.start();
       this.isRecording = true;
   
-      // Démarrer un minuteur pour afficher le temps d'enregistrement
       this.recordingInterval = setInterval(() => {
         this.recordingTime++;
       }, 1000);
@@ -76,24 +75,19 @@ export class FileDialogComponent {
     this.mediaRecorder.stop();
     this.isRecording = false;
 
-    // Arrêter le minuteur
     clearInterval(this.recordingInterval);
 
     this.mediaRecorder.onstop = () => {
-      // Vérifier que des données ont bien été collectées
       if (this.audioChunks.length > 0) {
         const audioBlob = new Blob(this.audioChunks, { type: 'audio/mp3' });
 
-        // Créer un fichier à partir du blob audio
         const audioFile = new File([audioBlob], 'recording.mp3', { type: 'audio/mp3' });
 
-        // Simuler que ce fichier est un fichier sélectionné
         this.selectedFile = audioFile;
         this.fileName = audioFile.name;
 
-        // Afficher l'URL audio si besoin
         this.audioURL = URL.createObjectURL(audioBlob);
-        this.audioChunks = []; // Réinitialiser les chunks après traitement
+        this.audioChunks = []; 
       } else {
         console.error('Aucune donnée audio enregistrée.');
       }

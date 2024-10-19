@@ -98,7 +98,7 @@ contenu = '';
     });
   
     this.listeCanvases()
-    this.loadCommentaires()
+    this.getCommentaires()
     this.getUserPhoto()
     this.ListProjectsAndCanvas()
 
@@ -1046,7 +1046,7 @@ getUserPhoto2(userId: number): void {
   } else {
   }
 }
-loadCommentaires(): void {
+getCommentaires(): void {
   this.canvasService.getCanvases(this.users.user.idUser, this.selectProject).subscribe(
     (data) => {
       if (data && Array.isArray(data.Canvas)) {
@@ -1099,7 +1099,7 @@ onFileChange(event: any): void {
   this.file = event.target.files[0]; 
 }
 
-submitCommentaire(): void {
+creatCommentaire(): void {
   this.canvasService.getCanvases(this.users.user.idUser, this.selectProject).subscribe(
     (data) => {
       if (data && Array.isArray(data.Canvas)) {
@@ -1113,7 +1113,7 @@ submitCommentaire(): void {
             (response) => {
               this.getCommentCount();
               console.log('Commentaire créé:', response);
-              this.loadCommentaires();
+              this.getCommentaires();
               this.contenu = ''; 
               this.file = null;
             },
