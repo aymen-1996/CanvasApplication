@@ -54,6 +54,12 @@ projectIdToDelete: number | null = null;
 notifications: Notification[] = [];
 isDropdownVisible = false;
 unreadNotificationCount = 0;
+showEmojiPicker: boolean = false;
+emojis: string[] = [
+  '😀', '😁', '😂', '🤣', '😃', '😄', '😅', '😆', '😉', '😊',
+  '😍', '😘', '😋', '😎', '🤓', '🤔', '😏', '😒', '😔', '😕',
+  '😲', '😧', '😬', '😪', '😵', '🤯', '😡', '😠', '😇', '🤗',
+];
   constructor(private projectService: ProjetService ,private notifService :NotifService,private authService:AuthService,private router: Router,private activatedRoute:ActivatedRoute ,private dialogue: MatDialog ,private http: HttpClient,private sanitizer: DomSanitizer, private userService: UserService, private chatService: ChatService) {}
 
   ngOnInit(): void {
@@ -174,18 +180,18 @@ getUsersByInvitations(): void {
     (data: User[]) => {
       this.users = data;
       const messageRequests = this.users.map(user =>
-        
         this.chatService.getLastMessage(user.idUser, this.userId.user.idUser)
       );
 
-     
       forkJoin(messageRequests).subscribe(
         (messages: any[]) => {
           this.users.forEach((user, index) => {
             user.lastMessage = messages[index] ? messages[index].content : '';
+            user.filePath = messages[index] ? messages[index].filePath : null;
+            console.log("file user" ,  user.filePath)
             user.etat = messages[index] ? messages[index].etat : 'true';
             this.getUserPhoto2(user.idUser);
-            this.getLastMessage(user.idUser, this.userId.user.idUser)
+            this.getLastMessage(user.idUser, this.userId.user.idUser);
           });
         },
         (error) => {
@@ -198,6 +204,7 @@ getUsersByInvitations(): void {
     }
   );
 }
+
 
 //update etat msg
 onMarkAllAsRead(userId: number) {
@@ -295,6 +302,7 @@ getById(userid: number): void {
        
     });
 }
+
 loadMessages(senderId: any, recipientId: any): void {
   this.chatService.getMessagesBetweenUsers(senderId, recipientId).subscribe(
     (data) => {
@@ -580,5 +588,14 @@ delete(idInvite: number,userId: number): void {
       }
     );
 }
+
+toggleEmojiPicker() {
+  this.showEmojiPicker = !this.showEmojiPicker;
+}
+
+addEmoji(emoji: string) {
+  this.message += emoji;
+}
+
 }
 

@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import {DropdownModule} from "primeng/dropdown";
 import { AppRoutingModule } from './app-routing.module';
@@ -41,7 +41,6 @@ import { MatBadgeModule } from '@angular/material/badge';
 import { MatMenuModule } from '@angular/material/menu';
 import { CommentaireComponent } from './components/commentaire/commentaire.component';
 import { FileDialogComponent } from './components/file-dialog/file-dialog.component';
-
 
 
 @NgModule({
@@ -91,10 +90,12 @@ import { FileDialogComponent } from './components/file-dialog/file-dialog.compon
     MatToolbarModule,
     MatStepperModule,
     NgSelectModule,
+    
   ],
   providers: [
     DatePipe
   ],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],  
   bootstrap: [AppComponent]
 })
 export class AppModule { }

@@ -19,6 +19,8 @@ export interface User {
     lastMessage:any
     etat:any
     enLigne:boolean;
-    lastLogout:Date
+    lastLogout:Date;
+    filePath?: string | null;
+
   }
   
