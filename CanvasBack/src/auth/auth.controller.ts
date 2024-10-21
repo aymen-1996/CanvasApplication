@@ -141,6 +141,28 @@ async updateUserStatus(userId: number, status: { enLigne: boolean, lastLogout: D
       return { message: 'Déconnexion réussie' };
   }
   
+
+  @Post('update-status')
+  async updateStatus(@Body('idUser') idUser: number) {
+      if (idUser) {
+          await this.updateUserStatus(idUser, {
+              enLigne: false,
+              lastLogout: new Date()
+          });
+      }
+      return { message: 'Statut mis à jour avec succès' };
+  }
+
+  @Post('update-status-en-ligne')
+  async updateStatusEnLigne(@Body('idUser') idUser: number) {
+      if (idUser) {
+          await this.updateUserStatus(idUser, {
+              enLigne: true,        
+              lastLogout: null 
+          });
+      }
+      return { message: 'Statut mis à jour: en ligne' };
+  }
   
 }
 
