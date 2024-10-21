@@ -65,7 +65,11 @@ emojis: string[] = [
   '🗂️', '📁', '🗄️', '📊', '💾', '🌐', '🔍', '⚡','🍑', '🍒',  '💋','👄','💍', '💃', '🕺', '👙', '👠', '💩', '🤲', '👏', '👍','🖕','💄',
   '⛈','🌤','🌥','🌦','🌧','🌨','🌩','☂','☔','❄','☃','⛄','☄','💧','🌊','🌚','🌛','🌜','☀','🌘'
 ];
-
+isRecording: boolean = false;
+mediaRecorder!: MediaRecorder;
+audioChunks: Blob[] = [];
+recordingTime: number = 0;
+recordingInterval: any;
 
   constructor(private projectService: ProjetService ,private notifService :NotifService,private authService:AuthService,private router: Router,private activatedRoute:ActivatedRoute ,private dialogue: MatDialog ,private http: HttpClient,private sanitizer: DomSanitizer, private userService: UserService, private chatService: ChatService) {}
 
@@ -179,8 +183,7 @@ emojis: string[] = [
       this.GetNotif()
     });
   }
-
-
+  
 //liste user selon invitation
 getUsersByInvitations(): void {
   this.userService.getUsersByInvitations(this.userId.user.idUser, this.searchTerm).subscribe(
@@ -268,46 +271,106 @@ getById(userid: number): void {
   );
 }
 
-  send(): void {
-    const senderId = this.userId.user.idUser;
+send(audioBlob?: Blob): void {
+  const senderId = this.userId.user.idUser;
 
-    this.userService.getUser(senderId).subscribe(user => {
-        const username = user.prenomUser;
+  this.userService.getUser(senderId).subscribe(user => {
+      const username = user.prenomUser;
 
-        if (this.message) {
-            const messageData = { 
-                username: username, 
-                message: this.message,  
-                messageType: 'text', 
-                senderId: senderId, 
-                recipientId:  this.userselect
-            };
+      if (this.message) {
+          const messageData = { 
+              username: username, 
+              message: this.message,  
+              messageType: 'text', 
+              senderId: senderId, 
+              recipientId: this.userselect
+          };
 
-            this.socket.emit('message', messageData);
-            this.message = '';
-        } else if (this.selectedImage) {
-            const formData = new FormData();
-            formData.append('file', this.selectedImage);
-            formData.append('username', username);
-            formData.append('senderId', senderId.toString());
-            formData.append('recipientId', this.userselect.toString());
+          this.socket.emit('message', messageData);
+          this.message = '';
+      } else if (this.selectedImage) {
+          const formData = new FormData();
+          formData.append('file', this.selectedImage);
+          formData.append('username', username);
+          formData.append('senderId', senderId.toString());
+          formData.append('recipientId', this.userselect.toString());
 
-            this.userService.uploadImage(formData).subscribe(response => {
-                const imageUrl = `http://localhost:3000/upload/image/${response.filename}`;
+          this.userService.uploadImage(formData).subscribe(response => {
+              const imageUrl = `http://localhost:3000/upload/image/${response.filename}`;
 
-                this.messages.push({ 
-                    username: username, 
-                    message: '',
-                    messageType: 'image',
-                    senderId: senderId,
-                    imageUrl: imageUrl 
-                });
-                this.selectedImage = null; 
-            });
-        }
-    }, error => {
-       
-    });
+              this.messages.push({ 
+                  username: username, 
+                  message: '',
+                  messageType: 'image',
+                  senderId: senderId,
+                  imageUrl: imageUrl 
+              });
+              this.selectedImage = null; 
+          });
+      } else if (audioBlob) {
+          const formData = new FormData();
+          formData.append('file', audioBlob, 'recording.mp3');
+          formData.append('username', username);
+          formData.append('senderId', senderId.toString());
+          formData.append('recipientId', this.userselect.toString());
+
+          this.userService.uploadImage(formData).subscribe(response => {
+              const audioUrl = `http://localhost:3000/upload/image/${response.filename}`;
+
+              this.messages.push({ 
+                  username: username, 
+                  message: '',
+                  messageType: 'audio',
+                  senderId: senderId,
+                  imageUrl: audioUrl
+              });
+          }, error => {
+              console.error('Erreur lors de l\'envoi de l\'audio:', error);
+          });
+      }
+  }, error => {
+      console.error('Erreur lors de la récupération du nom d\'utilisateur:', error);
+  });
+}
+
+toggleRecording() {
+  if (this.isRecording) {
+    this.stopRecording();
+  } else {
+    this.startRecording();
+  }
+}
+
+async startRecording() {
+  this.isRecording = true;
+  this.recordingTime = 0;
+  this.audioChunks = [];
+
+  const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+  this.mediaRecorder = new MediaRecorder(stream);
+
+  this.mediaRecorder.ondataavailable = (event) => {
+    this.audioChunks.push(event.data);
+  };
+
+  this.mediaRecorder.start();
+  
+  this.recordingInterval = setInterval(() => {
+    this.recordingTime++;
+  }, 1000);
+}
+
+stopRecording() {
+  this.isRecording = false;
+  this.mediaRecorder.stop();
+
+  clearInterval(this.recordingInterval);
+
+  this.mediaRecorder.onstop = () => {
+      const audioBlob = new Blob(this.audioChunks, { type: 'audio/mpeg' });
+
+      this.send(audioBlob);
+  };
 }
 
 loadMessages(senderId: any, recipientId: any): void {

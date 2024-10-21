@@ -281,12 +281,12 @@
                                     {{ msg.senderId == senderId ? 'Vous' : msg.username }}
                                   </span>
                                   <span class="message" *ngIf="msg.message">{{ msg.message }}</span>
-                                  <img *ngIf="msg.imageUrl && !(msg.imageUrl.endsWith('.pdf') || msg.imageUrl.endsWith('.docx')) &&! (msg.imageUrl.endsWith('.mp4') || msg.imageUrl.endsWith('.mpeg') || msg.imageUrl.endsWith('.webm') || msg.imageUrl.endsWith('.avi'))" [src]="msg.imageUrl" alt="Image message" style="width: 210px; height: 250px;" />
+                                  <img *ngIf="msg.imageUrl && !(msg.imageUrl.endsWith('.pdf') || msg.imageUrl.endsWith('.docx')) && ! (msg.imageUrl.endsWith('.mp3') || msg.imageUrl.endsWith('.wav'))&&! (msg.imageUrl.endsWith('.mp4') || msg.imageUrl.endsWith('.mpeg') || msg.imageUrl.endsWith('.webm') || msg.imageUrl.endsWith('.avi'))" [src]="msg.imageUrl" alt="Image message" style="width: 210px; height: 250px;" />
                                   <p *ngIf="msg.imageUrl && (msg.imageUrl.endsWith('.pdf') || msg.imageUrl.endsWith('.docx'))" style="padding: 0.5rem; border: 1px solid rgb(204, 204, 204); margin: 1rem 0;">
                                     <a [href]="msg.imageUrl" target="_blank" rel="noreferrer">{{ msg.imageUrl.substring(msg.imageUrl.lastIndexOf('/') + 1) }}</a>
                                 </p>    
                                 
-<video *ngIf="msg.imageUrl && (msg.imageUrl.endsWith('.mp4') || msg.imageUrl.endsWith('.mpeg') || msg.imageUrl.endsWith('.webm') || msg.imageUrl.endsWith('.avi'))" 
+<video *ngIf="msg.imageUrl && (msg.imageUrl.endsWith('.mp4') || msg.imageUrl.endsWith('.mpeg') || msg.imageUrl.endsWith('.webm') || msg.imageUrl.endsWith('.avi')) && ! (msg.imageUrl.endsWith('.mp3') || msg.imageUrl.endsWith('.wav'))" 
 controls style="width: 100%; height:180px; border: 1px solid rgb(204, 204, 204); margin: 1rem 0;">
 <source [src]="msg.imageUrl" type="video/mp4">
 <source [src]="msg.imageUrl" type="video/mpeg">
@@ -294,6 +294,12 @@ controls style="width: 100%; height:180px; border: 1px solid rgb(204, 204, 204);
 <source [src]="msg.imageUrl" type="video/avi">
 Votre navigateur ne supporte pas la lecture de vidéos.
 </video>
+<audio *ngIf="msg.imageUrl && (msg.imageUrl.endsWith('.mp3') || msg.imageUrl.endsWith('.wav'))" 
+       controls>
+  <source [src]="msg.imageUrl" type="audio/mpeg">
+  <source [src]="msg.imageUrl" type="audio/wav">
+  Votre navigateur ne supporte pas la lecture de cet audio.
+</audio>
  </div>
                         </li>
                         
@@ -344,7 +350,11 @@ Votre navigateur ne supporte pas la lecture de vidéos.
                           <i class="fa fa-paperclip"> 
                             <input type="file" (change)="onFileSelected($event)" (input)="send()" style="display: none;" />
                           </i>
-                        </label>                        
+                        </label>  
+<label class="btn btn-outline-primary" (click)="toggleRecording()">
+  <i class="fa fa-microphone" [class.recording]="isRecording"></i>
+  <span *ngIf="isRecording">{{ recordingTime }}s</span>
+</label>                      
                           <input type="text" (keydown.enter)="send()" [(ngModel)]="message" placeholder="Entrez le texte ici..." class="form-control" />
 
                           
