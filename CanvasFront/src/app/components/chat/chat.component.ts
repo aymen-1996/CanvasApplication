@@ -236,6 +236,7 @@ selectUser(user: User): void {
   this.iduser = user.idUser;
   this.getUserPhoto(this.userselect);
   this.loadMessages(this.userId.user.idUser, this.userselect);
+  
   this.onMarkAllAsRead(this.userselect);
 
   console.log("Utilisateur sélectionné:", this.userselect);
@@ -665,6 +666,20 @@ toggleEmojiPicker() {
 
 addEmoji(emoji: string) {
   this.message += emoji;
+}
+
+
+@HostListener('document:click', ['$event'])
+onClickOutside(event: MouseEvent): void {
+  const target = event.target as HTMLElement;
+  const button = document.querySelector('.btn-light') as HTMLElement;
+  const emojiPicker = document.querySelector('.css-1oknx5t1') as HTMLElement;
+
+  if (this.showEmojiPicker && 
+      button && !button.contains(target) && 
+      emojiPicker && !emojiPicker.contains(target)) {
+    this.showEmojiPicker = false;
+  }
 }
 
 }
