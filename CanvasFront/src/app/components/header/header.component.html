@@ -162,7 +162,9 @@
 
 <div class="popover-wrapper"  >
 
-          <button (click)="toggleDropdown()" class="css-w5qhhs" tabindex="0" type="button"><div class="css-1ciwozm"><img alt="photoURL" [src]="userPhotoUrl" class="css-1hy9t21"></div><span class="css-w0pj6f"></span></button>
+          <button (click)="toggleDropdown()" class="css-w5qhhs" tabindex="0" type="button"><div class="css-1ciwozm"><img alt="photoURL" [src]="userPhotoUrl" class="css-1hy9t21"></div><span [ngStyle]="{
+            'background-color': showDropdown ? 'rgba(0, 0, 0, 0.6)' : 'transparent'
+        }" class="css-w0pj6f"></span></button>
         
           <div *ngIf="showDropdown" class="popover-container" tabindex="-1">
             <span class="arrow css-98b6ta"></span>

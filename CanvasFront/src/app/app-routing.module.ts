@@ -17,7 +17,6 @@ import { PersonaComponent } from './components/canvas/persona/persona.component'
 import { VpCanvasComponent } from './components/canvas/vp-canvas/vp-canvas.component';
 import { LeanCanvasComponent } from './components/canvas/lean-canvas/lean-canvas.component';
 import { ChatComponent } from './components/chat/chat.component';
-import { CommentaireComponent } from './components/commentaire/commentaire.component';
 
 
 const routes: Routes = [
@@ -32,12 +31,6 @@ const routes: Routes = [
     component: ChatComponent,
     canActivate: [AuthGuard],
     data: { title: 'Chat' }
-  },
-  {
-    path: 'commentaire',
-    component: CommentaireComponent,
-  
-    data: { title: 'commentaire' }
   },
   {
     path: 'projects',
