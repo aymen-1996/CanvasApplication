@@ -670,11 +670,12 @@ GetRole(): void {
 
 //pour n affiche button suivant si showtable
 shouldDisplayButton(): boolean {
-  const isLastBlock = this.currentBlockIndex === this.blocks.length - 1;
+  const isLastBlock = this.blocks && this.blocks.length > 0 && this.currentBlockIndex === this.blocks.length - 1;
 
   return (this.userRole?.roleInvite === 'editor' && !this.showTable) ||
          (this.userRole?.roleInvite === 'moniteur' && this.showTable && isLastBlock);
 }
+
 
 
 shouldDisplayMesg(): boolean {

@@ -352,4 +352,9 @@ async resetPassword(
       return await this.userService.updateUser(id, UpdateUserDto);
     }
 
+    //filtrer user par email
+    @Get('filterUser/email')
+    async getUsersByEmail(@Query('emailUser') emailUser: string): Promise<user[]> {
+      return this.userService.findAllUsersByEmail(emailUser);
+    }
 }

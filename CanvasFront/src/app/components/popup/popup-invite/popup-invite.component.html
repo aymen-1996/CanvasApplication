@@ -8,11 +8,22 @@
       <div *ngIf="successMessage" class="success-message">{{ successMessage }}</div>
       <div *ngIf="errorMessage" class="error-message">{{ errorMessage }}</div>
 
+  
       <div class="input-group">
         <label for="emailUser">Email de l'invité :</label>
-        <input type="text" id="emailUser" name="emailUser" formControlName="emailUser" required>
+        <input type="text" id="emailUser" name="emailUser" formControlName="emailUser" (input)="searchUsersByEmail()" required autocomplete="off">
       </div>
-  
+      
+      <div *ngIf="filteredUsers.length > 0" class="user-list">
+        <div *ngFor="let user of filteredUsers" class="user-item" (click)="selectUser(user.emailUser)">
+          <img [src]="getUserPhotoUrl(user.idUser)" alt="Avatar" class="user-avatar">
+          <div class="user-info">
+            <p class="user-name">{{ user.prenomUser }} {{ user.nomUser }}</p>
+            <p class="user-email">{{ user.emailUser }}</p>
+          </div>
+        </div>
+      </div>
+      
       <label>Donner un rôle :</label>
   
       <div class="radio-group">

@@ -65,6 +65,7 @@ export class UserService {
     );
   }
   
-
-
+  getUsersByEmail(email: string): Observable<User[]> {
+    return this.http.get<User[]>(`${environment.backendHost}/user/filterUser/email?emailUser=${email}`);
+  }
 }

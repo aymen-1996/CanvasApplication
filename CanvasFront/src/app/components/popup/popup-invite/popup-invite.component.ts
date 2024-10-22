@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
 import { BlocksService } from 'src/app/services/blocks.service';
+import { UserService } from 'src/app/services/user.service';
 
 
 @Component({
@@ -18,8 +19,10 @@ export class PopupInviteComponent {
   projet:any
   successMessage: string | null = null;
   errorMessage: string | null = null;
+  filteredUsers: any[] = [];  // Liste des utilisateurs filtrés
+
   constructor(private dialogRef: MatDialogRef<PopupInviteComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: { confirmationMessage: string, idBloc: any } ,private formBuilder: FormBuilder,private activatedRoute:ActivatedRoute, private blockService: BlocksService) {
+    @Inject(MAT_DIALOG_DATA) public data: { confirmationMessage: string, idBloc: any } ,private formBuilder: FormBuilder,private activatedRoute:ActivatedRoute, private blockService: BlocksService , private userService:UserService) {
       this.idBloc = data.idBloc;
     }
 
@@ -80,6 +83,36 @@ this.GetProjet()
           console.error('Error fetching user role:', error);
         }
       );
+  }
+
+
+  //filtrer user par email
+  searchUsersByEmail(): void {
+    const emailUser = this.inviteForm.get('emailUser')?.value;
+    if (emailUser) {
+      this.userService.getUsersByEmail(emailUser).subscribe(
+        (users: any[]) => {
+          console.log('Users fetched:', users);  
+          this.filteredUsers = users;
+        },
+        error => {
+          console.error('Error fetching users by email:', error);
+        }
+      );
+    } else {
+      this.filteredUsers = [];
+    }
+  }
+  
+  //pour selectioner user et son email affcihe dans input
+  selectUser(email: string): void {
+    this.inviteForm.patchValue({ emailUser: email }); 
+    this.filteredUsers = []; 
+  }
+
+  //photo user
+  getUserPhotoUrl(userId: number): string {
+    return this.userService.getUserPhotoUrl1(userId);
   }
   
 }

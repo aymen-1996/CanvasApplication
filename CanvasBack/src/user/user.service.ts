@@ -2,7 +2,7 @@
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { user } from 'src/user/user.entity';
-import { In, LessThan, MoreThan, Repository } from 'typeorm';
+import { In, LessThan, Like, MoreThan, Repository } from 'typeorm';
 import * as bcrypt from 'bcryptjs';
 import { EmailService } from './email/email.service';
 import * as crypto from 'crypto';
@@ -397,5 +397,14 @@ async getUniqueUsersByLastMessage(idUser: number, nomUser?: string): Promise<use
         return await this.userRep.save(updatedUser);
     }
 
+
+    async findAllUsersByEmail(emailUser: string): Promise<user[]> {
+        return await this.userRep.find({
+          where: {
+            emailUser: Like(`${emailUser}%`),
+          },
+        });
+      }
+      
 
 }
