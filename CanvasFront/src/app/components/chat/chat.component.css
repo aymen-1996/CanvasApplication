@@ -1431,23 +1431,23 @@ audio:hover::-webkit-media-controls-volume-slider {
   border: 1px solid rgb(204, 204, 204);
   margin: 1rem 0;
   border-radius: 4px;
-  background-color: #f9f9f9; /* Arrière-plan léger */
+  background-color: #f9f9f9;
 }
 
 .file-container i {
-  font-size: 24px; /* Taille de l'icône */
-  margin-right: 10px; /* Espace entre l'icône et le lien */
-  color: #007bff; /* Couleur de l'icône */
+  font-size: 24px; 
+  margin-right: 10px;
+  color: #007bff;
 }
 
 .file-link {
-  text-decoration: none; /* Retirer le soulignement du lien */
-  color: #007bff; /* Couleur du lien */
-  font-weight: bold; /* Gras */
+  text-decoration: none;
+  color: #007bff; 
+  font-weight: bold; 
 }
 
 .file-link:hover {
-  text-decoration: underline; /* Soulignement au survol */
+  text-decoration: underline; 
 }
 
 }
