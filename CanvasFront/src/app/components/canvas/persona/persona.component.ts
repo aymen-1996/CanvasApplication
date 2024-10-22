@@ -886,6 +886,8 @@ navigateToPersona(project: any): void {
   this.selectProject = project.idProjet;
   
   this.listeCanvases();
+  this.getCommentCount()
+  this.getCommentaires()
   
   const idCanvas = this.getCanvasId(project.idProjet, 'Persona Canvas');
   if (idCanvas) {

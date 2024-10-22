@@ -83,21 +83,28 @@
                 <div class="MuiBox-root css-i9gxme">
                   <h6 class="MuiTypography-root MuiTypography-subtitle1 css-k9tjo5">Invitations</h6>
                   <p class="MuiTypography-root MuiTypography-body2 css-11r9ii4">Vous avez {{ pendingInvitesCount }} invitations</p>
+                  <hr class="MuiDivider-root MuiDivider-fullWidth css-zg4d8h">
                   <div class="scroll-container">
-                    <ul class="MuiList-root css-1uzmcsd">
-                      <ng-container *ngIf="pendingInvites && pendingInvites.length > 0">
-                        <li *ngFor="let invite of pendingInvites" class="MuiListItem-root css-1g5h4hs" (click)="openPopup1(invite.idInvite)">
-                          <div class="MuiListItemText-root css-1bbslg7">
-                            <span class="MuiTypography-root MuiTypography-body2 css-11r9ii4">
-                              Vous avez été invité à rejoindre le projet <strong>{{ invite.projet.nomProjet }}</strong> dans<strong>{{ invite.canvas.nomCanvas }}</strong>.
-                            </span>
-                          </div>
+                    <div class="css-jjtu05">
+                      <div data-simplebar="init" class="css-qw2e6q">
+                    <ul class="css-1uzmcsd">
+                        <ng-container *ngIf="pendingInvites && pendingInvites.length > 0">
+                          <li *ngFor="let invite of pendingInvites" class="css-12ujxra" (click)="openPopup1(invite.idInvite)" tabindex="0" role="button">
+                            <div class="css-k008qs" style="display: flex; align-items: center;">
+                                <img alt="User Avatar" [src]="projectImages[invite.projet.idProjet]" style="width: 60px; object-fit: cover; margin-right: 1em;">
+                                <small class="justified-text">
+                                  <p><strong>{{ invite.projet.user.nomUser }}</strong> vous a envoyé une invitation pour rejoindre le projet <strong>{{ invite.projet.nomProjet }}</strong> dans <strong>{{ invite.canvas.nomCanvas }}</strong> en tant que <strong>{{ invite.roleInvite }}</strong>.</p>
+                              </small>                              
+                            </div>
+                            <span class="MuiTouchRipple-root css-w0pj6f"></span>
                         </li>
                       </ng-container>
                     </ul>
                   </div>
+                  </div>
+                  </div>
                 </div>
-              </div>
+           </div>
               <hr class="MuiDivider-root MuiDivider-fullWidth css-zg4d8h">
          
               </div>
@@ -546,8 +553,8 @@
 
           <div  class="wrapper" *ngIf="showTable && userRole?.roleInvite === 'editor' || userRole?.roleInvite === 'moniteur' " >
             <div class="button-container">
-              <button class="download-button" mat-raised-button color="primary" (click)="telechargerPDF()">Télécharger en PDF</button>
-              <button *ngIf="showTable && userRole?.roleInvite === 'editor'" class="download-button" mat-raised-button color="primary" (click)="openPopupInvite()">Envoyer Invitation</button>
+              <button  (click)="telechargerPDF()" class="css-1dq7v2u button-spacing" tabindex="0" type="button" title="Télécharger votre canvas en format pdf" textcolor="primary" value="8" id="mui-1"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" class="MuiBox-root css-1cqkbll iconify iconify--carbon" sx="[object Object]" width="1em" height="1em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 32 32"><path fill="currentColor" d="M24 24v4H8v-4H6v4a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-4Z"></path><path fill="currentColor" d="m21 21l-1.414-1.414L17 22.172V14h-2v8.172l-2.586-2.586L11 21l5 5zm7-17V2h-6v10h2V8h3V6h-3V4zm-11 8h-4V2h4a3.003 3.003 0 0 1 3 3v4a3.003 3.003 0 0 1-3 3m-2-2h2a1 1 0 0 0 1-1V5a1 1 0 0 0-1-1h-2zM9 2H4v10h2V9h3a2.003 2.003 0 0 0 2-2V4a2 2 0 0 0-2-2M6 7V4h3l.001 3z"></path></svg><span class="MuiTouchRipple-root css-w0pj6f"></span></button>
+              <button *ngIf="showTable && userRole?.roleInvite === 'editor'" class="css-lt70pb button-spacing" tabindex="0" type="submit"  (click)="openPopupInvite()">Envoyer une invitation<span class="MuiButton-endIcon MuiButton-iconSizeMedium css-pt151d"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" class="MuiBox-root css-0 iconify iconify--cib" sx="[object Object]" width="1em" height="1em" preserveAspectRatio="xMidYMid meet" viewBox="0 0 32 32"><path fill="currentColor" d="m29.919 6.163l-4.225 19.925c-.319 1.406-1.15 1.756-2.331 1.094l-6.438-4.744l-3.106 2.988c-.344.344-.631.631-1.294.631l.463-6.556L24.919 8.72c.519-.462-.113-.719-.806-.256l-14.75 9.288l-6.35-1.988c-1.381-.431-1.406-1.381.288-2.044l24.837-9.569c1.15-.431 2.156.256 1.781 2.013z"></path></svg></span><span class="MuiTouchRipple-root css-w0pj6f"></span></button>
             </div>
             
             <br>

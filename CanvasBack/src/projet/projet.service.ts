@@ -203,17 +203,18 @@ Un segment est une population homogène de consommateurs représentant une ou pl
     }
 
     async getPendingInvitesByUserId(userId: number) {
-        try {
+      try {
           const pendingInvites = await this.inviteRepository.find({
-            where: { user: { idUser: userId }, etat: 'en attente' },
-            relations: ['projet', 'user', 'canvas'],
+              where: { user: { idUser: userId }, etat: 'en attente' },
+              relations: ['projet', 'user', 'canvas', 'projet.user'],
           });
-    
+  
           return pendingInvites;
-        } catch (error) {
+      } catch (error) {
           throw new Error(`Unable to fetch pending invites: ${error.message}`);
-        }
       }
+  }
+  
 
     //Liste Canvas selon invite par isuser et idProj
     async getCanvasInvitesByUserIdAndProjetId(userId: number, projetId: number): Promise<invite[]> {

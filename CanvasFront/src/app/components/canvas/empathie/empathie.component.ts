@@ -1094,7 +1094,7 @@ navigateToEmpathy(project: any): void {
   
   const idCanvas = this.getCanvasId(project.idProjet, 'Empathy Map Canvas');
   if (idCanvas) {
-    this.router.navigateByUrl(`/empthy`)
+    this.router.navigateByUrl(`/empathie`)
     .then(() => {
       this.updateEmpthyData(idCanvas);
     });
