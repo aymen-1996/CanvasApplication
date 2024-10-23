@@ -820,6 +820,12 @@ top: -4px;
  left: 750px;
 }
 
+
+.button-container.narrow{
+  position: relative;
+ left: 780px;
+
+}
 .download-button {
   margin-left: 10px;
   background-color: #2196F3;
