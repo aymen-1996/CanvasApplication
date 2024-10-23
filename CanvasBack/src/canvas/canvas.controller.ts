@@ -1,4 +1,13 @@
-import { Controller } from '@nestjs/common';
-
+import { Controller, Get, Param } from '@nestjs/common';
+import { CanvasService } from './canvas.service';
+import { canvas } from 'src/canvas/canvas.entity';
 @Controller('canvas')
-export class CanvasController {}
+export class CanvasController {
+
+    constructor(private readonly canvasService: CanvasService) {}
+
+    @Get(':userId')
+    async getCanvasByUser(@Param('userId') userId: number): Promise<canvas[]> {
+      return this.canvasService.getCanvasByUser(userId);
+    }
+}

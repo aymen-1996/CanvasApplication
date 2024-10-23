@@ -1,6 +1,9 @@
-import { Body, Controller, Delete, Param, ParseIntPipe, Post, Res } from '@nestjs/common';
+import { Body, Controller, Delete, Get, NotFoundException, Param, ParseIntPipe, Post, Query, Res } from '@nestjs/common';
 import { InviteService } from './invite.service';
 import { Response } from 'express'; // Import the Response object
+import { invite } from './invite.entity';
+import { projet } from 'src/projet/projet.entity';
+import { canvas } from 'src/canvas/canvas.entity';
 
 @Controller('invite')
 export class InviteController {
@@ -38,6 +41,20 @@ export class InviteController {
         return { success: false, message: error.message };
       }
     }
+
+    @Get('project-by-canvas/:nomCanvas/:userId')
+    async getProjectByCanvasAndUser(
+      @Param('nomCanvas') nomCanvas: string,
+      @Param('userId') userId: number
+    ): Promise<{ projects: { canvas: any[]; idProjet: number; imageProjet: string; nomProjet: string }[] }> { // تأكد من أن نوع الإرجاع يعكس التغييرات
+      const result = await this.inviteService.getProjectByCanvasAndUser(nomCanvas, userId);
     
+      // معالجة الأخطاء
+      if (!result || result.projects.length === 0) {
+        throw new NotFoundException(`No projects found for canvas: ${nomCanvas} and user: ${userId}`);
+      }
+    
+      return result; // إرجاع النتيجة من الخدمة
+    }
     
 }

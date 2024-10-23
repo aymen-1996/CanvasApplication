@@ -973,34 +973,47 @@ getUserPhoto(): void {
 }
 
 ListProjectsAndCanvas() {
-  this.projetService.getProjectsCanvasByUserId(this.users.user.idUser)
-    .subscribe(
-      response => {
-        this.projects = response.projects;
-        console.log("Projets récupérés:", this.projects);
+  this.canvasService.getCanvasByUser(this.users.user.idUser).subscribe(
+    canvases => {
+      const vpCanvas = canvases.find(canvas => canvas.nomCanvas === 'VP Canvas');
 
-
-        if (!this.idBloc && this.projects.length > 0) {
-          for (const project of this.projects) {
-            const vpCanvas = project.canvas.find((canvas: { nomCanvas: string; }) => canvas.nomCanvas === 'VP Canvas');
-            if (vpCanvas) {
-              this.idBloc = vpCanvas.idCanvas;
-              break; 
-            }
-          }
-        }
-        this.currentProject = this.projects.find((project: { canvas: any[]; }) => {
-          return project.canvas.some(canvas => canvas.idCanvas === this.idBloc);
-        });
-
-        console.log("ID du canvas sélectionné:", this.idBloc);
-
-      },
-      error => {
-        console.error('Erreur lors du chargement des projets :', error);
+      if (!vpCanvas) {
+        console.error('Canvas de type "VP Canvas" non trouvé pour l\'utilisateur donné.');
+        return;
       }
-    );
+
+      this.projetService.getProjectByCanvasAndUser(vpCanvas.nomCanvas, this.users.user.idUser)
+        .subscribe(
+          response => {
+            this.projects = response.projects; 
+            console.log("projets", this.projects);
+
+            if (!this.idBloc && this.projects.length > 0) {
+              for (const project of this.projects) {
+                const vpCanvas = project.canvas.find((canvas: { nomCanvas: string; }) => canvas.nomCanvas === 'BMC');
+                if (vpCanvas) {
+                  this.idBloc = vpCanvas.idCanvas;
+                  break; 
+                }
+              }
+            }
+            this.currentProject = this.projects.find((project: { canvas: any[]; }) => {
+              return project.canvas.some(canvas => canvas.idCanvas === this.idBloc);
+            });
+    
+            console.log("ID du canvas sélectionné:", this.idBloc);
+          },
+          error => {
+            console.error('Erreur lors du chargement des projets :', error);
+          }
+        );
+    },
+    error => {
+      console.error('Erreur lors de la récupération des canvases :', error);
+    }
+  );
 }
+
 getCanvasId(projectId: string, type: string): string | undefined {
   const project = this.projects.find((p: { idProjet: string; }) => p.idProjet === projectId);
   if (project) {
@@ -1009,6 +1022,7 @@ getCanvasId(projectId: string, type: string): string | undefined {
   }
   return undefined;
 }
+
 
 //routerlink
 navigateToVP(project: any): void {
@@ -1030,8 +1044,6 @@ navigateToVP(project: any): void {
     console.error('Canvas de type "vp" non trouvé pour le projet donné.');
   }
 }
-
-
 
 updateVPData(idCanvas: string) {
   this.idBloc = idCanvas;

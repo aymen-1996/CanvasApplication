@@ -720,33 +720,45 @@ getUserPhoto(): void {
 }
 
 ListProjectsAndCanvas() {
-  this.projetService.getProjectsCanvasByUserId(this.users.user.idUser)
-    .subscribe(
-      response => {
-        this.projects = response.projects;
-        console.log("Projets récupérés:", this.projects);
+  this.canvasService.getCanvasByUser(this.users.user.idUser).subscribe(
+    canvases => {
+      const swotCanvas = canvases.find(canvas => canvas.nomCanvas === 'SWOT');
 
-
-        if (!this.idBloc && this.projects.length > 0) {
-          for (const project of this.projects) {
-            const swotCanvas = project.canvas.find((canvas: { nomCanvas: string; }) => canvas.nomCanvas === 'SWOT');
-            if (swotCanvas) {
-              this.idBloc = swotCanvas.idCanvas;
-              break; 
-            }
-          }
-        }
-        this.currentProject = this.projects.find((project: { canvas: any[]; }) => {
-          return project.canvas.some(canvas => canvas.idCanvas === this.idBloc);
-        });
-
-        console.log("ID du canvas sélectionné:", this.idBloc);
-
-      },
-      error => {
-        console.error('Erreur lors du chargement des projets :', error);
+      if (!swotCanvas) {
+        console.error('Canvas de type "SWOT" non trouvé pour l\'utilisateur donné.');
+        return;
       }
-    );
+
+      this.projetService.getProjectByCanvasAndUser(swotCanvas.nomCanvas, this.users.user.idUser)
+        .subscribe(
+          response => {
+            this.projects = response.projects; 
+            console.log("projets", this.projects);
+
+            if (!this.idBloc && this.projects.length > 0) {
+              for (const project of this.projects) {
+                const swotCanvas = project.canvas.find((canvas: { nomCanvas: string; }) => canvas.nomCanvas === 'BMC');
+                if (swotCanvas) {
+                  this.idBloc = swotCanvas.idCanvas;
+                  break; 
+                }
+              }
+            }
+            this.currentProject = this.projects.find((project: { canvas: any[]; }) => {
+              return project.canvas.some(canvas => canvas.idCanvas === this.idBloc);
+            });
+    
+            console.log("ID du canvas sélectionné:", this.idBloc);
+          },
+          error => {
+            console.error('Erreur lors du chargement des projets :', error);
+          }
+        );
+    },
+    error => {
+      console.error('Erreur lors de la récupération des canvases :', error);
+    }
+  );
 }
 getCanvasId(projectId: string, type: string): string | undefined {
   const project = this.projects.find((p: { idProjet: string; }) => p.idProjet === projectId);

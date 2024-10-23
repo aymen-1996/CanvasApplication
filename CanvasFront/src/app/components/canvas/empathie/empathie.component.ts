@@ -1047,33 +1047,45 @@ getUserPhoto(): void {
 }
 
 ListProjectsAndCanvas() {
-  this.projetService.getProjectsCanvasByUserId(this.users.user.idUser)
-    .subscribe(
-      response => {
-        this.projects = response.projects;
-        console.log("Projets récupérés:", this.projects);
+  this.canvasService.getCanvasByUser(this.users.user.idUser).subscribe(
+    canvases => {
+      const empthyCanvas = canvases.find(canvas => canvas.nomCanvas === 'Empathy Map Canvas');
 
-
-        if (!this.idBloc && this.projects.length > 0) {
-          for (const project of this.projects) {
-            const empthyCanvas = project.canvas.find((canvas: { nomCanvas: string; }) => canvas.nomCanvas === 'Empathy Map Canvas');
-            if (empthyCanvas) {
-              this.idBloc = empthyCanvas.idCanvas;
-              break; 
-            }
-          }
-        }
-        this.currentProject = this.projects.find((project: { canvas: any[]; }) => {
-          return project.canvas.some(canvas => canvas.idCanvas === this.idBloc);
-        });
-
-        console.log("ID du canvas sélectionné:", this.idBloc);
-
-      },
-      error => {
-        console.error('Erreur lors du chargement des projets :', error);
+      if (!empthyCanvas) {
+        console.error('Canvas de type "Empathy Map Canvas" non trouvé pour l\'utilisateur donné.');
+        return;
       }
-    );
+
+      this.projetService.getProjectByCanvasAndUser(empthyCanvas.nomCanvas, this.users.user.idUser)
+        .subscribe(
+          response => {
+            this.projects = response.projects; 
+            console.log("projets", this.projects);
+
+            if (!this.idBloc && this.projects.length > 0) {
+              for (const project of this.projects) {
+                const empthyCanvas = project.canvas.find((canvas: { nomCanvas: string; }) => canvas.nomCanvas === 'BMC');
+                if (empthyCanvas) {
+                  this.idBloc = empthyCanvas.idCanvas;
+                  break; 
+                }
+              }
+            }
+            this.currentProject = this.projects.find((project: { canvas: any[]; }) => {
+              return project.canvas.some(canvas => canvas.idCanvas === this.idBloc);
+            });
+    
+            console.log("ID du canvas sélectionné:", this.idBloc);
+          },
+          error => {
+            console.error('Erreur lors du chargement des projets :', error);
+          }
+        );
+    },
+    error => {
+      console.error('Erreur lors de la récupération des canvases :', error);
+    }
+  );
 }
 
 getCanvasId(projectId: string, type: string): string | undefined {
@@ -1089,21 +1101,20 @@ getCanvasId(projectId: string, type: string): string | undefined {
 navigateToEmpathy(project: any): void {
   localStorage.setItem('selectedProjectId', project.idProjet);
   
-  this.selectProject = project.idProjet;
-  
-  this.listeCanvases();
-  this.getCommentCount()
-  this.getCommentaires()
-  
-  const idCanvas = this.getCanvasId(project.idProjet, 'Empathy Map Canvas');
-  if (idCanvas) {
-    this.router.navigateByUrl(`/empathie`)
+this.selectProject = project.idProjet;
+  this.listeCanvases(); 
+this.getCommentCount(); 
+this.getCommentaires(); 
+
+const idCanvas = this.getCanvasId(project.idProjet, 'Empathy Map Canvas');
+if (idCanvas) {
+  this.router.navigateByUrl(`/empathie`)
     .then(() => {
       this.updateEmpthyData(idCanvas);
     });
-  } else {
-    console.error('Canvas de type "empthy" non trouvé pour le projet donné.');
-  }
+} else {
+  console.error('Canvas de type "Empathy Map Canvas" non trouvé pour le projet donné.');
+}
 }
 updateEmpthyData(idCanvas: string) {
   this.idBloc = idCanvas;

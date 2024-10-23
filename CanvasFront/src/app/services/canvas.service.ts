@@ -13,4 +13,9 @@ export class CanvasService {
   getCanvases(userId: number, projetId: any): Observable<any> {
     return this.http.get<any>(`${environment.backendHost}/projet/${userId}/${projetId}`);
   }
+
+  getCanvasByUser(userId: number): Observable<any[]> {
+    const url = `${environment.backendHost}/canvas/${userId}`;
+    return this.http.get<any[]>(url);
+  }
 }

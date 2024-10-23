@@ -96,5 +96,65 @@ async deleteInviteByIdAndUserId(idInvite: number, idUser: number): Promise<strin
     
     return `L'invitation avec l'ID ${idInvite} a été supprimée avec succès pour l'utilisateur avec l'ID ${idUser}`;
   }
+  async getProjectByCanvasAndUser(nomCanvas: string, userId: number): Promise<{ projects: { canvas: any[], idProjet: number, imageProjet: string, nomProjet: string }[] }> {
+    const invites = await this.inviteRepository
+        .createQueryBuilder('invite')
+        .leftJoinAndSelect('invite.projet', 'projet')
+        .leftJoinAndSelect('invite.canvas', 'canvas')
+        .leftJoinAndSelect('invite.user', 'user')
+        .where('canvas.nomCanvas = :nomCanvas', { nomCanvas })
+        .andWhere('invite.userId = :userId', { userId })
+        .select(['invite', 'projet', 'canvas', 'user'])
+        .getMany();
+
+    if (invites.length === 0) {
+        throw new NotFoundException(`No invites found for canvas: ${nomCanvas} and user: ${userId}`);
+    }
+
+    // استخراج المشاريع
+    const projectsMap = new Map<number, { canvas: any[], idProjet: number, imageProjet: string, nomProjet: string }>();
+
+    for (const invite of invites) {
+        const project = invite.projet;
+
+        // إذا كان المشروع موجودًا في الخريطة، أضف القماشات له
+        if (!projectsMap.has(project.idProjet)) {
+            projectsMap.set(project.idProjet, {
+                canvas: [],
+                idProjet: project.idProjet,
+                imageProjet: project.imageProjet,
+                nomProjet: project.nomProjet
+            });
+        }
+
+        // إضافة القماش إلى المشروع
+        const projectEntry = projectsMap.get(project.idProjet);
+        if (projectEntry) {
+            const canvasEntry = {
+                idCanvas: invite.canvas.idCanvas,
+                nomCanvas: invite.canvas.nomCanvas
+            };
+            projectEntry.canvas.push(canvasEntry);
+        }
+    }
+
+    // تحويل الخريطة إلى مصفوفة
+    const projectsArray = Array.from(projectsMap.values());
+
+    // تأكد من وجود مشروع واحد على الأقل
+    if (projectsArray.length === 0) {
+        throw new NotFoundException(`No project found for canvas: ${nomCanvas} and user: ${userId}`);
+    }
+
+    // بناء الاستجابة النهائية
+    return {
+        projects: projectsArray // إرجاع قائمة المشاريع
+    };
+}
+
+
+
+
+
   
 }

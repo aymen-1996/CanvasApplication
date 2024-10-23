@@ -22,11 +22,11 @@
                        <mat-form-field class="custom-select">
               <mat-label>Projet actuel</mat-label>
               <mat-select [(ngModel)]="currentProject">
-                <mat-option>Mes projet</mat-option>
+                <mat-option disabled>Mes projets</mat-option>
                 <mat-option *ngFor="let project of projects" [value]="project" (click)="navigateToBmc(project)">
                   {{ project.nomProjet }}
                 </mat-option>
-              </mat-select>
+              </mat-select>              
             </mat-form-field>
 
             <mat-icon 

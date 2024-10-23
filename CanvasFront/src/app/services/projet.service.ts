@@ -82,4 +82,9 @@ getProjectById(id: number): Observable<any> {
 }
 
 
+getProjectByCanvasAndUser(nomCanvas: string, userId: number): Observable<any> {
+  const url = `${environment.backendHost}/invite/project-by-canvas/${nomCanvas}/${userId}`;
+  return this.http.get<any>(url);
+}
+
 }

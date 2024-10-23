@@ -862,33 +862,45 @@ getUserPhoto(): void {
 }
 
 ListProjectsAndCanvas() {
-  this.projetService.getProjectsCanvasByUserId(this.users.user.idUser)
-    .subscribe(
-      response => {
-        this.projects = response.projects;
-        console.log("Projets récupérés:", this.projects);
+  this.canvasService.getCanvasByUser(this.users.user.idUser).subscribe(
+    canvases => {
+      const leanCanvas = canvases.find(canvas => canvas.nomCanvas === 'Lean Canvas');
 
-
-        if (!this.idBloc && this.projects.length > 0) {
-          for (const project of this.projects) {
-            const leanCanvas = project.canvas.find((canvas: { nomCanvas: string; }) => canvas.nomCanvas === 'Lean Canvas');
-            if (leanCanvas) {
-              this.idBloc = leanCanvas.idCanvas;
-              break; 
-            }
-          }
-        }
-        this.currentProject = this.projects.find((project: { canvas: any[]; }) => {
-          return project.canvas.some(canvas => canvas.idCanvas === this.idBloc);
-        });
-
-        console.log("ID du canvas sélectionné:", this.idBloc);
-
-      },
-      error => {
-        console.error('Erreur lors du chargement des projets :', error);
+      if (!leanCanvas) {
+        console.error('Canvas de type "Lean Canvas" non trouvé pour l\'utilisateur donné.');
+        return;
       }
-    );
+
+      this.projetService.getProjectByCanvasAndUser(leanCanvas.nomCanvas, this.users.user.idUser)
+        .subscribe(
+          response => {
+            this.projects = response.projects; 
+            console.log("projets", this.projects);
+
+            if (!this.idBloc && this.projects.length > 0) {
+              for (const project of this.projects) {
+                const leanCanvas = project.canvas.find((canvas: { nomCanvas: string; }) => canvas.nomCanvas === 'BMC');
+                if (leanCanvas) {
+                  this.idBloc = leanCanvas.idCanvas;
+                  break; 
+                }
+              }
+            }
+            this.currentProject = this.projects.find((project: { canvas: any[]; }) => {
+              return project.canvas.some(canvas => canvas.idCanvas === this.idBloc);
+            });
+    
+            console.log("ID du canvas sélectionné:", this.idBloc);
+          },
+          error => {
+            console.error('Erreur lors du chargement des projets :', error);
+          }
+        );
+    },
+    error => {
+      console.error('Erreur lors de la récupération des canvases :', error);
+    }
+  );
 }
 
 getCanvasId(projectId: string, type: string): string | undefined {
@@ -905,23 +917,20 @@ navigateToLean(project: any): void {
   localStorage.setItem('selectedProjectId', project.idProjet);
   
   this.selectProject = project.idProjet;
-  
-  this.listeCanvases();
-  this.getCommentCount()
-  this.getCommentaires()
+    this.listeCanvases(); 
+  this.getCommentCount(); 
+  this.getCommentaires(); 
   
   const idCanvas = this.getCanvasId(project.idProjet, 'Lean Canvas');
   if (idCanvas) {
     this.router.navigateByUrl(`/lean`)
-    .then(() => {
-      this.updateLeanData(idCanvas);
-    });
+      .then(() => {
+        this.updateLeanData(idCanvas);
+      });
   } else {
-    console.error('Canvas de type "lean" non trouvé pour le projet donné.');
+    console.error('Canvas de type "Lean Canvas" non trouvé pour le projet donné.');
   }
 }
-
-
 
 updateLeanData(idCanvas: string) {
   this.idBloc = idCanvas;
@@ -969,7 +978,7 @@ updateInviteState(userId: number, idInvite: number): void {
         this.pendingInvites = this.pendingInvites.filter(invite => invite.id !== idInvite);
         this.pendingInvitesCount = this.pendingInvites.length;
         this.projetService.updateProject(); 
-        this.projetService.updateCanvas(); 
+        this.projetService.updateCanvas();
         this.ListProjectsAndCanvas()
 
         setTimeout(() => {
