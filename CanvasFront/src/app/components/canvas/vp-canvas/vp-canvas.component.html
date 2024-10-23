@@ -86,7 +86,7 @@
                       <div data-simplebar="init" class="css-qw2e6q">
                     <ul class="css-1uzmcsd">
                         <ng-container *ngIf="pendingInvites && pendingInvites.length > 0">
-                          <li *ngFor="let invite of pendingInvites" class="css-12ujxra" (click)="openPopup1(invite.idInvite)" tabindex="0" role="button">
+                          <li *ngFor="let invite of pendingInvites" class="css-12ujxra" (click)="openPopup1(invite.idInvite , invite)" tabindex="0" role="button">
                             <div class="css-k008qs" style="display: flex; align-items: center;">
                                 <img alt="User Avatar" [src]="projectImages[invite.projet.idProjet]" style="width: 60px; object-fit: cover; margin-right: 1em;">
                                 <small class="justified-text">

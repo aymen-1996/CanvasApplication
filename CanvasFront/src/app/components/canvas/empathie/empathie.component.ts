@@ -1131,11 +1131,14 @@ getPendingInvites() {
 
 
 
-openPopup1(idInvite: number): void {
-  const confirmationMessage = 'Êtes-vous sûr de vouloir supprimer cette Post-it ?';
+openPopup1(idInvite: number, invite: any): void {
   const dialogRef = this.dialogue.open(PopupAcceptedComponent, {
     width: '600px',
-    data: { confirmationMessage, idInvite },
+    data: {
+      nomUser: invite.projet.user.nomUser,
+      projetName: invite.projet.nomProjet,
+      idInvite,
+    },
   });
 
   dialogRef.afterClosed().subscribe((result) => {
@@ -1150,6 +1153,7 @@ openPopup1(idInvite: number): void {
     }
   });
 }
+
 
 
 

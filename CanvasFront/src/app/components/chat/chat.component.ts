@@ -522,19 +522,30 @@ toggleDropdown() {
 }
 
 @HostListener('document:click', ['$event'])
-onDocumentClick(event: MouseEvent) {
-  const button = document.querySelector('.css-w5qhhs');
-  const dropdownMenu = document.querySelector('.popover-container');
-  const pendingButton = document.querySelector('.css-tfolz5');
-  const dropdown1Menu = document.querySelector('.css-tfolz51'); 
+onClickOutside(event: MouseEvent): void {
+  const target = event.target as HTMLElement;
 
-  const clickedInsideDropdownMenu = dropdownMenu && dropdownMenu.contains(event.target as Node);
-  const clickedInsideDropdown1Menu = dropdown1Menu && dropdown1Menu.contains(event.target as Node);
+  const button = document.querySelector('.btn-light') as HTMLElement;
+  const emojiPicker = document.querySelector('.css-1oknx5t1') as HTMLElement;
 
-  const clickedInsideButton = (button && button.contains(event.target as Node)) || 
-                              (pendingButton && pendingButton.contains(event.target as Node));
+  const buttonDropdown = document.querySelector('.css-w5qhhs') as HTMLElement;
+  const dropdownMenu = document.querySelector('.popover-container') as HTMLElement;
+  const pendingButton = document.querySelector('.css-tfolz5') as HTMLElement;
+  const dropdown1Menu = document.querySelector('.css-tfolz51') as HTMLElement;
 
-  if (!clickedInsideButton && !clickedInsideDropdownMenu && !clickedInsideDropdown1Menu) {
+  const clickedInsideEmojiPicker = emojiPicker && emojiPicker.contains(target);
+  const clickedInsideButtonEmoji = button && button.contains(target);
+
+  const clickedInsideDropdownMenu = dropdownMenu && dropdownMenu.contains(target);
+  const clickedInsideDropdown1Menu = dropdown1Menu && dropdown1Menu.contains(target);
+  const clickedInsideButtonDropdown = (buttonDropdown && buttonDropdown.contains(target)) || 
+                                      (pendingButton && pendingButton.contains(target));
+
+  if (this.showEmojiPicker && !clickedInsideButtonEmoji && !clickedInsideEmojiPicker) {
+    this.showEmojiPicker = false;
+  }
+
+  if (!clickedInsideButtonDropdown && !clickedInsideDropdownMenu && !clickedInsideDropdown1Menu) {
     this.showDropdown = false;
     this.showPendingInvitesDropdown = false;
     this.isDropdownVisible = false;
@@ -589,11 +600,14 @@ getPendingInvites() {
 
 
 
-openPopup1(idInvite: number): void {
-  const confirmationMessage = 'Êtes-vous sûr de vouloir supprimer cette Post-it ?';
+openPopup1(idInvite: number, invite: any): void {
   const dialogRef = this.dialogue.open(PopupAcceptedComponent, {
     width: '600px',
-    data: { confirmationMessage, idInvite },
+    data: {
+      nomUser: invite.projet.user.nomUser,
+      projetName: invite.projet.nomProjet,
+      idInvite,
+    },
   });
 
   dialogRef.afterClosed().subscribe((result) => {
@@ -608,6 +622,7 @@ openPopup1(idInvite: number): void {
     }
   });
 }
+
 
 
 
@@ -670,20 +685,6 @@ toggleEmojiPicker() {
 
 addEmoji(emoji: string) {
   this.message += emoji;
-}
-
-
-@HostListener('document:click', ['$event'])
-onClickOutside(event: MouseEvent): void {
-  const target = event.target as HTMLElement;
-  const button = document.querySelector('.btn-light') as HTMLElement;
-  const emojiPicker = document.querySelector('.css-1oknx5t1') as HTMLElement;
-
-  if (this.showEmojiPicker && 
-      button && !button.contains(target) && 
-      emojiPicker && !emojiPicker.contains(target)) {
-    this.showEmojiPicker = false;
-  }
 }
 
 loadImage(projectId: number): void {

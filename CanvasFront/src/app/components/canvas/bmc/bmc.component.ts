@@ -967,15 +967,16 @@ getPendingInvites() {
 }
 
 
-
-openPopup1(idInvite: number): void {
-  const confirmationMessage = 'Êtes-vous sûr de vouloir supprimer cette Post-it ?';
+openPopup1(idInvite: number, invite: any): void {
   const dialogRef = this.dialogue.open(PopupAcceptedComponent, {
     width: '600px',
-    data: { confirmationMessage, idInvite },
+    data: {
+      nomUser: invite.projet.user.nomUser,
+      projetName: invite.projet.nomProjet,
+      idInvite,
+    },
   });
 
-  this.showPendingInvitesDropdown=false
   dialogRef.afterClosed().subscribe((result) => {
     if (result && result.action === 'delete') {
       console.log('Suppression confirmée');
@@ -988,6 +989,7 @@ openPopup1(idInvite: number): void {
     }
   });
 }
+
 
 
 
