@@ -70,6 +70,7 @@ mediaRecorder!: MediaRecorder;
 audioChunks: Blob[] = [];
 recordingTime: number = 0;
 recordingInterval: any;
+projectImages: { [key: number]: string } = {}; 
 
   constructor(private projectService: ProjetService ,private notifService :NotifService,private authService:AuthService,private router: Router,private activatedRoute:ActivatedRoute ,private dialogue: MatDialog ,private http: HttpClient,private sanitizer: DomSanitizer, private userService: UserService, private chatService: ChatService) {}
 
@@ -97,6 +98,9 @@ recordingInterval: any;
       (response) => {
         this.pendingInvites = response.pendingInvites;
         this.pendingInvitesCount = this.pendingInvites.length;
+        this.pendingInvites.forEach(invite => {
+          this.loadImage(invite.projet.idProjet);
+      });
       },
       (error) => {
         console.error('Une erreur s\'est produite :', error);
@@ -682,5 +686,12 @@ onClickOutside(event: MouseEvent): void {
   }
 }
 
+loadImage(projectId: number): void {
+  this.projectService.loadImageForProject(projectId).subscribe(response => {
+      this.projectImages[projectId] = response.imageUrl;
+  }, error => {
+      console.error('Error loading image:', error);
+  });
+}
 }
 

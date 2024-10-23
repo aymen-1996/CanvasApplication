@@ -90,7 +90,11 @@ showDropdown: boolean = false;
       (response) => {
         this.pendingInvites = response.pendingInvites;
         this.pendingInvitesCount = this.pendingInvites.length;
-        this.getAllProjectByUser()
+        this.getAllProjectByUser()  ;
+         this.pendingInvites.forEach(invite => {
+          this.loadImage(invite.projet.idProjet);
+      });
+
       },
       (error) => {
         console.error('Une erreur s\'est produite :', error);

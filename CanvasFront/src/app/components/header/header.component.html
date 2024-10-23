@@ -72,19 +72,26 @@
             <div class="MuiBox-root css-i9gxme">
               <h6 class="MuiTypography-root MuiTypography-subtitle1 css-k9tjo5">Invitations</h6>
               <p class="MuiTypography-root MuiTypography-body2 css-11r9ii4">Vous avez {{ pendingInvitesCount }} invitations</p>
-              <div class="scroll-container">
-                <ul class="css-1uzmcsd">
-                  <ng-container *ngIf="pendingInvites && pendingInvites.length > 0">
-                    <li *ngFor="let invite of pendingInvites" class="MuiListItem-root css-1g5h4hs" (click)="openPopup(invite.idInvite)">
-                      <div class="MuiListItemText-root css-1bbslg7">
-                        <span class="MuiTypography-root MuiTypography-body2 css-11r9ii4">
-                          Vous avez été invité à rejoindre le projet <strong>{{ invite.projet.nomProjet }}</strong> dans<strong>{{ invite.canvas.nomCanvas }}</strong>.
-                        </span>
-                      </div>
-                    </li>
-                  </ng-container>
-                </ul>
-              </div>
+              <hr class="MuiDivider-root MuiDivider-fullWidth css-zg4d8h">
+                    <div class="scroll-container">
+                      <div class="css-jjtu05">
+                        <div data-simplebar="init" class="css-qw2e6q">
+                      <ul class="css-1uzmcsd">
+                          <ng-container *ngIf="pendingInvites && pendingInvites.length > 0">
+                            <li *ngFor="let invite of pendingInvites" class="css-12ujxra" (click)="openPopup(invite.idInvite)" tabindex="0" role="button">
+                              <div class="css-k008qs" style="display: flex; align-items: center;">
+                                  <img alt="User Avatar" [src]="projectImages[invite.projet.idProjet]" style="width: 60px; object-fit: cover; margin-right: 1em;">
+                                  <small class="justified-text">
+                                    <p><strong>{{ invite.projet.user.nomUser }}</strong> vous a envoyé une invitation pour rejoindre le projet <strong>{{ invite.projet.nomProjet }}</strong> dans <strong>{{ invite.canvas.nomCanvas }}</strong> en tant que <strong>{{ invite.roleInvite }}</strong>.</p>
+                                </small>                              
+                              </div>
+                              <span class="MuiTouchRipple-root css-w0pj6f"></span>
+                          </li>
+                        </ng-container>
+                      </ul>
+                    </div>
+                    </div>
+                    </div>
             </div>
           </div>
           <hr class="MuiDivider-root MuiDivider-fullWidth css-zg4d8h">

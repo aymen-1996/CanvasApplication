@@ -80,7 +80,7 @@ user: User[] = [];
 
   @ViewChild(MatStepper) stepper!: MatStepper;
 
-    constructor(private dialogue: MatDialog ,private datePipe: DatePipe,private commentaireService: CommentaireService ,private authService:AuthService,private notifService:NotifService,private chatService:ChatService ,private canvasService:CanvasService,private http: HttpClient,private projetService:ProjetService,private sanitizer: DomSanitizer,private userService:UserService ,private router: Router,private blockService:BlocksService , private dialog: MatDialog, private activatedRoute:ActivatedRoute ,private formBuilder: FormBuilder){
+    constructor(private dialogue: MatDialog ,private projectService:ProjetService ,private datePipe: DatePipe,private commentaireService: CommentaireService ,private authService:AuthService,private notifService:NotifService,private chatService:ChatService ,private canvasService:CanvasService,private http: HttpClient,private projetService:ProjetService,private sanitizer: DomSanitizer,private userService:UserService ,private router: Router,private blockService:BlocksService , private dialog: MatDialog, private activatedRoute:ActivatedRoute ,private formBuilder: FormBuilder){
 
   }
   ngOnInit(): void {
@@ -120,6 +120,9 @@ user: User[] = [];
     (response: { pendingInvites: any[]; }) => {
       this.pendingInvites = response.pendingInvites;
       this.pendingInvitesCount = this.pendingInvites.length;
+      this.pendingInvites.forEach(invite => {
+        this.loadImage(invite.projet.idProjet);
+    });
     },
     (error: any) => {
       console.error('Une erreur s\'est produite :', error);
@@ -1160,6 +1163,14 @@ openDialog(): void {
       this.file = file; 
       console.log('Fichier reçu depuis le dialogue:', file);
     }
+  });
+}
+
+loadImage(projectId: number): void {
+  this.projectService.loadImageForProject(projectId).subscribe(response => {
+      this.projectImages[projectId] = response.imageUrl;
+  }, error => {
+      console.error('Error loading image:', error);
   });
 }
   

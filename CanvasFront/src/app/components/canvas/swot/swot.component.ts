@@ -80,7 +80,7 @@ user: User[] = [];
 
   @ViewChild(MatStepper) stepper!: MatStepper;
 
-    constructor(private dialogue: MatDialog ,private datePipe: DatePipe,private commentaireService: CommentaireService ,private authService:AuthService,private chatService:ChatService ,private notifService:NotifService,private http: HttpClient,private canvasService:CanvasService,private projetService:ProjetService,private sanitizer: DomSanitizer,private userService:UserService ,private router: Router,private blockService:BlocksService , private dialog: MatDialog, private activatedRoute:ActivatedRoute ,private formBuilder: FormBuilder){
+    constructor(private dialogue: MatDialog ,private datePipe: DatePipe,private projectService:ProjetService ,private commentaireService: CommentaireService ,private authService:AuthService,private chatService:ChatService ,private notifService:NotifService,private http: HttpClient,private canvasService:CanvasService,private projetService:ProjetService,private sanitizer: DomSanitizer,private userService:UserService ,private router: Router,private blockService:BlocksService , private dialog: MatDialog, private activatedRoute:ActivatedRoute ,private formBuilder: FormBuilder){
 
   }
   ngOnInit(): void {
@@ -114,6 +114,9 @@ user: User[] = [];
       (response) => {
         this.pendingInvites = response.pendingInvites;
         this.pendingInvitesCount = this.pendingInvites.length;
+           this.pendingInvites.forEach(invite => {
+        this.loadImage(invite.projet.idProjet);
+    });
       },
       (error) => {
         console.error('Une erreur s\'est produite :', error);
@@ -1020,6 +1023,13 @@ openDialog(): void {
   });
 }
   
+loadImage(projectId: number): void {
+  this.projectService.loadImageForProject(projectId).subscribe(response => {
+      this.projectImages[projectId] = response.imageUrl;
+  }, error => {
+      console.error('Error loading image:', error);
+  });
+}
 }
 
 

@@ -69,6 +69,9 @@ idBlock:any
       (response) => {
         this.pendingInvites = response.pendingInvites;
         this.pendingInvitesCount = this.pendingInvites.length;
+        this.pendingInvites.forEach(invite => {
+          this.loadImage(invite.projet.idProjet);
+      });
       },
       (error) => {
         console.error('Une erreur s\'est produite :', error);
@@ -345,6 +348,5 @@ delete(idInvite: number,userId: number): void {
       }
     );
 }
-
 
 }
