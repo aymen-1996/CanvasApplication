@@ -223,10 +223,9 @@ async getUserById(idUser: number): Promise<user> {
     return this.userRep.findOne({ where: { idUser } });
 }
 
-//liste user selon invite orderBy lastMessage
 async getUniqueUsersByLastMessage(idUser: number, nomUser?: string): Promise<user[]> {
     const userInvitations = await this.inviteRepository.find({
-        where: { user: { idUser } },
+        where: { user: { idUser }, etat: 'accepted' },
         relations: ['projet'],
     });
 
@@ -236,7 +235,8 @@ async getUniqueUsersByLastMessage(idUser: number, nomUser?: string): Promise<use
         .createQueryBuilder('invite')
         .innerJoinAndSelect('invite.user', 'user')
         .where('invite.projetId IN (:...projectIds)', { projectIds })
-        .andWhere('user.idUser != :idUser', { idUser });
+        .andWhere('user.idUser != :idUser', { idUser })
+        .andWhere('invite.etat = :etat', { etat: 'accepted' });
 
     if (nomUser) {
         usersQuery.andWhere('user.nomUser LIKE :nomUser', { nomUser: `%${nomUser}%` });
@@ -278,6 +278,7 @@ async getUniqueUsersByLastMessage(idUser: number, nomUser?: string): Promise<use
 
     return sortedUsers.map(item => item.user);
 }
+
 
 
     async changephoto(userId: number, photoName: string): Promise<user> {

@@ -44,7 +44,7 @@ export class InviteService {
     });
 
     if (userInProject) {
-      throw new Error(`Vous ne pouvez pas envoyer une invitation à cet utilisateur, car il est le superviseur du projet`);
+      throw new Error(`Vous ne pouvez pas envoyer une invitation à cet utilisateur, car il est le porteur de projet`);
     }
 
     const existingInvite = await this.inviteRepository.findOne({
