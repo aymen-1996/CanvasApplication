@@ -78,6 +78,8 @@ commentaires: any[] = [];
 canvasId: any
 commentCount: number = 0;
 contenu = '';
+isMenuOpen = false; // Pour contrôler l'affichage du menu
+
   @ViewChild(MatStepper) stepper!: MatStepper;
     constructor(private dialogue: MatDialog ,private projectService:ProjetService ,private datePipe: DatePipe,private commentaireService: CommentaireService,private authService:AuthService,private chatService:ChatService ,private notifService:NotifService,private canvasService:CanvasService,private http: HttpClient,private projetService:ProjetService,private sanitizer: DomSanitizer,private userService:UserService ,private router: Router ,private blockService:BlocksService , private dialog: MatDialog, private activatedRoute:ActivatedRoute ,private formBuilder: FormBuilder){
 
@@ -145,6 +147,10 @@ contenu = '';
    
   }
 
+
+  toggleMenu() {
+    this.isMenuOpen = !this.isMenuOpen;
+  }
   
   toggleComments() {
     this.showComments = !this.showComments;

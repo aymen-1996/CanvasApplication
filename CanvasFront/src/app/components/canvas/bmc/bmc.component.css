@@ -1203,7 +1203,7 @@ img {
 
 .css-1oknx5t {
   top: 50px; 
-  margin-left: -5px !important;
+  margin-left: -10px !important;
   background-color: rgb(255, 255, 255);
   color: rgb(33, 43, 54);
   box-shadow: rgba(145, 158, 171, 0.2) 0px 5px 5px -3px,
@@ -2149,3 +2149,285 @@ body {
   word-spacing: -0.1em;  
 }
 
+
+
+
+
+
+.css-13l6o60 {
+  display: inline-flex;
+  flex-direction: column;
+  position: relative;
+  padding: 0px;
+  margin: 0px;
+  border: 0px;
+  vertical-align: top;
+  min-width: 200px;
+}
+
+
+.css-1auxw74 {
+  color: rgb(99, 115, 129);
+  line-height: 1.4375em;
+  font-size: 1rem;
+  font-family: "Public Sans", sans-serif;
+  font-weight: 400;
+  display: block;
+  transform-origin: left top;
+  text-overflow: ellipsis;
+  max-width: calc(133% - 24px);
+  position: absolute;
+  left: 0px;
+  top: -5px;
+  transform: translate(14px, -9px) scale(0.75);
+  z-index: 1;
+  pointer-events: auto;
+  user-select: none;
+  padding: 0px;
+  white-space: nowrap;
+  overflow: hidden;
+  transition: color 200ms cubic-bezier(0, 0, 0.2, 1), transform 200ms cubic-bezier(0, 0, 0.2, 1), max-width 200ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+.css-1lqhc60 {
+  line-height: 1.4375em;
+  font-size: 1rem;
+  font-family: "Public Sans", sans-serif;
+  font-weight: 400;
+  color: rgb(33, 43, 54);
+  box-sizing: border-box;
+  cursor: text;
+  display: inline-flex;
+  -webkit-box-align: center;
+  align-items: center;
+  position: relative;
+  border-radius: 8px;
+}
+
+
+.css-34c9f6.MuiSelect-select {
+  height: auto;
+  min-height: 1.4375em;
+  text-overflow: ellipsis;
+  cursor: pointer;
+  white-space: nowrap;
+  overflow: hidden;
+}
+.css-34c9f6 {
+  appearance: none;
+  user-select: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font: inherit;
+  letter-spacing: inherit;
+  color: currentcolor;
+  border: 0px;
+  box-sizing: content-box;
+  background: none;
+  height: 1.4375em;
+  margin: 0px;
+  -webkit-tap-highlight-color: transparent;
+  display: block;
+  min-width: 0px;
+  width: 100%;
+  animation-name: mui-auto-fill-cancel;
+  animation-duration: 10ms;
+  padding: 8.5px 14px;
+}
+.css-1k3x8v3 {
+  bottom: 0px;
+  left: 0px;
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+  width: 100%;
+  box-sizing: border-box;
+}
+.css-4suahr {
+  user-select: none;
+  width: 1em;
+  height: 1em;
+  display: inline-block;
+  fill: currentcolor;
+  flex-shrink: 0;
+  font-size: 1.5rem;
+  position: absolute;
+  right: 7px;
+  top: calc(50% - 0.5em);
+  pointer-events: none;
+  color: rgb(99, 115, 129);
+  transition: fill 200ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.css-igs3ac {
+  text-align: left;
+  position: absolute;
+  inset: -5px 0 0;
+  margin: 0;
+  padding: 0 8px;
+  cursor: pointer;
+  pointer-events: auto; 
+  border-radius: inherit;
+  border-style: solid;
+  border-width: 1px;
+  min-width: 0;
+  border-color: rgba(0, 0, 0, 0.23);
+  border-top-width: 0;
+  transition: border-color 0.3s; 
+}
+.css-igs3ac:not(.is-menu-open):hover {
+  border-color: rgba(0, 0, 0, 0.733) !important;
+}
+
+.css-igs3ac::before {
+  content: "";
+  position: absolute;
+  right: 3.3px;
+  width: 55%; 
+  height: 0.1px;
+  background-color: rgba(0, 0, 0, 0.23);
+  transition: background-color 0.3s; 
+}
+
+.css-igs3ac.is-menu-open::before {
+  background-color: rgb(44, 141, 245);
+}
+.css-igs3ac:not(.is-menu-open):hover::before {
+  background-color: rgba(0, 0, 0, 0.733)
+}
+
+.css-r8u8y9 {
+  list-style: none;
+  margin: 0px;
+  padding: 8px 0px;
+  position: relative;
+  outline: 0px;
+}
+
+@media (min-width: 600px) {
+  .css-1l61fsr {
+      min-height: auto;
+  }
+}
+.css-1l61fsr {
+  -webkit-tap-highlight-color: transparent;
+  background-color: transparent;
+  outline: 0px;
+  border: 0px;
+  margin: 0px;
+  border-radius: 0px;
+  cursor: pointer;
+  user-select: none;
+  vertical-align: middle;
+  appearance: none;
+  color: inherit;
+  line-height: 1.5;
+  font-size: 1rem;
+  font-family: "Public Sans", sans-serif;
+  font-weight: 400;
+  display: flex;
+  -webkit-box-pack: start;
+  justify-content: flex-start;
+  -webkit-box-align: center;
+  align-items: center;
+  position: relative;
+  text-decoration: none;
+  min-height: 48px;
+  padding: 6px 16px;
+  box-sizing: border-box;
+  white-space: nowrap;
+}
+
+
+.css-w0pj6f {
+  overflow: hidden;
+  pointer-events: none;
+  position: absolute;
+  z-index: 0;
+  inset: 0px;
+  border-radius: inherit;
+}
+
+
+.css-1l61fsr {
+  -webkit-tap-highlight-color: transparent;
+  background-color: transparent;
+  outline: 0px;
+  border: 0px;
+  margin: 0px;
+  border-radius: 0px;
+  cursor: pointer;
+  user-select: none;
+  vertical-align: middle;
+  appearance: none;
+  color: inherit;
+  line-height: 1.5;
+  font-size: 1rem;
+  font-family: "Public Sans", sans-serif;
+  font-weight: 400;
+  display: flex;
+  -webkit-box-pack: start;
+  justify-content: flex-start;
+  -webkit-box-align: center;
+  align-items: center;
+  position: relative;
+  text-decoration: none;
+  min-height: 48px;
+  padding: 6px 16px;
+  box-sizing: border-box;
+  white-space: nowrap;
+}
+
+.css-1l61fsr {
+  -webkit-tap-highlight-color: transparent;
+  background-color: transparent;
+  outline: 0px;
+  border: 0px;
+  margin: 0px;
+  border-radius: 0px;
+  cursor: pointer;
+  user-select: none;
+  vertical-align: middle;
+  appearance: none;
+  color: inherit;
+  line-height: 1.5;
+  font-size: 1rem;
+  font-family: "Public Sans", sans-serif;
+  font-weight: 400;
+  display: flex;
+  -webkit-box-pack: start;
+  justify-content: flex-start;
+  -webkit-box-align: center;
+  align-items: center;
+  position: relative;
+  text-decoration: none;
+  min-height: 48px;
+  padding: 6px 16px;
+  box-sizing: border-box;
+  white-space: nowrap;
+}
+
+
+.css-169pdm9 {
+    background-color: rgb(255, 255, 255);
+    color: rgb(33, 43, 54);
+    box-shadow: rgba(145, 158, 171, 0.2) 0px 5px 5px -3px, rgba(145, 158, 171, 0.14) 0px 8px 10px 1px, rgba(145, 158, 171, 0.12) 0px 3px 14px 2px;
+    background-image: none;
+    position: absolute;
+    overflow-y: auto;
+    overflow-x: hidden;
+    min-width: 16px;
+    max-width: calc(100% - 32px);
+    transition: box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1);
+    border-radius: 8px;
+    outline: 0px;
+}
+
+
+.selected1 {
+  background-color: rgba(33, 150, 243, 0.08); /* Couleur de fond pour le projet sélectionné */
+}
+
+.css-1l61fsr:hover {
+  background-color: rgba(241, 239, 239, 0.815); /* Couleur de fond lors du survol */
+}
