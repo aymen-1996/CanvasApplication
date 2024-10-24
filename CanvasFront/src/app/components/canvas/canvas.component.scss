@@ -21,6 +21,9 @@
     justify-content: space-around; 
   }
   
+  .canvas-list .canvas-items .canvas-item:hover{
+    background-color: rgb(246, 246, 247);
+  }
   .canvas-list .canvas-items .canvas-item {
     margin: 20px 0; 
     text-align: center;
