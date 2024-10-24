@@ -25,6 +25,7 @@ import { DatePipe } from '@angular/common';
 import { CommentaireService } from 'src/app/services/commentaire.service';
 import { User } from 'src/app/models/user';
 import { FileDialogComponent } from '../../file-dialog/file-dialog.component';
+import { io, Socket } from 'socket.io-client';
 @Component({
   selector: 'app-empathie',
   templateUrl: './empathie.component.html',
@@ -78,6 +79,7 @@ canvasId: any
 commentCount: number = 0;
 contenu = '';
 user: User[] = [];
+private socket!: Socket;
 
   @ViewChild(MatStepper) stepper!: MatStepper;
 
@@ -87,6 +89,7 @@ user: User[] = [];
   ngOnInit(): void {
     this.users = JSON.parse(localStorage.getItem('currentUser') as string);
     this.GetNotif()
+    this.socket = io('http://localhost:3000');
 
     this.selectProject =  localStorage.getItem('selectedProjectId');
     this.activatedRoute.data.subscribe((data: any) => {
@@ -105,33 +108,10 @@ user: User[] = [];
     }, 5000);
     this.getUserPhoto()
     this.ListProjectsAndCanvas()
-    this.pollSubscription = interval(1000)
-    .pipe(
-      switchMap(() => this.getPendingInvites())
-    )
-    .subscribe(
-      (response) => {
-        this.pendingInvites = response.pendingInvites;
-        this.pendingInvitesCount = this.pendingInvites.length;
-      },
-      (error) => {
-        console.error('Une erreur s\'est produite :', error);
-      }
-    );
-    
-  this.getPendingInvites().subscribe(
-    (response: { pendingInvites: any[]; }) => {
-      this.pendingInvites = response.pendingInvites;
-      this.pendingInvitesCount = this.pendingInvites.length;
-      this.pendingInvites.forEach(invite => {
-        this.loadImage(invite.projet.idProjet);
-    });
-    },
-    (error: any) => {
-      console.error('Une erreur s\'est produite :', error);
-    }
-  );
+
     this.getPendingInvites()
+    this.listenForNewInvites();
+    
     this.donneesForm = this.formBuilder.group({
       coleur: ''
     });
@@ -1125,10 +1105,35 @@ updateEmpthyData(idCanvas: string) {
   this.GetRole()
 
 }
-getPendingInvites() {
-  return this.http.get<any>(`${environment.backendHost}/projet/invites/${this.users.user.idUser}/etat`);
+getPendingInvites(): void {
+  this.projectService.getPendingInvites(this.users.user.idUser).subscribe(
+    (response) => {
+      this.pendingInvites = response.pendingInvites;
+      this.pendingInvitesCount = this.pendingInvites.length;
+
+      this.pendingInvites.forEach((invite) => {
+        this.loadImage(invite.projet.idProjet);
+   });
+
+      console.log("Pending invites:", this.pendingInvites);
+    },
+    (error) => {
+      console.error('Erreur lors de la récupération des invitations :', error);
+    }
+  );
 }
 
+
+listenForNewInvites(): void {
+  this.projectService.listenForNewInvites().subscribe(
+    (data) => {
+      this.getPendingInvites();
+    },
+    (error) => {
+      console.error('Erreur lors de l\'écoute des nouvelles invitations :', error);
+    }
+  );
+}
 
 
 openPopup1(idInvite: number, invite: any): void {
@@ -1168,18 +1173,8 @@ updateInviteState(userId: number, idInvite: number): void {
         this.projetService.updateProject(); 
         this.projetService.updateCanvas(); 
         this.ListProjectsAndCanvas()
-
-        setTimeout(() => {
-          this.getPendingInvites().subscribe(
-            (response: { pendingInvites: any[]; }) => {
-              this.pendingInvites = response.pendingInvites;
-              this.pendingInvitesCount = this.pendingInvites.length;
-            },
-            (error: any) => {
-              console.error('Une erreur s\'est produite :', error);
-            }
-          );
-        }, 100); 
+        this.getPendingInvites()
+        this.listenForNewInvites();
       },
       (error) => {
         console.error('Failed to update invitation state:', error);
@@ -1193,17 +1188,8 @@ delete(idInvite: number,userId: number): void {
       (response) => {
         this.pendingInvites = this.pendingInvites.filter(invite => invite.id !== idInvite);
         this.pendingInvitesCount = this.pendingInvites.length;
-        setTimeout(() => {
-          this.getPendingInvites().subscribe(
-            (response: { pendingInvites: any[]; }) => {
-              this.pendingInvites = response.pendingInvites;
-              this.pendingInvitesCount = this.pendingInvites.length;
-            },
-            (error: any) => {
-              console.error('Une erreur s\'est produite :', error);
-            }
-          );
-        }, 100); 
+        this.getPendingInvites()
+        this.listenForNewInvites();
       },
       (error) => {
         console.error('Failed to update invitation state:', error);

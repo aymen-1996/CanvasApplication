@@ -86,38 +86,8 @@ projectImages: { [key: number]: string } = {};
     });
     this.getUserPhoto1()
     this.getUsersByInvitations()
-
-
-
-   
-    this.pollSubscription = interval(1000)
-    .pipe(
-      switchMap(() => this.getPendingInvites())
-    )
-    .subscribe(
-      (response) => {
-        this.pendingInvites = response.pendingInvites;
-        this.pendingInvitesCount = this.pendingInvites.length;
-        this.pendingInvites.forEach(invite => {
-          this.loadImage(invite.projet.idProjet);
-      });
-      },
-      (error) => {
-        console.error('Une erreur s\'est produite :', error);
-      }
-    );
-    
-  this.getPendingInvites().subscribe(
-    (response: { pendingInvites: any[]; }) => {
-      this.pendingInvites = response.pendingInvites;
-      this.pendingInvitesCount = this.pendingInvites.length;
-
-    },
-    (error: any) => {
-      console.error('Une erreur s\'est produite :', error);
-    }
-    
-  );
+    this.getPendingInvites()
+    this.listenForNewInvites();
 
     this.socket.on('message',
       (data: { 
@@ -594,10 +564,36 @@ getUserPhoto1(): void {
 
 
 
-getPendingInvites() {
-  return this.http.get<any>(`${environment.backendHost}/projet/invites/${this.userId.user.idUser}/etat`);
+
+getPendingInvites(): void {
+  this.projectService.getPendingInvites(this.userId.user.idUser).subscribe(
+    (response) => {
+      this.pendingInvites = response.pendingInvites;
+      this.pendingInvitesCount = this.pendingInvites.length;
+
+      this.pendingInvites.forEach((invite) => {
+        this.loadImage(invite.projet.idProjet);
+   });
+
+      console.log("Pending invites:", this.pendingInvites);
+    },
+    (error) => {
+      console.error('Erreur lors de la récupération des invitations :', error);
+    }
+  );
 }
 
+
+listenForNewInvites(): void {
+  this.projectService.listenForNewInvites().subscribe(
+    (data) => {
+      this.getPendingInvites();
+    },
+    (error) => {
+      console.error('Erreur lors de l\'écoute des nouvelles invitations :', error);
+    }
+  );
+}
 
 
 openPopup1(idInvite: number, invite: any): void {
@@ -637,17 +633,8 @@ updateInviteState(userId: number, idInvite: number): void {
         this.projectService.updateProject(); 
         this.projectService.updateCanvas(); 
 
-        setTimeout(() => {
-          this.getPendingInvites().subscribe(
-            (response: { pendingInvites: any[]; }) => {
-              this.pendingInvites = response.pendingInvites;
-              this.pendingInvitesCount = this.pendingInvites.length;
-            },
-            (error: any) => {
-              console.error('Une erreur s\'est produite :', error);
-            }
-          );
-        }, 100); 
+        this.getPendingInvites()
+        this.listenForNewInvites();
       },
       (error) => {
         console.error('Failed to update invitation state:', error);
@@ -661,17 +648,8 @@ delete(idInvite: number,userId: number): void {
       (response) => {
         this.pendingInvites = this.pendingInvites.filter(invite => invite.id !== idInvite);
         this.pendingInvitesCount = this.pendingInvites.length;
-        setTimeout(() => {
-          this.getPendingInvites().subscribe(
-            (response: { pendingInvites: any[]; }) => {
-              this.pendingInvites = response.pendingInvites;
-              this.pendingInvitesCount = this.pendingInvites.length;
-            },
-            (error: any) => {
-              console.error('Une erreur s\'est produite :', error);
-            }
-          );
-        }, 100); 
+        this.getPendingInvites()
+        this.listenForNewInvites();
       },
       (error) => {
         console.error('Failed to update invitation state:', error);

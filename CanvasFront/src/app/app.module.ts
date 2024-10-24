@@ -40,6 +40,7 @@ import { ChatComponent } from './components/chat/chat.component';
 import { MatBadgeModule } from '@angular/material/badge';
 import { MatMenuModule } from '@angular/material/menu';
 import { FileDialogComponent } from './components/file-dialog/file-dialog.component';
+import { SocketService } from './services/socket.service';
 
 
 @NgModule({
@@ -91,7 +92,7 @@ import { FileDialogComponent } from './components/file-dialog/file-dialog.compon
     
   ],
   providers: [
-    DatePipe
+    DatePipe, SocketService
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],  
   bootstrap: [AppComponent]

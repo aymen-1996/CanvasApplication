@@ -104,11 +104,12 @@ async deleteInviteByIdAndUserId(idInvite: number, idUser: number): Promise<strin
         .leftJoinAndSelect('invite.user', 'user')
         .where('canvas.nomCanvas = :nomCanvas', { nomCanvas })
         .andWhere('invite.userId = :userId', { userId })
+        .andWhere('invite.etat = :etat', { etat: 'accepted' }) 
         .select(['invite', 'projet', 'canvas', 'user'])
         .getMany();
 
     if (invites.length === 0) {
-        throw new NotFoundException(`No invites found for canvas: ${nomCanvas} and user: ${userId}`);
+        throw new NotFoundException(`No invites found for canvas: ${nomCanvas}, user: ${userId}, with status accepted`);
     }
 
     const projectsMap = new Map<number, { canvas: any[], idProjet: number, imageProjet: string, nomProjet: string }>();
@@ -145,6 +146,7 @@ async deleteInviteByIdAndUserId(idInvite: number, idUser: number): Promise<strin
         projects: projectsArray 
     };
 }
+
 
 
 

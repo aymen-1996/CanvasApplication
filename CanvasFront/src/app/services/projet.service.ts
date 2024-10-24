@@ -4,6 +4,8 @@ import { BehaviorSubject, Observable, Subject, catchError, map } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { project } from '../models/project';
 import { User } from '../models/user';
+import { io, Socket } from 'socket.io-client';
+import { SocketService } from './socket.service';
 
 @Injectable({
   providedIn: 'root'
@@ -14,8 +16,10 @@ export class ProjetService {
   private canvasUpdatedSource = new BehaviorSubject<boolean>(false);
   canvasUpdated$ = this.canvasUpdatedSource.asObservable();
   private refreshSubject = new BehaviorSubject<boolean>(false);
+  constructor(private http: HttpClient , private socketService:SocketService) {
 
-  constructor(private http: HttpClient) { }
+
+   }
 
 
   getallProjectByUser(id:number):Observable<project[]>{
@@ -85,6 +89,14 @@ getProjectById(id: number): Observable<any> {
 getProjectByCanvasAndUser(nomCanvas: string, userId: number): Observable<any> {
   const url = `${environment.backendHost}/invite/project-by-canvas/${nomCanvas}/${userId}`;
   return this.http.get<any>(url);
+}
+
+getPendingInvites(userId: number): Observable<any> {
+  return this.http.get(`${environment.backendHost}/projet/invites/${userId}/etat`);
+}
+
+listenForNewInvites(): Observable<any> {
+  return this.socketService.listenForNewInvites();
 }
 
 }

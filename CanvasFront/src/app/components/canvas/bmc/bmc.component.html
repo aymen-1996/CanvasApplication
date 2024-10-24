@@ -29,7 +29,7 @@
                   </label>
                   
                   <div class="css-1lqhc60">
-                    <div [(ngModel)]="currentProject" tabindex="0" role="button" aria-expanded="true" aria-haspopup="listbox" aria-labelledby="project-select" class="MuiSelect-select MuiSelect-outlined MuiOutlinedInput-input MuiInputBase-input MuiInputBase-inputSizeSmall css-34c9f6">
+                    <div tabindex="0" role="button" aria-expanded="true" aria-haspopup="listbox" aria-labelledby="project-select" class="MuiSelect-select MuiSelect-outlined MuiOutlinedInput-input MuiInputBase-input MuiInputBase-inputSizeSmall css-34c9f6">
                       {{currentProject?.nomProjet}} 
                     </div>
                     
@@ -124,7 +124,10 @@
                             <div class="css-k008qs" style="display: flex; align-items: center;">
                                 <img alt="User Avatar" [src]="projectImages[invite.projet.idProjet]" style="width: 60px; object-fit: cover; margin-right: 1em;">
                                 <small class="justified-text">
-                                  <p><strong>{{ invite.projet.user.nomUser }}</strong> vous a envoyé une invitation pour rejoindre le projet <strong>{{ invite.projet.nomProjet }}</strong> dans <strong>{{ invite.canvas.nomCanvas }}</strong> en tant que <strong>{{ invite.roleInvite }}</strong>.</p>
+                                  <p><strong>{{ invite.projet.user.nomUser }}</strong> vous a envoyé une invitation pour rejoindre le projet <strong>{{ invite.projet.nomProjet }}</strong> dans <strong>{{ invite.canvas.nomCanvas }}</strong> en tant que 
+                                     <strong>
+                                    {{ invite.roleInvite === 'editor' ? 'superviseur' : invite.roleInvite }}
+                                  </strong>.</p>
                               </small>                              
                             </div>
                             <span class="MuiTouchRipple-root css-w0pj6f"></span>

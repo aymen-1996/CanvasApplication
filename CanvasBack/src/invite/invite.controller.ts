@@ -4,28 +4,31 @@ import { Response } from 'express'; // Import the Response object
 import { invite } from './invite.entity';
 import { projet } from 'src/projet/projet.entity';
 import { canvas } from 'src/canvas/canvas.entity';
+import { InviteGateway } from 'src/Gateway/invite';
 
 @Controller('invite')
 export class InviteController {
 
-    constructor(private readonly inviteService: InviteService) {}
+    constructor(private readonly inviteService: InviteService , private readonly inviteGateway: InviteGateway, 
+    ) {}
 
-    //envoyer invitation si invitation est deja existe return error
-    @Post(':idProjet/:idCanvas')
-    async inviteUser(
-      @Param('idProjet', ParseIntPipe) idProjet: number,
-      @Param('idCanvas', ParseIntPipe) idCanvas: number,
-      @Body('emailUser') emailUser: string,
-      @Body('role') role: string,
-      @Res() res: Response, 
-    ): Promise<void> {
-      try {
-        const successMessage = await this.inviteService.inviteUser(idProjet, idCanvas, emailUser, role);
-        res.status(200).json({ message: successMessage });
-      } catch (error) {
-        res.status(400).json({ error: error.message });
-      }
-    }
+@Post(':idProjet/:idCanvas')
+async inviteUser(
+  @Param('idProjet', ParseIntPipe) idProjet: number,
+  @Param('idCanvas', ParseIntPipe) idCanvas: number,
+  @Body('emailUser') emailUser: string,
+  @Body('role') role: string,
+  @Res() res: Response,
+): Promise<void> {
+  try {
+    const successMessage = await this.inviteService.inviteUser(idProjet, idCanvas, emailUser, role);
+    this.inviteGateway.server.emit('newInvite', { message: successMessage });
+    res.status(200).json({ message: successMessage });
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+}
+
 
 
     //Refus invite (delete)
