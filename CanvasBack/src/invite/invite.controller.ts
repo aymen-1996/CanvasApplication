@@ -49,12 +49,11 @@ export class InviteController {
     ): Promise<{ projects: { canvas: any[]; idProjet: number; imageProjet: string; nomProjet: string }[] }> { // تأكد من أن نوع الإرجاع يعكس التغييرات
       const result = await this.inviteService.getProjectByCanvasAndUser(nomCanvas, userId);
     
-      // معالجة الأخطاء
       if (!result || result.projects.length === 0) {
         throw new NotFoundException(`No projects found for canvas: ${nomCanvas} and user: ${userId}`);
       }
     
-      return result; // إرجاع النتيجة من الخدمة
+      return result;
     }
     
 }

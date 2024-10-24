@@ -111,13 +111,11 @@ async deleteInviteByIdAndUserId(idInvite: number, idUser: number): Promise<strin
         throw new NotFoundException(`No invites found for canvas: ${nomCanvas} and user: ${userId}`);
     }
 
-    // استخراج المشاريع
     const projectsMap = new Map<number, { canvas: any[], idProjet: number, imageProjet: string, nomProjet: string }>();
 
     for (const invite of invites) {
         const project = invite.projet;
 
-        // إذا كان المشروع موجودًا في الخريطة، أضف القماشات له
         if (!projectsMap.has(project.idProjet)) {
             projectsMap.set(project.idProjet, {
                 canvas: [],
@@ -127,7 +125,6 @@ async deleteInviteByIdAndUserId(idInvite: number, idUser: number): Promise<strin
             });
         }
 
-        // إضافة القماش إلى المشروع
         const projectEntry = projectsMap.get(project.idProjet);
         if (projectEntry) {
             const canvasEntry = {
@@ -138,17 +135,14 @@ async deleteInviteByIdAndUserId(idInvite: number, idUser: number): Promise<strin
         }
     }
 
-    // تحويل الخريطة إلى مصفوفة
     const projectsArray = Array.from(projectsMap.values());
 
-    // تأكد من وجود مشروع واحد على الأقل
     if (projectsArray.length === 0) {
         throw new NotFoundException(`No project found for canvas: ${nomCanvas} and user: ${userId}`);
     }
 
-    // بناء الاستجابة النهائية
     return {
-        projects: projectsArray // إرجاع قائمة المشاريع
+        projects: projectsArray 
     };
 }
 
