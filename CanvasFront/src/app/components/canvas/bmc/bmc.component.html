@@ -20,46 +20,16 @@
             </svg>
               <span class=" css-w0pj6f"></span></button>  
               
-              <div style="display: flex; flex-direction: column;">
-                <div class="MuiFormControl-root css-13l6o60" (click)="toggleMenu()">
-                  <label class="css-1auxw74"  
-                         [ngStyle]="{'color': isMenuOpen ? 'rgb(44, 141, 245)' : 'rgb(99, 115, 129)'}" 
-                         data-shrink="true" id="project-select"> 
-                    Projet actuel 
-                  </label>
-                  
-                  <div class="css-1lqhc60">
-                    <div tabindex="0" role="button" aria-expanded="true" aria-haspopup="listbox" aria-labelledby="project-select" class="MuiSelect-select MuiSelect-outlined MuiOutlinedInput-input MuiInputBase-input MuiInputBase-inputSizeSmall css-34c9f6">
-                      {{currentProject?.nomProjet}} 
-                    </div>
-                    
-                    <input aria-hidden="true" tabindex="-1" class="css-1k3x8v3" [value]="currentProject?.id">
-                    
-                    <svg [ngClass]="{'rotated': isMenuOpen}" class="css-4suahr" focusable="false" aria-hidden="true" viewBox="0 0 24 24" data-testid="ArrowDropDownIcon">
-                      <path d="M7 10l5 5 5-5z"></path>
-                    </svg>
+              <mat-form-field class="custom-select">
+                <mat-label>Projet actuel</mat-label>
+                <mat-select [(ngModel)]="currentProject">
+                  <mat-option>Mes projet</mat-option>
+                  <mat-option *ngFor="let project of projects" [value]="project" (click)="navigateToBmc(project)">
+                    {{ project.nomProjet }}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
               
-                    <fieldset aria-hidden="true" class="css-igs3ac" 
-                    [ngClass]="{ 'is-menu-open': isMenuOpen }" 
-                    [ngStyle]="{
-                      'border-color': isMenuOpen ? 'rgb(44, 141, 245)' : 'rgba(0, 0, 0, 0.23)'
-                    }">
-                    
-                      <legend class="css-1in441m"><span></span></legend>
-                    </fieldset>
-                  </div>
-                </div>
-              
-                <div *ngIf="isMenuOpen" class="css-169pdm9" tabindex="-1" 
-                     style="opacity: 1; transform: none; min-width: 200px; transition: opacity 267ms cubic-bezier(0.4, 0, 0.2, 1), transform 178ms cubic-bezier(0.4, 0, 0.2, 1); top: 58px; transform-origin: 100px 0px;">
-                  <ul role="listbox" class="css-r8u8y9" aria-labelledby="project-select-label">
-                    <li class="css-1l61fsr" *ngFor="let project of projects" (click)="navigateToBmc(project)"  [ngClass]="{'selected1': project.idProjet === currentProject?.idProjet}">
-                      <span>{{ project.nomProjet }}</span>
-                    </li>
-                  </ul>
-                </div>
-              </div>
-
             <mat-icon 
             routerLink="/chat" 
             class="maticon1" 

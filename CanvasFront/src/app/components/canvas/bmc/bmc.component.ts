@@ -80,7 +80,7 @@ commentaires: any[] = [];
 canvasId: any
 commentCount: number = 0;
 contenu = '';
-isMenuOpen = false; // Pour contrôler l'affichage du menu
+isMenuOpen = false;
 private socket!: Socket;
 
   @ViewChild(MatStepper) stepper!: MatStepper;
