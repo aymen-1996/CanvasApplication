@@ -388,7 +388,7 @@ async getProjectCanvassByUserId(userId: number): Promise<invite[]> {
   try {
       const invitations = await this.inviteRepository.find({
           where: { user: { idUser: userId } },
-          relations: ['projet', 'projet.canvas'], // Ajout de la relation avec l'entité canvas
+          relations: ['projet', 'projet.canvas'],
       });
 
       return invitations;
@@ -398,6 +398,52 @@ async getProjectCanvassByUserId(userId: number): Promise<invite[]> {
   }
 }
   
+async updateProjectImage(idProjet: number, image: Express.Multer.File): Promise<projet> {
+    const project = await this.projectRepository.findOne({
+      where: { idProjet: idProjet },
+    });
+  
+    if (!project) {
+      throw new NotFoundException('Project not found');
+    }
+  
+    const uploadsPath = path.join(__dirname, '..', '..', 'uploads');
+    const oldImageName = project.imageProjet; 
+      if (oldImageName && oldImageName !== 'project.jpg') {
+      const oldImagePath = path.join(uploadsPath, oldImageName);
+      try {
+        await fs.unlink(oldImagePath);
+      } catch (error) {
+        console.error(`Error deleting old image: ${oldImagePath}`, error);
+      }
+    }
+      const newImageName = await this.saveImage(image, uploadsPath); 
+  
+    project.imageProjet = newImageName;
+  
+    await this.projectRepository.save(project);
+  
+    return project;
+  }
+  
+  
+
+  private async saveImage(image: Express.Multer.File, uploadsPath: string): Promise<string> {
+    if (!image || !image.path) {
+      throw new BadRequestException('No valid image data received');
+    }
+  
+    const currentDate = new Date().toISOString().replace(/[-:T.]/g, '');
+    const nomImage = `${currentDate}_${image.originalname}`; 
+  
+    const imagePath = path.join(uploadsPath, nomImage); 
+  
+    await fs.copyFile(image.path, imagePath);
+  
+    await fs.unlink(image.path);
+  
+    return nomImage;
+  }
   
   
 }

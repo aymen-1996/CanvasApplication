@@ -228,5 +228,22 @@ async getProjectById(@Param('id', ParseIntPipe) idProjet: number): Promise<any> 
         };
     }
 }
+
+//change image projet
+@Put(':projectId/image')
+@UseInterceptors(FileInterceptor('image'))
+async updateProjectImage(
+  @Param('projectId', ParseIntPipe) projectId: number,
+  @UploadedFile() image: Express.Multer.File,
+): Promise<projet> {
+  if (!image) {
+    throw new BadRequestException('Image file is required');
+  }
+  try {
+    return await this.projetService.updateProjectImage(projectId, image);
+  } catch (error) {
+    throw new NotFoundException('Project not found');
+  }
+}
 }
 

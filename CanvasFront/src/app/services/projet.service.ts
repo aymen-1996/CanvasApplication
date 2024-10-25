@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, Subject, catchError, map } from 'rxjs';
 import { environment } from 'src/environments/environment';
@@ -97,6 +97,16 @@ getPendingInvites(userId: number): Observable<any> {
 
 listenForNewInvites(): Observable<any> {
   return this.socketService.listenForNewInvites();
+}
+
+updateProjectImage(projectId: number, image: File): Observable<any> {
+  const formData = new FormData();
+  formData.append('image', image, image.name);
+  
+  return this.http.put(`${environment.backendHost}/projet/${projectId}/image`, formData, {
+    headers: new HttpHeaders({
+    })
+  });
 }
 
 }

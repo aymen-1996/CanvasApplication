@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Component, ElementRef, HostListener, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, HostListener, Input, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
@@ -16,6 +16,7 @@ import { ChatService } from 'src/app/services/chat.service';
 import { NotifService } from 'src/app/services/notif.service';
 import { Notification } from 'src/app/models/notification'; 
 import { io, Socket } from 'socket.io-client';
+import { ToastrService } from 'ngx-toastr';
 interface BlockData {
   block: any; // Remplacez 'any' par le type approprié pour votre bloc
   donnees: any[]; // Remplacez 'any' par le type approprié pour vos données
@@ -63,7 +64,7 @@ unreadNotificationCount = 0;
 showPendingInvitesDropdown: boolean = false;
 showDropdown: boolean = false;
 private socket!: Socket;
-
+selectedFile: File | null = null;
   constructor(private activatedRoute:ActivatedRoute ,private chatService:ChatService , private notifService:NotifService ,private dialogue: MatDialog ,private http: HttpClient,private sanitilzer: DomSanitizer,private userService:UserService ,private router: Router,private fb:FormBuilder ,
     private projectService: ProjetService ,private authService:AuthService){}
    ngOnInit(): void {
@@ -290,9 +291,46 @@ getInvitesByUserId(projId: number): void {
       );
 }
 
+//update image projet
+updateImage(projectId: number): void {
+  if (this.selectedFile) {
+    this.projectService.updateProjectImage(projectId, this.selectedFile).subscribe({
+      next: (response) => {
+        console.log('Image mise à jour avec succès', response);
+        this.projectImages[projectId] = response.imageUrl; 
 
+        this.loadImage(response.idProjet);
+        alert('Image changée avec succès!');
 
+      },
+      error: (err) => {
+        console.error('Erreur lors de la mise à jour de l\'image', err);
+        
+        alert('Erreur lors du changement d\'image');
+      }
+    });
+  } else {
+    console.error('Aucun fichier sélectionné');
 
+    alert('Veuillez sélectionner une image.');
+  }
+}
+
+onFileSelected1(event: any, projectId: number): void {
+  this.selectedFile = event.target.files[0];
+  this.updateImage
+  (projectId);
+}
+//grandire image projet
+enlargeImage(event: MouseEvent): void {
+  const img = event.target as HTMLElement;
+  img.style.transform = 'scale(1.04)';
+}
+
+shrinkImage(event: MouseEvent): void {
+  const img = event.target as HTMLElement;
+  img.style.transform = 'scale(1)';
+}
 
 //partie header
 
@@ -406,6 +444,7 @@ openPopup1(idInvite: number, invite: any): void {
     data: {
       nomUser: invite.projet.user.nomUser,
       projetName: invite.projet.nomProjet,
+      canvasName: invite.canvas.nomCanvas,
       idInvite,
     },
   });

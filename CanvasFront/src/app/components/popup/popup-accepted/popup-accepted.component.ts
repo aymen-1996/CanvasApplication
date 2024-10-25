@@ -13,7 +13,7 @@ export class PopupAcceptedComponent {
   successMessage: string = '';
 
   constructor(private dialogRef: MatDialogRef<PopupAcceptedComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: { confirmationMessage: string, nomUser: string, projetName: string },
+    @Inject(MAT_DIALOG_DATA) public data: { confirmationMessage: string, nomUser: string, projetName: string ,canvasName: string},
               private blockService: BlocksService) {}
 
   closePopup() {

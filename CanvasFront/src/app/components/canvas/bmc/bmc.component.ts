@@ -791,6 +791,8 @@ calculateWidth4(totalItems: number, currentIndex: number): string {
 
 
 
+
+
 //partie header
 
 
