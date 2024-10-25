@@ -7,7 +7,7 @@ import { invite } from './invite.entity';
 import { user } from 'src/user/user.entity';
 import { canvas } from 'src/canvas/canvas.entity';
 import { projet } from 'src/projet/projet.entity';
-import { InviteGateway } from 'src/Gateway/invite';
+import { InviteGateway } from 'src/Gateway/inviteGateways';
 
 
 @Module({

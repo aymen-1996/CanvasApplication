@@ -4,7 +4,7 @@ import { Response } from 'express'; // Import the Response object
 import { invite } from './invite.entity';
 import { projet } from 'src/projet/projet.entity';
 import { canvas } from 'src/canvas/canvas.entity';
-import { InviteGateway } from 'src/Gateway/invite';
+import { InviteGateway } from 'src/Gateway/inviteGateways';
 
 @Controller('invite')
 export class InviteController {
