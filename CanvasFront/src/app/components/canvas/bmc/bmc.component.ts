@@ -985,6 +985,7 @@ openPopup1(idInvite: number, invite: any): void {
     data: {
       nomUser: invite.projet.user.nomUser,
       projetName: invite.projet.nomProjet,
+      canvasName: invite.canvas.nomCanvas,
       idInvite,
     },
   });
