@@ -218,11 +218,12 @@ Un segment est une population homogène de consommateurs représentant une ou pl
 
     //Liste Canvas selon invite par isuser et idProj
     async getCanvasInvitesByUserIdAndProjetId(userId: number, projetId: number): Promise<invite[]> {
-        return this.inviteRepository.find({
-          where: { user: { idUser: userId }, projet: { idProjet: projetId } },
-          relations: ['canvas'],
-        });
-      }
+      return this.inviteRepository.find({
+        where: { user: { idUser: userId }, projet: { idProjet: projetId } },
+        relations: ['canvas', 'projet', 'projet.user'], 
+      });
+    }
+    
       
     
     async getProjectById(idProjet: number): Promise<projet | undefined> {

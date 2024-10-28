@@ -59,14 +59,14 @@ async getCanvasesByUserIdAndProjetId(
 ) {
   try {
     const invites = await this.projetService.getCanvasInvitesByUserIdAndProjetId(userId, projetId);
-    const uniqueProjectIds = new Set();
+    const uniqueCanvasIds = new Set();
 
     const result = invites
       .filter(invite => invite.etat === 'accepted')
       .filter(invite => {
         const canvasId = invite.canvas.idCanvas.toString();
-        if (!uniqueProjectIds.has(canvasId)) {
-          uniqueProjectIds.add(canvasId);
+        if (!uniqueCanvasIds.has(canvasId)) {
+          uniqueCanvasIds.add(canvasId);
           return true;
         }
         return false;
@@ -74,7 +74,15 @@ async getCanvasesByUserIdAndProjetId(
       .map(invite => ({
         idCanvas: invite.canvas.idCanvas,
         nomCanvas: invite.canvas.nomCanvas,
-        roleInvite: invite.roleInvite, // Include roleInvite for each canvas
+        roleInvite: invite.roleInvite,
+        projet: {
+          idProjet: invite.projet.idProjet,
+          nomProjet: invite.projet.nomProjet,
+          user: {
+            idUser: invite.projet.user.idUser,
+            nomUser: invite.projet.user.nomUser
+          }
+        }
       }));
 
     return { Canvas: result };
@@ -82,6 +90,7 @@ async getCanvasesByUserIdAndProjetId(
     return { success: false, error: error.message };
   }
 }
+
 
 
 //afficher image projet

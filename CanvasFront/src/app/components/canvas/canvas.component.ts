@@ -118,9 +118,16 @@ this.getCanvasId(type);
     return canvas?.nomCanvas;
   }
 
-  getCanvasRoleInvite(type: string): string | undefined {
-    const canvas = this.canvas.Canvas.find((c: { nomCanvas: string; }) => c.nomCanvas.toLowerCase() === type.toLowerCase());
-    return canvas?.roleInvite;
+  getCanvasRoleInvite(type: string, currentUserId: number): string {
+    const canvas = this.canvas.Canvas.find(
+      (c: { nomCanvas: string; }) => c.nomCanvas.toLowerCase() === type.toLowerCase()
+    );
+  
+    if (canvas?.projet?.user?.idUser === currentUserId) {
+      return 'Porteur';
+    }
+  
+    return canvas?.roleInvite === 'editor' ? 'Superviseur' : canvas?.roleInvite;
   }
   
 
