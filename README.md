@@ -52,10 +52,10 @@
 ![Page profil](screenshots/profil.png)
 
 #### Bmc Canvas Page
-<div style="display: flex; justify-content: center; gap: 20px;">
-  <img src="screenshots/bmc.png" width="45%">
-  <img src="screenshots/commentairebmc.png" width="45%">
-</div>
+![Page Bmc](screenshots/bmc.png)
+
+#### Bmc Comment Page
+![Page Bmc](screenshots/commentairebmc.png)
 
 #### Lean Canvas Page
 ![Page lean](screenshots/lean.png)
