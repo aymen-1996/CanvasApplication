@@ -78,9 +78,9 @@
 
 #### Notificaton
 
-<div style="display: flex; justify-content: center;">
-  <img src="screenshots/notification.png" width="30%" height="30%" style="margin-right: 40px;">
-  <img src="screenshots/notifInvitaion.png" width="30%" height="30%" style="margin-right: 40px;">
+<div style="display: flex; justify-content: center; gap: 200pxx;">
+  <img src="screenshots/notification.png" width="30%" height="30%">
+  <img src="screenshots/notifInvitaion.png" width="30%">
   <img src="screenshots/logouttmp.png" width="30%" height="30%">
 </div>
 
