@@ -34,9 +34,9 @@
 ![Page change Password](screenshots/ChangePass.png)
 
 #### Page Create Project
-<div style="display: flex; justify-content: center; gap: 25px;">
-  <img src="screenshots/list_proj.png" width="50%">
-  <img src="screenshots/addProj.png" width="50%">
+<div style="display: flex; justify-content: center; gap: 20px;">
+  <img src="screenshots/list_proj.png" width="45%">
+  <img src="screenshots/addProj.png" width="45%">
 </div>
 
 
