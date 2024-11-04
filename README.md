@@ -80,8 +80,8 @@
 
 <div style="display: flex; justify-content: center; gap: 40px;">
   <img src="screenshots/notification.png" width="30%" height="30%">
-  <img src="screenshots/notifInvitaion.png" width="30%"height="30%">
-  <img src="screenshots/logouttmp.png" width="30%"height="30%">
+  <img src="screenshots/notifInvitaion.png" width="30%">
+  <img src="screenshots/logouttmp.png" width="30%" height="30%">
 </div>
 
 ## Technologies Used
