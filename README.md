@@ -35,8 +35,8 @@
 
 #### Page Create Project
 <div align="center">
-  <img src="screenshots/list_proj.png" >
-  <img src="screenshots/addproj.png" >
+  <img src="screenshots/list_proj.png" width="50%">
+  <img src="screenshots/addProj.png" width="50%">
 </div>
 
 
