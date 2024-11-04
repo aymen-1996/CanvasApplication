@@ -52,8 +52,10 @@
 ![Page profil](screenshots/profil.png)
 
 #### Bmc Canvas Page
-![Page bmc](screenshots/bmc.png)
-![Page comments bmc](screenshots/commentairebmc.png)
+<div style="display: flex; justify-content: center; gap: 20px;">
+  <img src="screenshots/bmc.png" width="45%">
+  <img src="screenshots/commentairebmc.png" width="45%">
+</div>
 
 #### Lean Canvas Page
 ![Page lean](screenshots/lean.png)
@@ -68,9 +70,11 @@
 ![Page empthie](screenshots/empthie.png)
 
 #### Persona Canvas Page
-![Page Persona](screenshots/persona.png)
 
-![Page aad audio comment Persona](screenshots/commentpersona.png)
+<div style="display: flex; justify-content: center; gap: 20px;">
+  <img src="screenshots/persona.png" width="45%">
+  <img src="screenshots/commentpersona.png" width="45%">
+</div>
 
 ## Technologies Used
 
