@@ -83,6 +83,7 @@
   <img src="screenshots/notifInvitaion.png" width="30%"height="30%">
   <img src="screenshots/logouttmp.png" width="30%"height="30%">
 </div>
+
 ## Technologies Used
 
 ### Backend (backEnd)
