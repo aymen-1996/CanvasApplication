@@ -11,7 +11,9 @@
   .success-message {
     color: green; 
     font-weight: bold;
+    text-align: center; 
   }
+  
   .css-126xj0f {
     position: fixed;
     z-index: 1300;
