@@ -76,6 +76,13 @@
   <img src="screenshots/commentpersona.png" width="45%">
 </div>
 
+#### Notificaton
+
+<div style="display: flex; justify-content: center; gap: 20px;">
+  <img src="screenshots/notification.png" width="30%" height="30%">
+  <img src="screenshots/notifInvitaion.png" width="30%"height="30%">
+  <img src="screenshots/logouttmp.png" width="30%"height="30%">
+</div>
 ## Technologies Used
 
 ### Backend (backEnd)
