@@ -34,10 +34,11 @@
 ![Page change Password](screenshots/ChangePass.png)
 
 #### Page Create Project
-<p align="center">
-  <img src="screenshots/list_proj.png" width="50%">
-  <img src="screenshots/addproj.png" width="50%">
-</p>
+<div align="center">
+  <img src="screenshots/list_proj.png" >
+  <img src="screenshots/addproj.png" >
+</div>
+
 
 
 #### Chat Page
