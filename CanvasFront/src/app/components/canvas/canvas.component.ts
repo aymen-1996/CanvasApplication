@@ -45,17 +45,36 @@ this.getCanvasId(type);
 }
 
 
-  listeCanvases(projet: number): void {
-    this.canvasService.getCanvases(this.users.user.idUser, projet).subscribe(
-      (data) => {
-        this.canvas = data;
-        console.log(this.canvas);
-      },
-      (error) => {
-        console.error('Error fetching canvas:', error);
+listeCanvases(projet: number): void {
+  this.PojectService.getallProjectByUser(this.users.user.idUser).subscribe(
+    (projects) => {
+      const selectedProjectId = localStorage.getItem('selectedProjectId');
+      const isProjectValid = projects.some(project => project.idProjet === Number(selectedProjectId));
+
+      if (!isProjectValid) {
+        if (projects.length > 0) {
+          localStorage.setItem('selectedProjectId', projects[0].idProjet.toString());
+        } else {
+          console.error('Aucun projet disponible.');
+        }
       }
-    );
-  }
+
+      this.canvasService.getCanvases(this.users.user.idUser, projet).subscribe(
+        (data) => {
+          this.canvas = data;
+          console.log('Canvas trouvés:', this.canvas);
+        },
+        (error) => {
+          console.error('Erreur lors de la récupération des canvas:', error);
+        }
+      );
+    },
+    (error) => {
+      console.error('Erreur lors de la récupération des projets:', error);
+    }
+  );
+}
+
   
 
   shouldDisplayLean(): boolean {
