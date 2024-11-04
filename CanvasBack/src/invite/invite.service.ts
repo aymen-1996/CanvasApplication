@@ -21,7 +21,7 @@ export class InviteService {
     private readonly canvasRepository: Repository<canvas>,
   ) {}
 
-  async inviteUser(idProjet: number, idCanvas: number, emailUser: string, role: string): Promise<string> {
+  async inviteUser(idProjet: number, idCanvas: number, emailUser: string, role: string, idUserSendInvite: number): Promise<string> {
     const user = await this.userRepository.findOne({ where: { emailUser } });
 
     if (!user) {
@@ -33,7 +33,7 @@ export class InviteService {
     }
 
     if (!role) {
-      throw new Error("Veuillez choisir un rôle pour l'invitation.");
+        throw new Error("Veuillez choisir un rôle pour l'invitation.");
     }
 
     const projet = await this.projetRepository.findOne({ where: { idProjet } });
@@ -44,40 +44,47 @@ export class InviteService {
     });
 
     if (userInProject) {
-      throw new Error(`Vous ne pouvez pas envoyer une invitation à cet utilisateur, car il est le porteur de projet`);
+        throw new Error(`Vous ne pouvez pas envoyer une invitation à cet utilisateur, car il est le porteur de projet.`);
     }
 
     const existingInvite = await this.inviteRepository.findOne({
-        where: { user, canvas: { idCanvas: idCanvas }, roleInvite: role },
+        where: { user, canvas: { idCanvas: idCanvas } },
     });
 
     if (existingInvite) {
-        throw new Error(`Une invitation existe déjà pour cet utilisateur`);
-    } else {
-        const existingInviteWithSameUserAndCanvas = await this.inviteRepository.findOne({
-            where: { user, canvas: { idCanvas: idCanvas } },
-        });
-
-        if (existingInviteWithSameUserAndCanvas) {
-            existingInviteWithSameUserAndCanvas.roleInvite = role;
-            await this.inviteRepository.save(existingInviteWithSameUserAndCanvas);
-            return `Le rôle de l'utilisateur dans l'invitation a été mis à jour avec succès`;
-        } else {
-            const invite = this.inviteRepository.create({
-                etat: 'en attente',
-                nomInvite: user.nomUser,
-                emailInvite: user.emailUser,
-                roleInvite: role,
-                projet,
-                user,
-                canvas,
+        if (existingInvite.roleInvite !== role) {
+            const userInProjectForInviter = await this.projetRepository.findOne({
+                where: { idProjet, user: { idUser: idUserSendInvite } },
             });
 
-            await this.inviteRepository.save(invite);
-            return `Invitation envoyée avec succès`;
+            if (!userInProjectForInviter) {
+                throw new Error(`Vous n'avez pas l'accès pour changer le rôle de cet utilisateur.`);
+            }
+
+            existingInvite.roleInvite = role;
+            await this.inviteRepository.save(existingInvite);
+            return `Le rôle de l'utilisateur dans l'invitation a été mis à jour avec succès.`;
         }
+
+        throw new Error(`Une invitation existe déjà pour cet utilisateur avec le même rôle.`);
+    } else {
+        const invite = this.inviteRepository.create({
+            etat: 'en attente',
+            nomInvite: user.nomUser,
+            emailInvite: user.emailUser,
+            roleInvite: role,
+            projet,
+            user,
+            userSendInvite: { idUser: idUserSendInvite }, 
+            canvas,
+        });
+
+        await this.inviteRepository.save(invite);
+        return `Invitation envoyée avec succès.`;
     }
 }
+
+
 
 
 async deleteInviteByIdAndUserId(idInvite: number, idUser: number): Promise<string> {

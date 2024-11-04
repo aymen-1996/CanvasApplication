@@ -68,15 +68,17 @@ export class BlocksService {
     const url = `${environment.backendHost}/projet/role/${userId}/${canvasId}/role`;
     return this.http.get<any>(url);
   }
-
-  inviteUser(idProjet: number, idCanvas: number, emailUser: string, role: string): Observable<any> {
+  inviteUser(idProjet: number, idCanvas: number, emailUser: string, role: string, idUserSendInvite: number): Observable<any> {
     const body = {
-      emailUser,
-      role,
+        emailUser,
+        role,
+        idUserSendInvite, 
     };
 
-    return this.http.post(`${environment.backendHost}/invite/${idProjet}/${idCanvas}`, body);
-  }
+    return this.http.post(`${environment.backendHost}/invite/${idProjet}/${idCanvas}/${idUserSendInvite}`, body);
+}
+
+
 
 
   getProjetByUserIdAndCanvasId(userId: number, canvasId: number): Observable<any> {

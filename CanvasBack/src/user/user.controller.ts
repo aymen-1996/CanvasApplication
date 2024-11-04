@@ -376,10 +376,14 @@ async getFile(@Param('userId') userId: number, @Res() res: Response) {
 }
 
     //filtrer user par email
-    @Get('filterUser/email')
-    async getUsersByEmail(@Query('emailUser') emailUser: string): Promise<user[]> {
-      return this.userService.findAllUsersByEmail(emailUser);
+    @Get('filterUser/email/:idUserToExclude')
+    async getUsersByEmail(
+      @Param('idUserToExclude') idUserToExclude: number,
+      @Query('emailUser') emailUser: string 
+    ): Promise<user[]> {
+      return this.userService.findAllUsersByEmail(emailUser, idUserToExclude);
     }
+    
 
     //progress profil User
     @Get(':id/progress')

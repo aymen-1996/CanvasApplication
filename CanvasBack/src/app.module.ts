@@ -50,7 +50,7 @@ import { CommentaireModule } from './commentaires/commentaire.module';
       port: 3306,
       username: 'root',
       password: '',
-      database: 'canvasback_mysql-data1',
+      database: 'canvasback_mysql-data2',
       entities: [invite,projet,user,canvas,block,donnees , message , Token ,Notification , commentaire] ,
       synchronize: false,
     }),

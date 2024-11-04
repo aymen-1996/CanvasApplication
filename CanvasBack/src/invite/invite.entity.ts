@@ -30,6 +30,9 @@ export class invite {
     @JoinColumn({ name: 'userId'  })
     user: user
 
+    @ManyToOne(() => user, (user) => user.invite)
+    @JoinColumn({ name: 'userSendInviteId' }) 
+    userSendInvite: user;
     
     @ManyToOne(()=> canvas,(canvas)=> canvas.invite)
     @JoinColumn({ name: 'canvasId'  })

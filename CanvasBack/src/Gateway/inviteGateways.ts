@@ -10,8 +10,13 @@ export class InviteGateway {
   constructor(private inviteService: InviteService) {}
 
   @SubscribeMessage('inviteUser')
-  async handleInviteUser(client: Socket, { idProjet, idCanvas, emailUser, role }): Promise<void> {
-    const successMessage = await this.inviteService.inviteUser(idProjet, idCanvas, emailUser, role);
-    this.server.emit('newInvite', { message: successMessage });
+  async handleInviteUser(client: Socket, { idProjet, idCanvas, emailUser, role, idUserSendInvite }): Promise<void> {
+      try {
+          const successMessage = await this.inviteService.inviteUser(idProjet, idCanvas, emailUser, role, idUserSendInvite);
+          this.server.emit('newInvite', { message: successMessage });
+      } catch (error) {
+          this.server.emit('inviteError', { error: error.message });
+      }
   }
+  
 }

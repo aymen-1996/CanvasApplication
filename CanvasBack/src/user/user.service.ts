@@ -2,7 +2,7 @@
 import { BadRequestException, Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { user } from 'src/user/user.entity';
-import { In, LessThan, Like, MoreThan, Repository } from 'typeorm';
+import { In, LessThan, Like, MoreThan, Not, Repository } from 'typeorm';
 import * as bcrypt from 'bcryptjs';
 import { EmailService } from './email/email.service';
 import * as crypto from 'crypto';
@@ -412,7 +412,6 @@ async getUniqueUsersByLastMessage(idUser: number, nomUser?: string): Promise<use
             throw new NotFoundException(`User with ID ${idUser} not found`);
         }
     
-        // حذف الملف القديم إذا كان موجودًا
         if (userToUpdate.cv) {
             const oldCvPath = path.join(uploadsPath, userToUpdate.cv);
             try {
@@ -422,13 +421,11 @@ async getUniqueUsersByLastMessage(idUser: number, nomUser?: string): Promise<use
             }
         }
     
-        // حفظ الملف الجديد
         const currentDate = new Date().toISOString().replace(/[-:T.]/g, '');
         const cvName = `${currentDate}_${cvFile.originalname}`;
         const cvPath = path.join(uploadsPath, cvName);
         await fs.writeFile(cvPath, cvFile.buffer);
     
-        // تحديث مسار السيرة الذاتية الجديد في قاعدة البيانات
         userToUpdate.cv = cvName;
         await this.userRep.save(userToUpdate);
     
@@ -461,13 +458,14 @@ async getUniqueUsersByLastMessage(idUser: number, nomUser?: string): Promise<use
         }
     }
     
-    async findAllUsersByEmail(emailUser: string): Promise<user[]> {
+    async findAllUsersByEmail(emailUser: string, idUserToExclude: number): Promise<user[]> {
         return await this.userRep.find({
-          where: {
-            emailUser: Like(`${emailUser}%`),
-          },
+            where: {
+                emailUser: Like(`${emailUser}%`),
+                idUser: Not(idUserToExclude), 
+            },
         });
-      }
+    }
       
 
       async getUserProgress(userId: number): Promise<number> {

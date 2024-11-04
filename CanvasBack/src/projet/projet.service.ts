@@ -285,19 +285,19 @@ async getRoleByUserIdAndCanvasId(
   }
 
 
-  async getProjetByUserIdAndCanvasId(userId: number, canvasId: number): Promise<any> {
+  async getProjetByUserIdAndCanvasId(userId: number, canvasId: number): Promise<any> { 
     try {
-      const invite = await this.inviteRepository.findOne({
-        where: { user: { idUser: userId }, canvas: { idCanvas: canvasId } },
-        relations: ['projet'],
-      });
+        const invite = await this.inviteRepository.findOne({
+            where: { user: { idUser: userId }, canvas: { idCanvas: canvasId } },
+            relations: ['projet', 'projet.user'],
+        });
 
-      return invite?.projet || null;
+        return invite?.projet || null;
     } catch (error) {
-      console.error('Error in getProjetByUserIdAndCanvasId:', error);
-      throw error;
+        console.error('Error in getProjetByUserIdAndCanvasId:', error);
+        throw error;
     }
-  }
+}
 
 
   //change etat invite 

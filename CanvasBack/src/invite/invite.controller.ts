@@ -12,22 +12,30 @@ export class InviteController {
     constructor(private readonly inviteService: InviteService , private readonly inviteGateway: InviteGateway, 
     ) {}
 
-@Post(':idProjet/:idCanvas')
-async inviteUser(
-  @Param('idProjet', ParseIntPipe) idProjet: number,
-  @Param('idCanvas', ParseIntPipe) idCanvas: number,
-  @Body('emailUser') emailUser: string,
-  @Body('role') role: string,
-  @Res() res: Response,
-): Promise<void> {
-  try {
-    const successMessage = await this.inviteService.inviteUser(idProjet, idCanvas, emailUser, role);
-    this.inviteGateway.server.emit('newInvite', { message: successMessage });
-    res.status(200).json({ message: successMessage });
-  } catch (error) {
-    res.status(400).json({ error: error.message });
-  }
-}
+    @Post(':idProjet/:idCanvas/:userSendInviteId')
+    async inviteUser(
+      @Param('idProjet', ParseIntPipe) idProjet: number,
+      @Param('idCanvas', ParseIntPipe) idCanvas: number,
+      @Param('userSendInviteId', ParseIntPipe) userSendInviteId: number,
+      @Body('emailUser') emailUser: string,
+      @Body('role') role: string,
+      @Res() res: Response,
+    ): Promise<void> {
+      try {
+        const successMessage = await this.inviteService.inviteUser(
+          idProjet,
+          idCanvas,
+          emailUser,
+          role,
+          userSendInviteId
+        );
+        this.inviteGateway.server.emit('newInvite', { message: successMessage });
+        res.status(200).json({ message: successMessage });
+      } catch (error) {
+        res.status(400).json({ error: error.message });
+      }
+    }
+    
 
 
 

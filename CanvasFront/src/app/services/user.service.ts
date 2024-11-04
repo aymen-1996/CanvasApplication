@@ -73,10 +73,10 @@ uploadCv(idUser: number, cvFile: File): Observable<any> {
     );
   }
   
-  getUsersByEmail(email: string): Observable<User[]> {
-    return this.http.get<User[]>(`${environment.backendHost}/user/filterUser/email?emailUser=${email}`);
+  getUsersByEmail(email: string, idUserToExclude: number): Observable<User[]> {
+    return this.http.get<User[]>(`${environment.backendHost}/user/filterUser/email/${idUserToExclude}?emailUser=${email}`);
   }
-
+  
   getUserProgress(userId: number): Observable<number> {
     return this.http.get<number>(`${environment.backendHost}/user/${userId}/progress`);
   }

@@ -59,8 +59,9 @@ this.GetProjet()
           console.log('User projet is:', this.projet);
 
           const idProjet = this.projet.idProjet;
+          const idUserSendInvite = this.users.user.idUser; 
 
-          this.blockService.inviteUser(idProjet, this.idBloc, this.inviteForm.value.emailUser, this.inviteForm.value.role)
+          this.blockService.inviteUser(idProjet, this.idBloc, this.inviteForm.value.emailUser, this.inviteForm.value.role ,idUserSendInvite)
             .subscribe(
               (response: any) => {
                 console.log('Invitation sent successfully', response);
@@ -90,7 +91,7 @@ this.GetProjet()
   searchUsersByEmail(): void {
     const emailUser = this.inviteForm.get('emailUser')?.value;
     if (emailUser) {
-      this.userService.getUsersByEmail(emailUser).subscribe(
+      this.userService.getUsersByEmail(emailUser , this.users.user.idUser).subscribe(
         (users: any[]) => {
           console.log('Users fetched:', users);  
           this.filteredUsers = users;
