@@ -1069,8 +1069,9 @@ height: 100%;
 }
 
 .centered-message p {
-font-size: 25px;
-color: rgb(189, 39, 39);
+  font-size: 25px;
+  color: rgb(189, 39, 39);
+  margin-top: 50px;
 }
 
 

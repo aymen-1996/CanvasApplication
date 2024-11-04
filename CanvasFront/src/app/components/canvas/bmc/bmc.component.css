@@ -1006,7 +1006,9 @@ height: 65px;
 .centered-message p {
   font-size: 25px;
   color: rgb(189, 39, 39);
+  margin-top: 50px;
 }
+
 
 .css-w5qhhs {
   display: inline-flex;

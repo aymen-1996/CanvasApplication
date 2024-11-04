@@ -1,4 +1,4 @@
-<div class="css-10650aq" *ngIf="blocks  && blocks?.length > 0">
+<div class="css-10650aq" >
     <div class="css-p34mhd">
       <div class="header">
 
@@ -225,6 +225,7 @@
   
 
                 <!----------------partie commentaire--------------->
+                <div *ngIf="blocks  && blocks?.length > 0">
                 <div class="chat-container" *ngIf="showComments">
                   <div class="messages">
                     <div *ngFor="let commentaire of commentaires" class="message">
@@ -567,10 +568,11 @@
   
                             </ul>
                         </div>
-                        </div></div>     
+                        </div></div>    
+                        </div> 
   </div>
+</div>
 
-
-  <div class="centered-message" *ngIf="userRole?.roleInvite === null">
+  <div class="centered-message" *ngIf="showMessage">
     <p>tu n'as pas le droit dans cette canvas. Attendre une invitation ou contacter le Porteur de projet.</p>
   </div>

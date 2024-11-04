@@ -720,6 +720,6 @@
 
 <button *ngIf="showTable && userRole?.roleInvite !== 'moniteur'" class="css-5357ut"  style="position: relative;top: 281px;"(click)="precedent()" >Précédent</button>
 
-<div class="centered-message" *ngIf="userRole?.roleInvite === null">
+<div class="centered-message" *ngIf="showMessage">
   <p>tu n'as pas le droit dans cette canvas. Attendre une invitation ou contacter le Porteur de projet.</p>
 </div>

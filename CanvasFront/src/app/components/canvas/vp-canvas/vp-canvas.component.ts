@@ -79,6 +79,7 @@ canvasId: any
 commentCount: number = 0;
 contenu = '';
 user: User[] = [];
+showMessage: boolean = false;
 private socket!: Socket;
 
   @ViewChild(MatStepper) stepper!: MatStepper;
@@ -616,14 +617,15 @@ precedent(): void {
 
 
 //Role invitation dans canvas
+
 GetRole(): void {
   this.canvasService.getCanvases(this.users.user.idUser, this.selectProject).subscribe(
     (data) => {
       if (data && Array.isArray(data.Canvas)) {
-        const vpCanvas = data.Canvas.find((c: { nomCanvas: string; }) => c.nomCanvas === 'VP Canvas');
-        if (vpCanvas) {
-          console.log("ID du canvas vp:", vpCanvas.idCanvas);
-          this.idBloc = vpCanvas.idCanvas;
+        const bmcCanvas = data.Canvas.find((c: { nomCanvas: string; }) => c.nomCanvas === 'VP Canvas');
+        if (bmcCanvas) {
+          console.log("ID du canvas vp:", bmcCanvas.idCanvas);
+          this.idBloc = bmcCanvas.idCanvas;
           console.log("idddd", this.idBloc);
 
           this.blockService.getRoleByUserIdAndCanvasId(this.users.user.idUser, this.idBloc)
@@ -631,24 +633,25 @@ GetRole(): void {
               (role: any) => {
                 this.userRole = role;
                 console.log('User Role:', this.userRole);
+
+                if (!this.userRole || this.userRole?.roleInvite == null) {
+                  setTimeout(() => {
+                    this.showMessage = true;
+                  }, 100);
+                }
               },
-              error => {
-                console.error('Error fetching user role:', error);
-              }
             );
         } else {
-          console.warn('Canvas vp non trouvé.');
+          console.warn('Canvas VP Canvas non trouvé.');
+          setTimeout(() => {
+            this.showMessage = true;
+          }, 100);
         }
-      } else {
-        console.error('Format de données inattendu:', data);
       }
     },
-    (error) => {
-      console.error('Erreur lors de la récupération des canvases:', error);
-    }
+ 
   );
 }
-
 
 //pour n affiche button suivant si showtable
 shouldDisplayButton(): boolean {

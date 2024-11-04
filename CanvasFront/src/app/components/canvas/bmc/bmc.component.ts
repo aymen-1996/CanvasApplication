@@ -81,6 +81,7 @@ canvasId: any
 commentCount: number = 0;
 contenu = '';
 isMenuOpen = false;
+showMessage: boolean = false;
 private socket!: Socket;
 
   @ViewChild(MatStepper) stepper!: MatStepper;
@@ -668,21 +669,23 @@ GetRole(): void {
               (role: any) => {
                 this.userRole = role;
                 console.log('User Role:', this.userRole);
+
+                if (!this.userRole || this.userRole?.roleInvite == null) {
+                  setTimeout(() => {
+                    this.showMessage = true;
+                  }, 100);
+                }
               },
-              error => {
-                console.error('Error fetching user role:', error);
-              }
             );
         } else {
           console.warn('Canvas BMC non trouvé.');
+          setTimeout(() => {
+            this.showMessage = true;
+          }, 100);
         }
-      } else {
-        console.error('Format de données inattendu:', data);
       }
     },
-    (error) => {
-      console.error('Erreur lors de la récupération des canvases:', error);
-    }
+ 
   );
 }
 

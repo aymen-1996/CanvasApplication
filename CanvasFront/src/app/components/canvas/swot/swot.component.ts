@@ -78,6 +78,7 @@ canvasId: any
 commentCount: number = 0;
 contenu = '';
 user: User[] = [];
+showMessage: boolean = false;
 private socket!: Socket;
 
   @ViewChild(MatStepper) stepper!: MatStepper;
@@ -508,14 +509,15 @@ deleteDonnees(id: number): void {
 
 
 //Role invitation dans canvas
+
 GetRole(): void {
   this.canvasService.getCanvases(this.users.user.idUser, this.selectProject).subscribe(
     (data) => {
       if (data && Array.isArray(data.Canvas)) {
-        const swotCanvas = data.Canvas.find((c: { nomCanvas: string; }) => c.nomCanvas === 'SWOT');
-        if (swotCanvas) {
-          console.log("ID du canvas swot:", swotCanvas.idCanvas);
-          this.idBloc = swotCanvas.idCanvas;
+        const bmcCanvas = data.Canvas.find((c: { nomCanvas: string; }) => c.nomCanvas === 'SWOT');
+        if (bmcCanvas) {
+          console.log("ID du canvas swot:", bmcCanvas.idCanvas);
+          this.idBloc = bmcCanvas.idCanvas;
           console.log("idddd", this.idBloc);
 
           this.blockService.getRoleByUserIdAndCanvasId(this.users.user.idUser, this.idBloc)
@@ -523,25 +525,25 @@ GetRole(): void {
               (role: any) => {
                 this.userRole = role;
                 console.log('User Role:', this.userRole);
+
+                if (!this.userRole || this.userRole?.roleInvite == null) {
+                  setTimeout(() => {
+                    this.showMessage = true;
+                  }, 100);
+                }
               },
-              error => {
-                console.error('Error fetching user role:', error);
-              }
             );
         } else {
-          console.warn('Canvas swot non trouvé.');
+          console.warn('Canvas SWOT non trouvé.');
+          setTimeout(() => {
+            this.showMessage = true;
+          }, 100);
         }
-      } else {
-        console.error('Format de données inattendu:', data);
       }
     },
-    (error) => {
-      console.error('Erreur lors de la récupération des canvases:', error);
-    }
+ 
   );
 }
-
-
 //pour n affiche button suivant si showtable
 shouldDisplayButton(): boolean {
   const isLastBlock = this.currentBlockIndex === this.blocks.length - 1;

@@ -79,6 +79,7 @@ canvasId: any
 commentCount: number = 0;
 contenu = '';
 user: User[] = [];
+showMessage: boolean = false;
 private socket!: Socket;
 
   @ViewChild(MatStepper) stepper!: MatStepper;
@@ -615,14 +616,15 @@ precedent(): void {
 
 
 //Role invitation dans canvas
+
 GetRole(): void {
   this.canvasService.getCanvases(this.users.user.idUser, this.selectProject).subscribe(
     (data) => {
       if (data && Array.isArray(data.Canvas)) {
-        const empthyCanvas = data.Canvas.find((c: { nomCanvas: string; }) => c.nomCanvas === 'Empathy Map Canvas');
-        if (empthyCanvas) {
-          console.log("ID du canvas empthy:", empthyCanvas.idCanvas);
-          this.idBloc = empthyCanvas.idCanvas;
+        const bmcCanvas = data.Canvas.find((c: { nomCanvas: string; }) => c.nomCanvas === 'Empathy Map Canvas');
+        if (bmcCanvas) {
+          console.log("ID du canvas empthy:", bmcCanvas.idCanvas);
+          this.idBloc = bmcCanvas.idCanvas;
           console.log("idddd", this.idBloc);
 
           this.blockService.getRoleByUserIdAndCanvasId(this.users.user.idUser, this.idBloc)
@@ -630,21 +632,23 @@ GetRole(): void {
               (role: any) => {
                 this.userRole = role;
                 console.log('User Role:', this.userRole);
+
+                if (!this.userRole || this.userRole?.roleInvite == null) {
+                  setTimeout(() => {
+                    this.showMessage = true;
+                  }, 100);
+                }
               },
-              error => {
-                console.error('Error fetching user role:', error);
-              }
             );
         } else {
-          console.warn('Canvas empthy non trouvé.');
+          console.warn('Canvas Empathy Map Canvas non trouvé.');
+          setTimeout(() => {
+            this.showMessage = true;
+          }, 100);
         }
-      } else {
-        console.error('Format de données inattendu:', data);
       }
     },
-    (error) => {
-      console.error('Erreur lors de la récupération des canvases:', error);
-    }
+ 
   );
 }
 
