@@ -5,9 +5,9 @@
     <app-header [showFirstDiv]="showFirst" (showFirstDivChange)="onShowFirstChange($event)"></app-header>
     </div>
  
-    <div class="canvas-list">
-      <h4>Liste des canvas : <span class="shiny-blue">{{ project?.nomProjet }}</span></h4>
-      <div class="canvas-items" *ngIf="canvas && canvas.Canvas && canvas.Canvas.length > 0">
+    <div class="canvas-list" *ngIf="canvas && canvas.Canvas && canvas.Canvas.length > 0">
+      <h4 >Liste des canvas : <span class="shiny-blue">{{ project?.nomProjet }}</span></h4>
+      <div class="canvas-items" >
         
         <div class="canvas-item" *ngIf="shouldDisplayBMC()">
           <div class="role" [ngClass]="{
@@ -122,7 +122,10 @@
             <h3>{{ getCanvasName('persona canvas') }}</h3>
           </button>
         </div>
-        
+    
       </div>
     </div>
-    
+      <div *ngIf="showNoCanvasMessage" class="no-canvas-message">
+        Aucun canvas trouvé.
+      </div>
+</div>

@@ -43,6 +43,7 @@ export class CanvasComponent implements OnInit {
 onCanvasClick(type: string): void {
 this.getCanvasId(type);
 }
+showNoCanvasMessage: boolean = false; // Variable d'état
 
 
 listeCanvases(projet: number): void {
@@ -62,6 +63,11 @@ listeCanvases(projet: number): void {
       this.canvasService.getCanvases(this.users.user.idUser, projet).subscribe(
         (data) => {
           this.canvas = data;
+          if (!this.canvas || !this.canvas.Canvas || this.canvas.Canvas.length === 0) {
+            setTimeout(() => {
+              this.showNoCanvasMessage = true;
+            }, 100);
+          } 
           console.log('Canvas trouvés:', this.canvas);
         },
         (error) => {
