@@ -30,12 +30,20 @@ export class UserService {
     return `${environment.backendHost}/user/${userId}/photo`;
 }
 
+updateUser(id: number, updateUserDto: any): Observable<any> {
+  const url = `${environment.backendHost}/user/${id}`; 
+  return this.http.patch<any>(url, updateUserDto);
+}
 
-  updateUser(id: number, updateUserDto: any): Observable<any> {
-    const url = `${environment.backendHost}/user/${id}`; 
-    return this.http.patch<any>(url, updateUserDto);
-  }
-  
+uploadCv(idUser: number, cvFile: File): Observable<any> {
+  const formData = new FormData();
+  formData.append('cv', cvFile);
+
+  return this.http.post<{ message: string; cvName: string }>(
+    `${environment.backendHost}/user/${idUser}/cv`, formData
+  );
+}
+
   getUser(id: number): Observable<any> {
     const url = `${environment.backendHost}/user/${id}/user`;
     return this.http.get<any>(url);
@@ -68,4 +76,13 @@ export class UserService {
   getUsersByEmail(email: string): Observable<User[]> {
     return this.http.get<User[]>(`${environment.backendHost}/user/filterUser/email?emailUser=${email}`);
   }
+
+  getUserProgress(userId: number): Observable<number> {
+    return this.http.get<number>(`${environment.backendHost}/user/${userId}/progress`);
+  }
+
+  getUserCV(userId: any): Observable<Blob> {
+    return this.http.get(`${environment.backendHost}/user/file/${userId}`, { responseType: 'blob' }) as Observable<Blob>;
+  }
+  
 }

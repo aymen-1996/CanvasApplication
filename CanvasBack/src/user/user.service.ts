@@ -1,5 +1,5 @@
 /* eslint-disable prettier/prettier */
-import { Injectable, InternalServerErrorException } from '@nestjs/common';
+import { BadRequestException, Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { user } from 'src/user/user.entity';
 import { In, LessThan, Like, MoreThan, Repository } from 'typeorm';
@@ -12,6 +12,11 @@ import { Cron } from '@nestjs/schedule';
 import { message } from 'src/Message/message.entity';
 import { projet } from 'src/projet/projet.entity';
 import { invite } from 'src/invite/invite.entity';
+import * as path from 'path';
+
+import * as fs from 'fs/promises'
+import { join } from 'path';
+import { existsSync } from 'fs';
 
 interface ConfirmEmailResponse {
   user?: user;
@@ -386,7 +391,6 @@ async getUniqueUsersByLastMessage(idUser: number, nomUser?: string): Promise<use
             throw new InternalServerErrorException('An error occurred while processing the password reset');
         }
     }
-
     async updateUser(id: number, UpdateUserDto: updateUserDto): Promise<user> {
         let updatedUser = await this.userRep.findOneBy({ idUser: id });
 
@@ -398,7 +402,65 @@ async getUniqueUsersByLastMessage(idUser: number, nomUser?: string): Promise<use
         return await this.userRep.save(updatedUser);
     }
 
+    
+    
+    
+    async updateCv(idUser: number, cvFile: Express.Multer.File, uploadsPath: string): Promise<string> {
+        const userToUpdate = await this.userRep.findOne({ where: { idUser } });
+    
+        if (!userToUpdate) {
+            throw new NotFoundException(`User with ID ${idUser} not found`);
+        }
+    
+        // حذف الملف القديم إذا كان موجودًا
+        if (userToUpdate.cv) {
+            const oldCvPath = path.join(uploadsPath, userToUpdate.cv);
+            try {
+                await fs.unlink(oldCvPath);
+            } catch (err) {
+                console.error(`Error deleting old CV file: ${err.message}`);
+            }
+        }
+    
+        // حفظ الملف الجديد
+        const currentDate = new Date().toISOString().replace(/[-:T.]/g, '');
+        const cvName = `${currentDate}_${cvFile.originalname}`;
+        const cvPath = path.join(uploadsPath, cvName);
+        await fs.writeFile(cvPath, cvFile.buffer);
+    
+        // تحديث مسار السيرة الذاتية الجديد في قاعدة البيانات
+        userToUpdate.cv = cvName;
+        await this.userRep.save(userToUpdate);
+    
+        return cvName;
+    }
 
+    private async saveCv(cvFile: Express.Multer.File, uploadsPath: string): Promise<string> {
+        const currentDate = new Date().toISOString().replace(/[-:T.]/g, '');
+        const cvName = `${currentDate}_${cvFile.originalname}`;
+    
+        const cvPath = path.join(uploadsPath, cvName);
+    
+        await fs.writeFile(cvPath, cvFile.buffer);
+    
+        return cvName; 
+    }
+    
+    async getusercv(userId: number): Promise<string> {
+        const user = await this.userRep.findOne({ where: { idUser: userId } });
+        
+      
+        
+        const filePath = join(__dirname, '..', '..', 'uploads', user.cv);
+        
+        try {
+            await fs.access(filePath);
+            return filePath;
+        } catch (error) {
+            throw new NotFoundException('Le fichier n\'a pas pu être trouvé.');
+        }
+    }
+    
     async findAllUsersByEmail(emailUser: string): Promise<user[]> {
         return await this.userRep.find({
           where: {
@@ -407,5 +469,30 @@ async getUniqueUsersByLastMessage(idUser: number, nomUser?: string): Promise<use
         });
       }
       
+
+      async getUserProgress(userId: number): Promise<number> {
+        const user = await this.userRep.findOne({ where: { idUser: userId } });
+        if (!user) {
+            throw new NotFoundException('User not found');
+        }
+
+        const totalFields = 11;
+        let filledFields = 0;
+
+        if (user.nomUser) filledFields++;
+        if (user.prenomUser) filledFields++;
+        if (user.emailUser) filledFields++;
+        if (user.gov) filledFields++;
+        if (user.datenaissance) filledFields++;
+        if (user.adresse) filledFields++;
+        if (user.genre) filledFields++;
+        if (user.education) filledFields++;
+        if (user.qualification) filledFields++;
+        if (user.imageUser) filledFields++;
+        if (user.cv) filledFields++;
+
+
+        return (filledFields / totalFields) * 100;
+    }
 
 }

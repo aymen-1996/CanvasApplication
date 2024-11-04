@@ -12,6 +12,12 @@
 - **Real-time Chat**: Users can engage in live conversations within the platform using WebSocket technology.
 - **Invitation Notifications**: Users receive real-time notifications when someone accepts their invitation to a project.
 
+- **Acceptance Notification**: When a user accepts an invitation, a notification is sent to the user who sent the invitation.
+
+- **Canvas Comments**: Users within a project can add comments to specific canvases for discussion and collaboration.
+
+- **User Profile Editing**: Users can modify their profile details to keep their information up-to-date.
+
 #### Page Login
 ![# Page Login](screenshots/login.png)
 
@@ -27,8 +33,12 @@
 #### Page Change Password
 ![Page change Password](screenshots/ChangePass.png)
 
-#### Page Creat Project
-![Page ListProj](screenshots/list_proj.png)
+#### Page Create Project
+<p align="center">
+  <img src="screenshots/list_proj.png" width="50%">
+  <img src="screenshots/addproj.png" width="50%">
+</p>
+
 
 #### Chat Page
 ![Page Chat](screenshots/chatimg.png)
@@ -36,8 +46,12 @@
 #### Canvas List Page
 ![Page ListCanv](screenshots/list_canvas.png)
 
+#### Profil Page
+![Page profil](screenshots/profil.png)
+
 #### Bmc Canvas Page
 ![Page bmc](screenshots/bmc.png)
+![Page comments bmc](screenshots/commentairebmc.png)
 
 #### Lean Canvas Page
 ![Page lean](screenshots/lean.png)
@@ -53,6 +67,8 @@
 
 #### Persona Canvas Page
 ![Page Persona](screenshots/persona.png)
+
+![Page aad audio comment Persona](screenshots/commentpersona.png)
 
 ## Technologies Used
 

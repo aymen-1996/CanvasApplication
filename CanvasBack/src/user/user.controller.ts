@@ -14,6 +14,8 @@ import * as fs from 'fs';
 import { AuthGuard } from '@nestjs/passport';
 import { user } from './user.entity';
 import { updateUserDto } from './DTO/updateUser.dto';
+import { createReadStream } from 'fs';
+import { join } from 'path';
 
 @Controller('user')
 export class UserController {
@@ -352,9 +354,43 @@ async resetPassword(
       return await this.userService.updateUser(id, UpdateUserDto);
     }
 
+
+    //update cv user 
+    @Post(':idUser/cv')
+    @UseInterceptors(FileInterceptor('cv'))
+    async updateCv(
+        @Param('idUser') idUser: number,
+        @UploadedFile() cvFile: Express.Multer.File,
+    ): Promise<{ message: string; cvName: string }> {
+        const uploadsPath = join(__dirname, '..', '..', 'uploads'); 
+        const cvName = await this.userService.updateCv(idUser, cvFile, uploadsPath);
+    
+        return { message: 'CV updated successfully', cvName };
+    }
+    
+//getcv
+@Get('file/:userId')
+async getFile(@Param('userId') userId: number, @Res() res: Response) {
+    const filePath = await this.userService.getusercv(userId);
+    res.sendFile(filePath);
+}
+
     //filtrer user par email
     @Get('filterUser/email')
     async getUsersByEmail(@Query('emailUser') emailUser: string): Promise<user[]> {
       return this.userService.findAllUsersByEmail(emailUser);
+    }
+
+    //progress profil User
+    @Get(':id/progress')
+    async getUserProgress(@Param('id') id: number): Promise<number> {
+        try {
+            return await this.userService.getUserProgress(id);
+        } catch (error) {
+            if (error instanceof NotFoundException) {
+                throw new NotFoundException('Utilisateur non trouvé.');
+            }
+            throw error;
+        }
     }
 }
