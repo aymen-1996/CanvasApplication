@@ -66,7 +66,7 @@
 #### Swot Canvas Page
 <div style="display: flex; justify-content: center; gap: 20px;">
   <img src="screenshots/swot.png" width="50%">
-  <img src="screenshots/popupAcceptinvitaion.png" width="40%">
+  <img src="screenshots/popupAcceptinvitaion.png" width="45%">
 </div>
 
 #### Empathy Map Canvas Page
