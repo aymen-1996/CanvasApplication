@@ -40,8 +40,12 @@ export class FileDialogComponent {
   
   removeFile(): void {
     this.selectedFile = null;
-    this.fileName = null; 
+    this.fileName = null;
+    this.imageURL = null;
+    this.audioURL = null;
+    this.recordingTime = 0; 
   }
+  
 
   sendFile(): void {
     this.dialogRef.close(this.selectedFile); 
@@ -93,6 +97,7 @@ export class FileDialogComponent {
       }
     };
   }
+  
 
   formatRecordingTime(): string {
     const minutes = Math.floor(this.recordingTime / 60);

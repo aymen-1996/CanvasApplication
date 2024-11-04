@@ -39,7 +39,7 @@ import { PopupAcceptedComponent } from './components/popup/popup-accepted/popup-
 import { ChatComponent } from './components/chat/chat.component';
 import { MatBadgeModule } from '@angular/material/badge';
 import { MatMenuModule } from '@angular/material/menu';
-import { FileDialogComponent } from './components/file-dialog/file-dialog.component';
+import { FileDialogComponent } from './components/popup/file-dialog/file-dialog.component';
 import { SocketService } from './services/socket.service';
 
 

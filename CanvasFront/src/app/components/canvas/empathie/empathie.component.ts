@@ -24,7 +24,7 @@ import { AuthService } from 'src/app/services/auth.service';
 import { DatePipe } from '@angular/common';
 import { CommentaireService } from 'src/app/services/commentaire.service';
 import { User } from 'src/app/models/user';
-import { FileDialogComponent } from '../../file-dialog/file-dialog.component';
+import { FileDialogComponent } from '../../popup/file-dialog/file-dialog.component';
 import { io, Socket } from 'socket.io-client';
 @Component({
   selector: 'app-empathie',

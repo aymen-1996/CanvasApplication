@@ -254,8 +254,8 @@
     
     <p *ngIf="commentaire.file && (commentaire.file.endsWith('.pdf') || commentaire.file.endsWith('.docx'))" 
     style="padding: 0.5rem; border: 1px solid rgb(204, 204, 204); margin: 1rem 0;">
-    <a href="javascript:void(0)" (click)="openFile(commentaire.file)">{{ commentaire.file }}</a>
- </p>
+    <a href="javascript:void(0)" (click)="openFile(commentaire.file)">{{ extractFileName(commentaire.file) }}</a>
+  </p>
 
  <div *ngIf="commentaire.imageUrl && 
  (commentaire.imageUrl.endsWith('.jpg') || commentaire.imageUrl.endsWith('.jpeg') || commentaire.imageUrl.endsWith('.png') || commentaire.imageUrl.endsWith('.gif') || commentaire.imageUrl.endsWith('.bmp') ||  commentaire.imageUrl.endsWith('.webp'))">

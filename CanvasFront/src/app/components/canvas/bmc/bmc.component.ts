@@ -24,7 +24,7 @@ import { AuthService } from 'src/app/services/auth.service';
 import { CommentaireService } from 'src/app/services/commentaire.service';
 import { User } from 'src/app/models/user';
 import { DatePipe } from '@angular/common';
-import { FileDialogComponent } from '../../file-dialog/file-dialog.component';
+import { FileDialogComponent } from '../../popup/file-dialog/file-dialog.component';
 import { io, Socket } from 'socket.io-client';
 import { SocketService } from 'src/app/services/socket.service';
 
@@ -1181,6 +1181,12 @@ openFile(fileName: string): void {
     window.open(url);
   });
 }
+
+extractFileName(fileName: string): string {
+  const parts = fileName.split('-'); 
+  return parts.length > 1 ? parts.slice(1).join('-') : fileName;
+}
+
 
 isCurrentUser(commentaire: any): boolean {
   return this.users && this.users.user.idUser === commentaire.user.idUser;
