@@ -31,7 +31,7 @@
         <div class="canvas-item" *ngIf="shouldDisplayLean()">
           <div class="role" [ngClass]="{
               'gold-color': getCanvasRoleInvite('Lean Canvas', users.user.idUser) === 'Superviseur',
-              'crimson-color': getCanvasRoleInvite('Lean Canvas', users.user.idUser) === 'Invité',
+              'crimson-color': getCanvasRoleInvite('Lean Canvas', users.user.idUser) === 'moniteur',
               'porteur-color': getCanvasRoleInvite('Lean Canvas', users.user.idUser) === 'Porteur'
             }">
             <span *ngIf="getCanvasRoleInvite('Lean Canvas', users.user.idUser) === 'Superviseur'; else otherRole">
