@@ -6,10 +6,13 @@ import * as path from 'path';
 import { Response } from 'express';
 import { ChatService } from '../Message/chat.service';
 import { message } from 'src/Message/message.entity';
+import { ChatGateway } from './chatGateway';
 
 @Controller('upload')
 export class UploadController {
-  constructor(private readonly chatService: ChatService) {}
+  constructor(private readonly chatService: ChatService ,
+     private readonly chatGateway: ChatGateway, 
+  ) {}
 
   //upload image 
   @Post('image')
@@ -29,10 +32,11 @@ export class UploadController {
     }
 
     console.log('Image saved with filename:', file.filename);
-    const filePath = `./uploads/${file.filename}`; 
+    const filePath = `${file.filename}`; 
 
-    await this.chatService.saveMessageWithImage(body, filePath);
-    
+    const savedMessage = await this.chatService.saveMessageWithImage(body, filePath);
+    this.chatGateway.server.emit('message', savedMessage);
+
     return { filename: file.filename };
   }
 

@@ -74,7 +74,15 @@ selectedFile: File | null = null;
     this.GetNotif()
  
     this.socket = io('http://localhost:3000');
+    this.socket.on('message', (data: { 
+     
+    }) => {
+      
+    
+      this.getMessageCount();
 
+    });
+    
       
     this.activatedRoute.data.subscribe((data: any) => {
       const title = data.title || 'Titre par défaut';
@@ -94,9 +102,7 @@ selectedFile: File | null = null;
     });
     this.getAllProjectByUser();
     this.getMessageCount()
-  this.intervalId = setInterval(() => {
-    this.getMessageCount();
-  }, 5000);
+
   }
   onShowFirstChange(value: boolean) {
     this.showFirst = value;

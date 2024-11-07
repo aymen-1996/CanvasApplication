@@ -17,28 +17,8 @@ export class ChatService {
     this.socket = io('http://localhost:3000'); 
   }
 
-   sendMessage(messageData: {
-    username: string;
-    message: string;
-    file?: File | null; // Permettre l'envoi d'un fichier
-    senderId: number;
-    recipientId: number;
-  }) {
-    const formData = new FormData();
-    if (messageData.file) {
-      formData.append('file', messageData.file, messageData.file.name); // Ajouter le fichier au FormData
-    }
-    formData.append('username', messageData.username);
-    formData.append('message', messageData.message);
-    formData.append('senderId', messageData.senderId.toString());
-    formData.append('recipientId', messageData.recipientId.toString());
 
-    this.socket.emit('message', formData);
-  }
 
-  onMessage(callback: (message: any) => void) {
-    this.socket.on('message', callback);
-  }
 
 
   getMessagesBetweenUsers(senderId: number, recipientId: number): Observable<any> {

@@ -89,48 +89,52 @@ projectImages: { [key: number]: string } = {};
     this.getPendingInvites()
     this.listenForNewInvites();
 
-    this.socket.on('message',
-      (data: { 
-     content: string; 
-     senderId: string; 
-     recipientId: number; 
-     sentAt: string;
-     messageType: string; 
-     imageUrl?: string | null; 
-   }) => {
-     console.log('Message reçu:', data);
-     this.getUsersByInvitations();
-
-     const senderId = parseInt(data.senderId, 10);
-
-
-     this.userService.getUser(senderId).subscribe(user => {
-       const username = user.prenomUser;
-   
-       const formattedMessage = {
-         username: username,
-         message: data.messageType === 'image' ? '' : data.content,
-         messageType: data.messageType,
-         senderId: senderId,
-         imageUrl: data.messageType === 'image' ? `http://localhost:3000/upload/image/${data.imageUrl?.replace('./uploads/', '')}` : null,
-         timestamp: data.sentAt
-       };
-   
-       this.messages.push(formattedMessage);
-       console.log('Messages après ajout:', this.messages);
-       this.scrollToBottom();
-     }, error => {
-       console.error('Erreur lors de la récupération du nom d\'utilisateur:', error);
-     });
-   });
+    this.socket.on('message', (data: { 
+      content: string; 
+      senderId: string; 
+      recipientId: number; 
+      sentAt: string;
+      messageType: string; 
+      filePath?: string | null; 
+    }) => {
+      console.log('Message reçu:', data);
+      this.getUsersByInvitations();
+    
+      const senderId = parseInt(data.senderId, 10);
+    
+      this.userService.getUser(senderId).subscribe(user => {
+        const username = user.prenomUser;
+    
+        const formattedMessage = {
+          username: username,
+          message: data.filePath ? '' : data.content,
+          messageType: data.filePath ? 'image' : 'text',
+          senderId: senderId,
+          imageUrl: data.filePath ? `http://localhost:3000/upload/image/${data.filePath}` : null,
+          timestamp: data.sentAt
+        };
+    
+        this.messages.push(formattedMessage);
+        console.log('Messages après ajout:', this.messages);
+        this.scrollToBottom();
+      }, error => {
+        console.error('Erreur lors de la récupération du nom d utilisateur:', error);
+      });
+    });
+    
+    
+    
   }
   
   onFileSelected(event: Event): void {
     const input = event.target as HTMLInputElement;
     if (input.files && input.files[0]) {
       this.selectedImage = input.files[0]; 
+  
+      input.value = ''; 
     }
   }
+  
 
   GetNotif() {
     this.notifService.getLiveNotifications(this.userId.user.idUser)
@@ -271,15 +275,8 @@ send(audioBlob?: Blob): void {
           formData.append('recipientId', this.userselect.toString());
 
           this.userService.uploadImage(formData).subscribe(response => {
-              const imageUrl = `http://localhost:3000/upload/image/${response.filename}`;
-
-              this.messages.push({ 
-                  username: username, 
-                  message: '',
-                  messageType: 'image',
-                  senderId: senderId,
-                  imageUrl: imageUrl 
-              });
+          
+              
               this.selectedImage = null; 
           });
       } else if (audioBlob) {
@@ -290,15 +287,7 @@ send(audioBlob?: Blob): void {
           formData.append('recipientId', this.userselect.toString());
 
           this.userService.uploadImage(formData).subscribe(response => {
-              const audioUrl = `http://localhost:3000/upload/image/${response.filename}`;
 
-              this.messages.push({ 
-                  username: username, 
-                  message: '',
-                  messageType: 'audio',
-                  senderId: senderId,
-                  imageUrl: audioUrl
-              });
           }, error => {
               console.error('Erreur lors de l\'envoi de l\'audio:', error);
           });
@@ -357,7 +346,7 @@ loadMessages(senderId: any, recipientId: any): void {
           senderId: msg.senderId,
           message: msg.content, 
           messageType: messageType,
-          imageUrl: msg.filePath ? `http://localhost:3000/upload/image/${msg.filePath.replace('./uploads/', '')}` : null,
+          imageUrl: msg.filePath ? `http://localhost:3000/upload/image/${msg.filePath}` : null,
           timestamp: new Date(msg.sentAt).toLocaleString()
         };
       });
