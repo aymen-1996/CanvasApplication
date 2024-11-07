@@ -1016,6 +1016,12 @@ openFile(fileName: string): void {
   });
 }
 
+extractFileName(fileName: string): string {
+  const parts = fileName.split('-'); 
+  return parts.length > 1 ? parts.slice(1).join('-') : fileName;
+}
+
+
 isCurrentUser(commentaire: any): boolean {
   return this.users && this.users.user.idUser === commentaire.user.idUser;
 }

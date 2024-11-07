@@ -292,15 +292,16 @@
                                   <p *ngIf="msg.imageUrl && (msg.imageUrl.endsWith('.pdf') || msg.imageUrl.endsWith('.docx'))" class="file-container">
                                     <i class="fa" 
                                        [ngClass]="{
-                                           'fa-file-pdf': msg.imageUrl.endsWith('.pdf'), 
-                                           'fa-file-word': msg.imageUrl.endsWith('.docx'),
-                                           'fa-file': !msg.imageUrl.endsWith('.pdf') && !msg.imageUrl.endsWith('.docx')
+                                         'fa-file-pdf': msg.imageUrl.endsWith('.pdf'), 
+                                         'fa-file-word': msg.imageUrl.endsWith('.docx'),
+                                         'fa-file': !msg.imageUrl.endsWith('.pdf') && !msg.imageUrl.endsWith('.docx')
                                        }" 
                                        aria-hidden="true"></i>
                                     <a [href]="msg.imageUrl" target="_blank" rel="noreferrer" class="file-link">
-                                        {{ msg.imageUrl.substring(msg.imageUrl.lastIndexOf('/') + 1) }}
+                                      {{ extractFileName(msg.imageUrl.substring(msg.imageUrl.lastIndexOf('/') + 1)) }}
                                     </a>
-                                </p>
+                                  </p>
+                                  
                                 
 <video *ngIf="msg.imageUrl && (msg.imageUrl.endsWith('.mp4') || msg.imageUrl.endsWith('.mpeg') || msg.imageUrl.endsWith('.webm') || msg.imageUrl.endsWith('.avi')) && ! (msg.imageUrl.endsWith('.mp3') || msg.imageUrl.endsWith('.wav'))" 
 controls style="width: 100%; height:180px; border: 1px solid rgb(204, 204, 204); margin: 1rem 0;">

@@ -104,7 +104,7 @@ private socket!: Socket;
     this.getBlocksByCanvasId()
     this.GetRole()
     this.getMessageCount()
-    
+
     this.socket.on('message', () => {
       this.getMessageCount();
     });
@@ -1339,6 +1339,11 @@ openFile(fileName: string): void {
     const url = window.URL.createObjectURL(blob);
     window.open(url);
   });
+}
+
+extractFileName(fileName: string): string {
+  const parts = fileName.split('-'); 
+  return parts.length > 1 ? parts.slice(1).join('-') : fileName;
 }
 
 isCurrentUser(commentaire: any): boolean {

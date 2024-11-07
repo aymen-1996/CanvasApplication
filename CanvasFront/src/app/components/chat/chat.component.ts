@@ -371,6 +371,11 @@ loadMessages(senderId: any, recipientId: any): void {
 }
 
 
+extractFileName(fileName: string): string {
+  const parts = fileName.split('-');
+  return parts.length > 1 ? parts.slice(1).join('-') : fileName;
+}
+
 
 timeSince(date: Date | string): string {
 

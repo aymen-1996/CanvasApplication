@@ -20,8 +20,11 @@ export class UploadController {
     storage: diskStorage({
       destination: './uploads',
       filename: (req, file, cb) => {
-        const uniqueSuffix = uuidv4() + path.extname(file.originalname);
-        cb(null, uniqueSuffix);
+        const timestamp = Date.now(); 
+        const originalName = file.originalname;
+        const extname = path.extname(originalName); 
+        const uniqueFilename = `${timestamp}-${originalName}`; 
+        cb(null, uniqueFilename);
       },
     }),
   }))
@@ -30,16 +33,16 @@ export class UploadController {
       console.log('Aucun fichier reçu');
       throw new BadRequestException('Aucun fichier reçu');
     }
-
+  
     console.log('Image saved with filename:', file.filename);
-    const filePath = `${file.filename}`; 
-
+    const filePath = `${file.filename}`;
+  
     const savedMessage = await this.chatService.saveMessageWithImage(body, filePath);
     this.chatGateway.server.emit('message', savedMessage);
-
+  
     return { filename: file.filename };
   }
-
+  
   //affichage image msg
   @Get('image/:filename')
   getImage(@Param('filename') filename: string, @Res() res: Response) {
