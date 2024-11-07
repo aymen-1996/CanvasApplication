@@ -1182,6 +1182,8 @@ updateInviteState(userId: number, idInvite: number): void {
         this.ListProjectsAndCanvas()
         this.getPendingInvites()
         this.listenForNewInvites();
+        this.getBlocksByCanvasId()
+        this.GetRole()
       },
       (error) => {
         console.error('Failed to update invitation state:', error);
