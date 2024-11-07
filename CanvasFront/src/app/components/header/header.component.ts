@@ -152,7 +152,7 @@ markNotificationsAsRead(): void {
     this.showFirstDiv2 = !this.showFirstDiv2;
     this.showFirstDiv2Change.emit(this.showFirstDiv2);
   }
-  
+
   onProjectSelect(selectedProject: any): void {
     if (selectedProject && selectedProject.idProjet) {
       this.selectedProjectId = selectedProject.idProjet.toString();
@@ -161,6 +161,10 @@ markNotificationsAsRead(): void {
       const projectId = Number(this.selectedProjectId);
 
       if (!isNaN(projectId)) {
+        if (this.canvasComponent) {
+          this.canvasComponent.hideNoCanvasMessage();
+        }
+
         this.canvasComponent.listeCanvases(projectId);
         this.canvasComponent.getProject(projectId);
       } else {

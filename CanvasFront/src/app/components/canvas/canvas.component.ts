@@ -16,6 +16,8 @@ export class CanvasComponent implements OnInit {
   projet: any;
   project:any
   selectProject:any;
+  showNoCanvasMessage: boolean = false; 
+
   constructor(private activatedRoute: ActivatedRoute, private canvasService: CanvasService ,private PojectService:ProjetService  ) {
   }
 
@@ -43,22 +45,13 @@ export class CanvasComponent implements OnInit {
 onCanvasClick(type: string): void {
 this.getCanvasId(type);
 }
-showNoCanvasMessage: boolean = false; // Variable d'état
 
-
+hideNoCanvasMessage(): void {
+  this.showNoCanvasMessage = false;
+}
 listeCanvases(projet: number): void {
   this.PojectService.getallProjectByUser(this.users.user.idUser).subscribe(
     (projects) => {
-      const selectedProjectId = localStorage.getItem('selectedProjectId');
-      const isProjectValid = projects.some(project => project.idProjet === Number(selectedProjectId));
-
-      if (!isProjectValid) {
-        if (projects.length > 0) {
-          localStorage.setItem('selectedProjectId', projects[0].idProjet.toString());
-        } else {
-          console.error('Aucun projet disponible.');
-        }
-      }
 
       this.canvasService.getCanvases(this.users.user.idUser, projet).subscribe(
         (data) => {
