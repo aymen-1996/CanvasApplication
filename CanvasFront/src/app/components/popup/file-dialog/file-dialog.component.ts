@@ -61,10 +61,12 @@ export class FileDialogComponent {
       this.mediaRecorder = new MediaRecorder(stream);
   
       this.mediaRecorder.ondataavailable = (event) => {
-        this.audioChunks.push(event.data);
+        if (event.data.size > 0) {
+          this.audioChunks.push(event.data);
+        }
       };
   
-      this.mediaRecorder.start();
+      this.mediaRecorder.start(500); 
       this.isRecording = true;
   
       this.recordingInterval = setInterval(() => {
@@ -74,29 +76,35 @@ export class FileDialogComponent {
       console.error('Erreur d\'accès au microphone :', error);
     }
   }
-
   stopRecording(): void {
     this.mediaRecorder.stop();
     this.isRecording = false;
-
     clearInterval(this.recordingInterval);
-
-    this.mediaRecorder.onstop = () => {
-      if (this.audioChunks.length > 0) {
-        const audioBlob = new Blob(this.audioChunks, { type: 'audio/mp3' });
-
-        const audioFile = new File([audioBlob], 'recording.mp3', { type: 'audio/mp3' });
-
-        this.selectedFile = audioFile;
-        this.fileName = audioFile.name;
-
-        this.audioURL = URL.createObjectURL(audioBlob);
-        this.audioChunks = []; 
-      } else {
-        console.error('Aucune donnée audio enregistrée.');
-      }
-    };
+  
+    setTimeout(() => {
+      this.processAudioChunks();
+    }, 50); 
   }
+  
+  processAudioChunks(): void {
+    if (this.audioChunks.length > 0) {
+      const audioBlob = new Blob(this.audioChunks, { type: 'audio/wav' });
+      const audioFile = new File([audioBlob], 'recording.wav', { type: 'audio/wav' });
+  
+      this.selectedFile = audioFile;
+      this.fileName = audioFile.name;
+  
+      if (this.audioURL) {
+        URL.revokeObjectURL(this.audioURL);
+      }
+  
+      this.audioURL = URL.createObjectURL(audioBlob);
+      this.audioChunks = [];
+    } else {
+      console.error('Aucune donnée audio enregistrée.');
+    }
+  }
+  
   
 
   formatRecordingTime(): string {
