@@ -100,9 +100,10 @@ private socket!: Socket;
     this.getBlocksByCanvasId()
     this.GetRole()
     this.getMessageCount()
-    this.intervalId = setInterval(() => {
+    this.socket.on('message', () => {
       this.getMessageCount();
-    }, 5000);
+    });
+    
     this.listeCanvases()
     this.getUserPhoto()
     this.ListProjectsAndCanvas()

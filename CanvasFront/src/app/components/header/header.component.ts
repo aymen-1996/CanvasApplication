@@ -62,9 +62,11 @@ idBlock:any
     this.socket = io('http://localhost:3000');
 
     this.getMessageCount()
-    this.intervalId = setInterval(() => {
+
+    this.socket.on('message', () => {
       this.getMessageCount();
-    }, 5000);  
+    });
+      
    
     this.getPendingInvites()
     this.listenForNewInvites();

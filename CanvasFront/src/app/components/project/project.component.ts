@@ -74,14 +74,11 @@ selectedFile: File | null = null;
     this.GetNotif()
  
     this.socket = io('http://localhost:3000');
-    this.socket.on('message', (data: { 
-     
-    }) => {
-      
     
+    this.socket.on('message', () => {
       this.getMessageCount();
-
     });
+    
     
       
     this.activatedRoute.data.subscribe((data: any) => {
