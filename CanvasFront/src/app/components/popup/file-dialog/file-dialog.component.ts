@@ -41,6 +41,8 @@ export class FileDialogComponent {
     this.selectedFile = null;
     this.fileName = null;
     this.imageURL = null;
+    this.audioURL =null;
+    this.recordingTime =0
   }
 
   onFileSelectClick(): void {
