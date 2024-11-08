@@ -242,7 +242,7 @@
                          [src]="projectImages[project.idProjet]"
                          alt="Project Image"
                          class="small-image"
-                         title="Cliquez pour changer l'image du projet"
+                         [title]="userId === project.user.idUser ? 'Cliquez pour changer l\'image du projet' : ''"
                          (mouseover)="userId === project.user.idUser ? enlargeImage($event) : null" 
                          (mouseleave)="userId === project.user.idUser ? shrinkImage($event) : null"
                          (click)="userId === project.user.idUser ? fileInput.click() : null">
