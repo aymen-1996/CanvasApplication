@@ -627,9 +627,9 @@ updateInviteState(userId: number, idInvite: number): void {
         this.pendingInvitesCount = this.pendingInvites.length;
         this.projectService.updateProject(); 
         this.projectService.updateCanvas(); 
-
         this.getPendingInvites()
         this.listenForNewInvites();
+        this.getUsersByInvitations()
       },
       (error) => {
         console.error('Failed to update invitation state:', error);
