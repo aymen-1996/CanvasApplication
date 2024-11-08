@@ -1276,6 +1276,11 @@ onFileChange(event: any): void {
 }
 
 creatCommentaire(): void {
+  if (!this.contenu && !this.file) {
+    console.log('Aucun contenu ni fichier sélectionné. Commentaire non envoyé.');
+    return;  
+  }
+  
   this.canvasService.getCanvases(this.users.user.idUser, this.selectProject).subscribe(
     (data) => {
       if (data && Array.isArray(data.Canvas)) {
