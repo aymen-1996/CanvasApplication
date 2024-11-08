@@ -76,6 +76,10 @@ export class UserService {
           data.datenaissance = null;
       }
 
+      if (!data.education) {
+        data.education = null;
+    }
+
       const hashedPwd = await bcrypt.hash(data.passwordUser, 12);
       const userToSave = { ...data, passwordUser: hashedPwd, enabled: false };
 

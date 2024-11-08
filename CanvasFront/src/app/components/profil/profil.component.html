@@ -268,7 +268,15 @@
                                               <input type="text" class="form-control" placeholder="Adresse" formControlName="adresse">
                                             </div>
                                             <div class="col-md-6 mb-4">
-                                              <input type="text" class="form-control" placeholder="Adresse" formControlName="adresse">
+                                              <select class="form-control form-select" formControlName="education" aria-label="Choisissez votre niveau d'éducation">
+                                                <option [ngValue]="null" disabled [selected]="!userForm.controls['education'].value">Choisissez votre niveau d'éducation</option>
+                                                <option value="secondaire">Secondaire</option>
+                                                <option value="bac">Bac</option>
+                                                <option value="bac+2">Bac +2</option>
+                                                <option value="bac+3">Bac +3</option>
+                                                <option value="bac+5">Bac +5</option>
+                                                <option value="autre">Autre</option>
+                                              </select>
                                             </div>
                                             <div class="col-md-6 mb-4">
                                               <ng-select class="select" name="governorat" formControlName="gov"> 
@@ -291,11 +299,13 @@
                               
                                   <div class="row mt-3">
                                     <div class="col-md-4">
-                                      <select class="form-control" formControlName="genre">
-                                        <option value="" disabled selected>Choisissez votre genre</option>
-                                        <option value="homme">Homme</option>
-                                        <option value="femme">Femme</option>
+                                      <select class="form-control form-select" formControlName="genre" aria-label="Choisissez votre genre">
+                                        <option [ngValue]="null" disabled [selected]="!userForm.controls['genre'].value">Choisissez votre genre</option>
+                                        <option value="homme" [selected]="userForm.controls['genre'].value === 'homme'">Homme</option>
+                                        <option value="femme" [selected]="userForm.controls['genre'].value === 'femme'">Femme</option>
                                       </select>
+                                      
+                                      
                                     </div>
                                     
                                     <div class="col-md-4">
