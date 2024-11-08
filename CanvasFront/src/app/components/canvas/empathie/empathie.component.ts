@@ -1352,12 +1352,18 @@ isCurrentUser(commentaire: any): boolean {
   return this.users && this.users.user.idUser === commentaire.user.idUser;
 }
 openDialog(): void {
-  const dialogRef = this.dialog.open(FileDialogComponent);
+  const dialogRef = this.dialog.open(FileDialogComponent, {
+    data: { selectedFile: this.file }
+  });
+
+  dialogRef.componentInstance.fileRemoved.subscribe(() => {
+    console.log('Le fichier a été supprimé dans le dialogue');
+    this.file = null; 
+  });
 
   dialogRef.afterClosed().subscribe(file => {
     if (file) {
-      this.file = file; 
-      console.log('Fichier reçu depuis le dialogue:', file);
+      this.file = file;
     }
   });
 }

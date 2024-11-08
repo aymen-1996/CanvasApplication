@@ -55,9 +55,8 @@
               </button>
             </div>
           </div>
-          
-          <input type="file" #fileInput style="display: none;" (change)="onFileChange($event)" />
 
+          <input type="file" #fileInput style="display: none;" accept="image/*,application/pdf,.docx" (change)="onFileChange($event)" />
   
             <div *ngIf="!isRecording &&!fileName&&!audioURL" (click)="startRecording()" class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-6 css-1s50f5r">
               <div class="MuiBox-root css-6lwiu8">

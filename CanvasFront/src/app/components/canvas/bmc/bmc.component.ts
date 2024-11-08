@@ -1121,6 +1121,11 @@ onFileChange(event: any): void {
 }
 
 creatCommentaire(): void {
+  if (!this.contenu && !this.file) {
+    console.log('Aucun contenu ni fichier sélectionné. Commentaire non envoyé.');
+    return;  
+  }
+
   this.canvasService.getCanvases(this.users.user.idUser, this.selectProject).subscribe(
     (data) => {
       if (data && Array.isArray(data.Canvas)) {
@@ -1154,6 +1159,7 @@ creatCommentaire(): void {
     }
   );
 }
+
 
 
 getCommentCount() {
@@ -1197,17 +1203,26 @@ extractFileName(fileName: string): string {
 isCurrentUser(commentaire: any): boolean {
   return this.users && this.users.user.idUser === commentaire.user.idUser;
 }
+
 openDialog(): void {
-  const dialogRef = this.dialog.open(FileDialogComponent);
+  const dialogRef = this.dialog.open(FileDialogComponent, {
+    data: { selectedFile: this.file }
+  });
+
+  dialogRef.componentInstance.fileRemoved.subscribe(() => {
+    console.log('Le fichier a été supprimé dans le dialogue');
+    this.file = null; 
+  });
 
   dialogRef.afterClosed().subscribe(file => {
     if (file) {
-      this.file = file; 
-      console.log('Fichier reçu depuis le dialogue:', file);
+      this.file = file;
     }
   });
 }
-  
+
+
+
 loadImage(projectId: number): void {
   this.projectService.loadImageForProject(projectId).subscribe(response => {
       this.projectImages[projectId] = response.imageUrl;

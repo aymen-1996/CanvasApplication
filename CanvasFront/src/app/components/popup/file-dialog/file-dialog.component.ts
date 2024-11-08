@@ -1,5 +1,5 @@
-import { Component, ViewChild, ElementRef } from '@angular/core';
-import { MatDialogRef } from '@angular/material/dialog';
+import { Component, ViewChild, ElementRef, Inject, EventEmitter, Output } from '@angular/core';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-file-dialog',
@@ -18,7 +18,30 @@ export class FileDialogComponent {
   audioURL: string | null = null; 
   imageURL: string | null = null;
 
-  constructor(public dialogRef: MatDialogRef<FileDialogComponent>) {}
+  constructor(public dialogRef: MatDialogRef<FileDialogComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: any) {}
+
+  ngOnInit() {
+    this.resetFileData();
+
+    if (this.data && this.data.selectedFile) {
+      this.selectedFile = this.data.selectedFile;
+      this.fileName = this.selectedFile?.name ?? null;
+      if (this.selectedFile && this.selectedFile.type.startsWith('image/')) {
+        const reader = new FileReader();
+        reader.onload = (e: any) => {
+          this.imageURL = e.target.result;
+        };
+        reader.readAsDataURL(this.selectedFile);
+      }
+    }
+  }
+
+  resetFileData(): void {
+    this.selectedFile = null;
+    this.fileName = null;
+    this.imageURL = null;
+  }
 
   onFileSelectClick(): void {
     this.fileInput.nativeElement.click();
@@ -35,26 +58,27 @@ export class FileDialogComponent {
         this.imageURL = e.target.result;
       };
       reader.readAsDataURL(this.selectedFile);
-    } 
-  }
+    }
   
-  removeFile(): void {
-    this.selectedFile = null;
-    this.fileName = null;
-    this.imageURL = null;
-    this.audioURL = null;
-    this.recordingTime = 0; 
+    event.target.value = '';
   }
   
 
+  @Output() fileRemoved = new EventEmitter<void>();
+
+  removeFile(): void {
+    this.resetFileData();
+    this.fileRemoved.emit();
+    console.log('Fichier supprimé, mais le dialogue reste ouvert');
+  }
   sendFile(): void {
-    this.dialogRef.close(this.selectedFile); 
+    this.dialogRef.close(this.selectedFile);
   }
 
   onNoClick(): void {
     this.dialogRef.close();
   }
-
+  
   async startRecording(): Promise<void> {
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
@@ -89,7 +113,7 @@ export class FileDialogComponent {
   processAudioChunks(): void {
     if (this.audioChunks.length > 0) {
       const audioBlob = new Blob(this.audioChunks, { type: 'audio/wav' });
-      const audioFile = new File([audioBlob], 'recording.wav', { type: 'audio/wav' });
+      const audioFile = new File([audioBlob], 'recording.mp3', { type: 'audio/wav' });
   
       this.selectedFile = audioFile;
       this.fileName = audioFile.name;
@@ -104,6 +128,7 @@ export class FileDialogComponent {
       console.error('Aucune donnée audio enregistrée.');
     }
   }
+  
   
   
 
