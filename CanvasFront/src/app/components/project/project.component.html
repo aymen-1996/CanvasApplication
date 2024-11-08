@@ -243,15 +243,13 @@
                          alt="Project Image"
                          class="small-image"
                          title="Cliquez pour changer l'image du projet"
-                         
-                         (mouseover)="enlargeImage($event)" 
-                         (mouseleave)="shrinkImage($event)"
-                         (click)="fileInput.click()">
+                         (mouseover)="userId === project.user.idUser ? enlargeImage($event) : null" 
+                         (mouseleave)="userId === project.user.idUser ? shrinkImage($event) : null"
+                         (click)="userId === project.user.idUser ? fileInput.click() : null">
                     
                     <span *ngIf="!projectImages[project.idProjet]">Image Loading...</span>
                   </div>
                   
-                
                   <input type="file" hidden #fileInput (change)="onFileSelected1($event, project.idProjet)">
                 </div>
                 

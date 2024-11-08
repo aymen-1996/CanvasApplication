@@ -198,7 +198,7 @@ Un segment est une population homogène de consommateurs représentant une ou pl
     async getProjectsByUserId(userId: number): Promise<invite[]> {
         return this.inviteRepository.find({
             where: { user: { idUser: userId } },
-            relations: ['projet'], 
+            relations: ['projet' , 'projet.user'], 
         });
     }
 
