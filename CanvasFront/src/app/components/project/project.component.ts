@@ -65,6 +65,7 @@ showPendingInvitesDropdown: boolean = false;
 showDropdown: boolean = false;
 private socket!: Socket;
 selectedFile: File | null = null;
+user:any
   constructor(private activatedRoute:ActivatedRoute ,private chatService:ChatService , private notifService:NotifService ,private dialogue: MatDialog ,private http: HttpClient,private sanitilzer: DomSanitizer,private userService:UserService ,private router: Router,private fb:FormBuilder ,
     private projectService: ProjetService ,private authService:AuthService){}
    ngOnInit(): void {
@@ -72,7 +73,7 @@ selectedFile: File | null = null;
     this.users = JSON.parse(localStorage.getItem('currentUser') as string);
 
     this.GetNotif()
- 
+    this.getUserById()
     this.socket = io('http://localhost:3000');
     
     this.socket.on('message', () => {
@@ -132,6 +133,18 @@ selectedFile: File | null = null;
       }
     );
   }
+
+  getUserById(){
+    this.userService.getUser(this.users.user.idUser).subscribe(
+      (data) => {
+        this.user = data;
+      },
+      (error) => {
+        console.error('Erreur lors de la récupération de l\'utilisateur:', error);
+      }
+    );
+  }
+  
   GetNotif() {
     this.notifService.getLiveNotifications(this.users.user.idUser)
       .subscribe((newNotifications: Notification[]) => {
