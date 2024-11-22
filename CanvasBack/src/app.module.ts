@@ -34,6 +34,8 @@ import { ChatModule } from './Message/chat.module';
 import { APP_INTERCEPTOR } from '@nestjs/core';
 import { commentaire } from './commentaires/commentaire.entity';
 import { CommentaireModule } from './commentaires/commentaire.module';
+import { reaction } from './reactionMessage/reaction.entity';
+import { ReactionModule } from './reactionMessage/reaction.module';
 
 
 
@@ -50,8 +52,8 @@ import { CommentaireModule } from './commentaires/commentaire.module';
       port: 3306,
       username: 'root',
       password: '',
-      database: 'canvasback_mysql-data2',
-      entities: [invite,projet,user,canvas,block,donnees , message , Token ,Notification , commentaire] ,
+      database: 'canvasback_mysql-data',
+      entities: [invite,projet,user,canvas,block,donnees , message , Token ,Notification , commentaire,reaction] ,
       synchronize: false,
     }),
     UserModule,
@@ -64,7 +66,8 @@ import { CommentaireModule } from './commentaires/commentaire.module';
     JwtModule,
     AuthModule,
     ChatModule,
-    NotificationModule
+    NotificationModule,
+    ReactionModule
    
     
   ],

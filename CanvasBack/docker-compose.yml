@@ -8,16 +8,25 @@ services:
       - db
     environment:
       NODE_ENV: production
+    networks:
+      - mynetwork
 
   db:
     image: mysql:8
     environment:
       MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: canvasback_mysql-data
+      MYSQL_DATABASE: canvasback_canvasback_mysql-data2
     ports:
       - "3307:3306"
     volumes:
-      - mysql-data:/var/lib/mysql
+      - canvasback_mysql-data2:/var/lib/mysql 
+    networks:
+      - mynetwork
 
 volumes:
   mysql-data:
+  canvasback_mysql-data2: 
+
+networks:
+  mynetwork:
+    driver: bridge

@@ -1,15 +1,15 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { NotificationGateway } from 'src/Gateway/NotificationGateway';
 import { Repository } from 'typeorm';
 import { Notification } from 'src/notif/notif.entity';
+import { UnifiedGateway } from 'src/Gateway/UnifiedGateway';
 
 @Injectable()
 export class NotificationService {
   constructor(
     @InjectRepository(Notification)
     private readonly notifRepository: Repository<Notification>,
-    private readonly notifGateway: NotificationGateway, 
+    private readonly notifGateway: UnifiedGateway, 
   ) {}
  
   async createNotification(userId: number, message: string): Promise<Notification> {

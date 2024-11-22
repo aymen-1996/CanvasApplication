@@ -64,4 +64,8 @@ export class ChatGateway implements OnGatewayInit {
     return filename;
   }
   
+
+  emitMessageDeleted(messageId: number) {
+    this.server.emit('messageDeleted', messageId);
+  }
 }

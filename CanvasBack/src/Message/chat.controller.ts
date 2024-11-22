@@ -1,10 +1,12 @@
-import { Controller, Get, Put, Param } from '@nestjs/common';
+import { Controller, Get, Put, Param, Delete, Body, NotFoundException } from '@nestjs/common';
 import { ChatService } from './chat.service';
 import { message } from './message.entity';
+import { UnifiedGateway } from 'src/Gateway/UnifiedGateway';
 
 @Controller('chat')
 export class ChatController {
-  constructor(private readonly chatService: ChatService) {}
+  constructor(private readonly chatService: ChatService ,private readonly deleteGateway: UnifiedGateway,
+  ) {}
 
   @Get('last/:senderId/:recipientId')
   async getLastMessage(
@@ -32,4 +34,33 @@ export class ChatController {
     ): Promise<message[]> {
       return this.chatService.getMessagesBetweenUsers(senderId, recipientId);
     }
-}
+
+    //delete msg
+    @Delete(':messageId/:userId')
+  async deleteMessage(
+    @Param('messageId') messageId: number, 
+    @Param('userId') userId: number 
+  ): Promise<void> {
+    await this.chatService.deleteMessage(messageId, userId);
+    this.deleteGateway.emitMessageDeleted(messageId , userId);
+
+    
+  }
+    
+
+    @Put(':id')
+    async updateMessage(
+      @Param('id') id: number,
+      @Body('content') newContent: string  
+    ): Promise<message> {
+      const updatedMessage = await this.chatService.updateMessage(id, newContent);
+      this.deleteGateway.emitMessageUpdated(id, newContent);
+
+      if (!updatedMessage) {
+        throw new NotFoundException('Message not found');
+      }
+  
+      return updatedMessage;
+      
+    }
+  }

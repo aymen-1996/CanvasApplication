@@ -2,12 +2,18 @@ import { Injectable } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { message } from 'src/Message/message.entity';
+import * as fs from 'fs';
+import * as path from 'path';
+import { reaction } from 'src/reactionMessage/reaction.entity';
 
 @Injectable()
 export class ChatService {
   constructor(
     @InjectRepository(message)
     private readonly messageRepository: Repository<message>,
+    @InjectRepository(message)
+    private readonly reactionRepository: Repository<reaction>
+
   ) {}
 
   async saveMessageWithImage(body: any, filePath: string): Promise<message> {
@@ -36,7 +42,8 @@ export class ChatService {
         { senderId, recipientId },
         { senderId: recipientId, recipientId: senderId },
       ],
-      order: { sentAt: 'ASC' },
+      relations: ['reactions'],
+      order: { sentAt: 'ASC' }, 
     });
   }
 //nombre de msg envoyer
@@ -73,6 +80,52 @@ export class ChatService {
     });
 
     await this.messageRepository.save(messages);
+}
+
+async deleteMessage(id: number, userId: number): Promise<void> {
+  try {
+    const message = await this.messageRepository.findOne({
+      where: {
+        id,
+        senderId: userId, 
+      },
+      relations: ['reactions'],
+    });
+
+    if (!message) {
+      throw new Error(`Message with ID ${id} not found or you're not authorized to delete it.`);
+    }
+
+    if (message.reactions && message.reactions.length > 0) {
+      for (const reaction of message.reactions) {
+        await this.reactionRepository.delete({ id: reaction.id });
+      }
+    }
+
+    await this.messageRepository.delete(id);
+    console.log(`Message and its reactions successfully deleted by user with ID ${userId}`);
+  } catch (error) {
+    console.error('Error deleting message:', error.message);
+    throw new Error(`Error deleting message with ID ${id}: ${error.message}`);
+  }
+}
+
+
+
+
+
+
+
+async updateMessage(id: number, newContent: string): Promise<message> {
+  const messageToUpdate = await this.messageRepository.findOne({ where: { id } });
+  if (!messageToUpdate) {
+    throw new Error('Message not found');
+  }
+
+  messageToUpdate.content = newContent;
+  await this.messageRepository.save(messageToUpdate);
+
+  return messageToUpdate;
 }
 
 }

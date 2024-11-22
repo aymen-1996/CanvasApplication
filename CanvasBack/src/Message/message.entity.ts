@@ -1,4 +1,5 @@
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import { reaction } from 'src/reactionMessage/reaction.entity';
+import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
 
 @Entity('message')
 export class message {
@@ -22,4 +23,7 @@ export class message {
 
   @Column({ default: false })
   etat: boolean;
+  @OneToMany(() => reaction, (reaction) => reaction.message)
+  reactions: reaction[];
+
 }

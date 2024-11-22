@@ -12,9 +12,6 @@ import * as path from 'path';
 import * as fs from 'fs/promises';
 import { donnees } from 'src/donnees/donnees.entity';
 import { user } from 'src/user/user.entity';
-import { Notification } from 'src/notif/notif.entity';
-import { ChatGateway } from 'src/Gateway/chatGateway';
-import { NotificationGateway } from 'src/Gateway/NotificationGateway';
 import { NotificationService } from 'src/notif/notif.service';
 
 @Injectable()

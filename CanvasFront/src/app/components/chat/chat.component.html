@@ -228,28 +228,44 @@
                   *ngFor="let user of users" 
                   (click)="selectUser(user)">
                     <img [src]="user.imageUser" alt="avatar">
-                  
-                <div class="about">
-                  <div class="name">
-                    <i *ngIf="user.enLigne" class="fa fa-circle online"></i>
-                    <i *ngIf="!user.enLigne" class="fa fa-circle offline"></i>
-                    {{ user.nomUser }}</div>
-                  <div class="status" 
-                       [ngStyle]="{ 'font-weight': user?.etat === false ? 'bold' : 'normal' }">
-                    {{ user.lastMessage?.slice(0,10) }}
-                  </div>
-                  <div class="status" 
-                  [ngStyle]="{ 'font-weight': user?.etat === false ? 'bold' : 'normal' }">
-                  <div *ngIf="user.filePath != null">
-                    📎 Un fichier
-                  </div>
-                  
-             </div>
-             
-                </div>
-              </li>
-              
-                  
+
+                    <div class="about">
+                      <div class="name">
+                        <i *ngIf="user.enLigne" class="fa fa-circle online"></i>
+                        <i *ngIf="!user.enLigne" class="fa fa-circle offline"></i>
+                        {{ user.nomUser }}
+                      </div>
+                    
+                      <div *ngIf="!isGif(user.lastMessage)" class="status" [ngStyle]="{ 'font-weight': user?.etat === false ? 'bold' : 'normal' }">
+                        {{ user.lastMessage?.slice(0, 10) }}
+                      </div>
+                    
+                      <div *ngIf="user.lastMessage && isGif(user.lastMessage)">
+                        <img [src]="user.lastMessage" alt="GIF" class="gif-thumbnail"/>
+                      </div>
+                    
+                      <div class="status" [ngStyle]="{ 'font-weight': user?.etat === false ? 'bold' : 'normal' }">
+                        <div *ngIf="user.filePath != null && user.filePath.endsWith('.mp3')">
+                          🎵 Un fichier audio
+                        </div>
+                        
+                        <div *ngIf="user.filePath != null && (user.filePath.endsWith('.pdf') || user.filePath.endsWith('.docx'))">
+                          📎 Un document
+                        </div>
+                        
+                        <div *ngIf="user.filePath != null && (user.filePath.endsWith('.mp4') || user.filePath.endsWith('.mpeg') || user.filePath.endsWith('.avi'))">
+                          🎥 Un fichier vidéo
+                        </div>
+                        
+                        <div *ngIf="user.filePath != null && (user.filePath.endsWith('.png') || user.filePath.endsWith('.jpg'))">
+                          🖼️ Une image
+                        </div>    
+                      </div>
+                   
+                    </div>
+                                                  
+                    </li>   
+
                 </ul>
             </div>
             <div class="chat"  >
@@ -257,7 +273,7 @@
               <div class="chat-header clearfix">
                 <div class="row"  >
                         <div class="col-lg-6" >
-                            <a href="javascript:void(0);" data-toggle="modal" data-target="#view_info" >
+                            <a data-toggle="modal" data-target="#view_info" >
                                 <img  *ngIf="userselect" [src]="userPhotoUrl" alt="avatar">
                             </a>
                             <div class="chat-about" *ngIf="userselect">
@@ -274,50 +290,203 @@
                         </div>
                     </div>
                 </div>
-                <div class="chat-history" *ngIf="userselect">
+                <div class="chat-history" [ngClass]="{'chat-history-expanded': showEmojiPicker}" *ngIf="userselect">
                     <ul class="m-b-0">
                       <ul>
                        
-                        <li class="clearfix" *ngFor="let msg of messages">
-                         
-                          <div [ngClass]="{
-                                'message other-message float-right': msg.senderId != senderId,
-                                'message my-message': msg.senderId == senderId
-                              }">
-                                   <span class="message-sender">
-                                    {{ msg.senderId == senderId ? 'Vous' : msg.username }}
-                                  </span>
-                                  <span class="message" *ngIf="msg.message">{{ msg.message }}</span>
-                                  <img *ngIf="msg.imageUrl && !(msg.imageUrl.endsWith('.pdf') || msg.imageUrl.endsWith('.docx')) && ! (msg.imageUrl.endsWith('.mp3') || msg.imageUrl.endsWith('.wav'))&&! (msg.imageUrl.endsWith('.mp4') || msg.imageUrl.endsWith('.mpeg') || msg.imageUrl.endsWith('.webm') || msg.imageUrl.endsWith('.avi'))" [src]="msg.imageUrl" alt="Image message" style="width: 210px; height: 250px;" />
-                                  <p *ngIf="msg.imageUrl && (msg.imageUrl.endsWith('.pdf') || msg.imageUrl.endsWith('.docx'))" class="file-container">
-                                    <i class="fa" 
-                                       [ngClass]="{
-                                         'fa-file-pdf': msg.imageUrl.endsWith('.pdf'), 
-                                         'fa-file-word': msg.imageUrl.endsWith('.docx'),
-                                         'fa-file': !msg.imageUrl.endsWith('.pdf') && !msg.imageUrl.endsWith('.docx')
-                                       }" 
-                                       aria-hidden="true"></i>
-                                    <a [href]="msg.imageUrl" target="_blank" rel="noreferrer" class="file-link">
-                                      {{ extractFileName(msg.imageUrl.substring(msg.imageUrl.lastIndexOf('/') + 1)) }}
-                                    </a>
-                                  </p>
-                                  
+                        <li class="clearfix" *ngFor="let msg of messages" >
+                          <div [ngClass]="{'message-data message-left': msg.senderId == senderId, 'message-data message-right': msg.senderId != senderId}">
+                            <span class="message-data-time">
+                              {{ formatDate(msg.timestamp) }}
+                              </span>
+                                                 
+                          </div>
+
+                          <div
+                          [ngClass]="{
+                            'message other-message float-right': msg.senderId != senderId,
+                            'message my-message message-top-spacing': msg.senderId == senderId
+                        }"
+                            (mouseenter)="showIcons(msg.id)" style="position: relative;">
+                            
+                            <span class="message" *ngIf="msg.message">
+                              <ng-container *ngIf="!isEditing[msg.id]; else editMode">
+                                <ng-container *ngIf="isGif(msg.message); else staticMessage">
+                                  <img [src]="msg.message" alt="GIF" class="gif-message"/>
+                                </ng-container>
                                 
-<video *ngIf="msg.imageUrl && (msg.imageUrl.endsWith('.mp4') || msg.imageUrl.endsWith('.mpeg') || msg.imageUrl.endsWith('.webm') || msg.imageUrl.endsWith('.avi')) && ! (msg.imageUrl.endsWith('.mp3') || msg.imageUrl.endsWith('.wav'))" 
-controls style="width: 100%; height:180px; border: 1px solid rgb(204, 204, 204); margin: 1rem 0;">
-<source [src]="msg.imageUrl" type="video/mp4">
-<source [src]="msg.imageUrl" type="video/mpeg">
-<source [src]="msg.imageUrl" type="video/webm">
-<source [src]="msg.imageUrl" type="video/avi">
-Votre navigateur ne supporte pas la lecture de vidéos.
-</video>
-<audio *ngIf="msg.imageUrl && (msg.imageUrl.endsWith('.mp3') || msg.imageUrl.endsWith('.wav'))" 
-       controls>
-  <source [src]="msg.imageUrl" type="audio/mpeg">
-  <source [src]="msg.imageUrl" type="audio/wav">
-  Votre navigateur ne supporte pas la lecture de cet audio.
-</audio>
- </div>
+                                <ng-template #staticMessage>
+                                  {{ msg.message }}
+                                </ng-template>
+                              </ng-container>
+                              
+                              <ng-template #editMode>
+                                <textarea 
+                                  [(ngModel)]="msg.message" 
+                                  (ngModelChange)="newMessageContent = msg.message || ''" 
+                                  (blur)="updateMessage(msg.id)"
+                                  (keydown.enter)="updateMessage(msg.id)"  
+                                  [ngClass]="{'editing': isEditing[msg.id]}"
+                                  style="color: inherit; background: transparent; border: none; outline: none; height: 100%; width: 100%; resize: none; font-family: inherit; font-size: inherit; font-weight: inherit; font-style: inherit; word-break: break-word;"
+                                ></textarea>
+                              </ng-template>
+
+                            </span>
+                           
+                            
+                                                                           
+                            <img *ngIf="msg.imageUrl && !(msg.imageUrl.endsWith('.pdf') || msg.imageUrl.endsWith('.docx')) && !(msg.imageUrl.endsWith('.mp3') || msg.imageUrl.endsWith('.wav')) && !(msg.imageUrl.endsWith('.mp4') || msg.imageUrl.endsWith('.mpeg') || msg.imageUrl.endsWith('.webm') || msg.imageUrl.endsWith('.avi'))" 
+                                 [src]="msg.imageUrl" alt="Image message" style="width: 210px; height: 250px;" loading="lazy"/>
+                            
+                            <p *ngIf="msg.imageUrl && (msg.imageUrl.endsWith('.pdf') || msg.imageUrl.endsWith('.docx'))" class="file-container">
+                              <i class="fa" [ngClass]="{
+                                'fa-file-pdf': msg.imageUrl.endsWith('.pdf'),
+                                'fa-file-word': msg.imageUrl.endsWith('.docx'),
+                                'fa-file': !msg.imageUrl.endsWith('.pdf') && !msg.imageUrl.endsWith('.docx')
+                              }" aria-hidden="true"></i>
+                              <a [href]="msg.imageUrl" target="_blank" rel="noreferrer" class="file-link">
+                                {{ extractFileName(msg.imageUrl.substring(msg.imageUrl.lastIndexOf('/') + 1)) }}
+                              </a>
+                            </p>
+                        
+                            <video *ngIf="msg.imageUrl && (msg.imageUrl.endsWith('.mp4') || msg.imageUrl.endsWith('.mpeg') || msg.imageUrl.endsWith('.webm') || msg.imageUrl.endsWith('.avi'))" controls style="width: 100%; height: 180px; border: 1px solid rgb(204, 204, 204); margin: 1rem 0;">
+                              <source [src]="msg.imageUrl" type="video/mp4" />
+                              <source [src]="msg.imageUrl" type="video/mpeg" />
+                              <source [src]="msg.imageUrl" type="video/webm" />
+                              <source [src]="msg.imageUrl" type="video/avi" />
+                              Votre navigateur ne supporte pas la lecture de vidéos.
+                            </video>
+
+    <div *ngIf="msg.imageUrl && (msg.imageUrl.endsWith('.mp3') || msg.imageUrl.endsWith('.wav'))" 
+     class="audio-bubble" 
+     (click)="togglePlay(msg.id)" 
+     [ngClass]="{'sender': msg.senderId == senderId, 'receiver': msg.senderId != senderId}">
+  <div class="play-icon" 
+       [id]="'playIcon_' + msg.id" 
+       [ngClass]="isPlayingMap[msg.id] ? 'pause-icon' : 'play-icon'">
+  </div>
+  <div class="audio-wave" [ngClass]="{ 'playing': isPlayingMap[msg.id] }">
+    <div class="wave-bar"></div>
+    <div class="wave-bar"></div>
+    <div class="wave-bar"></div>
+  </div>
+  <div class="audio-duration">{{ formattedTimeMap[msg.id] || '00:00' }}</div>
+
+  <audio #audioPlayer [id]="'audioPlayer_' + msg.id" [src]="msg.imageUrl" 
+         (ended)="onAudioEnded(msg.id)" 
+         (timeupdate)="onTimeUpdate(msg.id, audioPlayer.currentTime)" 
+         (loadeddata)="onLoadedData(msg.id, audioPlayer)">
+    <source [src]="msg.imageUrl" type="audio/mpeg" />
+    <source [src]="msg.imageUrl" type="audio/wav" />
+    Votre navigateur ne supporte pas la lecture de cet audio.
+  </audio>
+</div>
+
+<div class="emoji-bottom">
+  <ng-container *ngFor="let reaction of msg.reactions">
+    <div class="emoji-item">
+      <div class="reaction-count">
+        <span>{{ reaction.count > 1 ? '+' + reaction.count : reaction.count }}</span>
+      </div>
+      
+      <span
+        class="emoji-circle"
+        (click)="toggleReactionMenu(msg.id)"
+      >
+        <a>{{ reaction.reaction }}</a>
+      </span>
+    </div>
+
+    <div
+      *ngIf="selectedReaction === msg.id"
+      [ngClass]="{
+        'rotate-180': msg.senderId != senderId
+      }"
+      class="css-1oknx5t2"
+      [style.marginTop]="calculateMarginTop(reaction.count, msg.reactions.length)"
+      tabindex="-1"
+      style="opacity: 1; transform: none;"
+    >
+      <div class="css-98b6tas2"></div>
+      <div class="css-3sojac1">
+        <div
+          class="css-i9gxme1"
+          *ngFor="let react of reactionListe"
+          [ngStyle]="{
+            position: msg.senderId == senderId ? 'relative' : 'initial',
+            right: msg.senderId == senderId ? '30px' : 'initial'
+          }"
+        >
+          <span>
+            {{ react.id == userId.user.idUser ? 'Vous' : react.userName }} :
+            {{ react.reaction }}
+          </span>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+</div>
+</div>
+                        
+                          <span class="message-icons"
+                                [ngClass]="{ 'icons-right': msg.senderId != senderId, 'message-icons': msg.senderId == senderId }"
+                                style="position: relative;">
+                                <ng-container *ngIf="msg.senderId == senderId">
+                                  <i *ngIf="iconsVisibleMap[msg.id]" class="ri-more-2-fill" (click)="toggleDropdownicons(msg.id)" style="cursor: pointer"></i>
+                                  <i *ngIf="iconsVisibleMap[msg.id]" class="ri-emotion-happy-line" (click)="toggleEmojis(msg.id)" style="cursor: pointer; margin-right: 8px;"></i>
+                                </ng-container>
+                                
+                            <ng-container *ngIf="msg.senderId != senderId">
+                              <i *ngIf="iconsVisibleMap[msg.id]" class="ri-emotion-happy-line" (click)="toggleEmojis(msg.id)" style="cursor: pointer; margin-right: 8px;"></i>
+                              <i *ngIf="iconsVisibleMap[msg.id] && msg.senderId !== senderId && msg.message" (click)="toggleDropdownicons(msg.id)" class="ri-more-2-fill" style="cursor: pointer;"></i>
+                            </ng-container>
+                            
+                           
+                          <div 
+                          class="dropdown-menu" 
+                          [class.show]="selectedMessageId == msg.id"
+                          [ngStyle]="{ 'left': msg.senderId != senderId ? '-165px' : '0' }"
+                        >
+                          <a *ngIf="msg.message"   (click)="copyMessage(msg.message)" class="dropdown-item d-flex align-items-center justify-content-between copy-message">
+                            Copy <i class="bx bx-copy text-muted ms-2"></i>
+                          </a>
+                        
+                          <a   (click)="editMessage(msg)"
+
+                          *ngIf="msg.senderId == senderId && msg.message "
+                          class="dropdown-item d-flex align-items-center justify-content-between delete-item"
+                        >
+                          Modifier <i class="bx bx-edit text-muted ms-2"></i>
+                        </a>
+                        
+                          <a (click)="deleteMessage(msg.id)"
+                            *ngIf="msg.senderId == senderId" 
+                            class="dropdown-item d-flex align-items-center justify-content-between delete-item"
+                          >
+                            Delete <i  class="bx bx-trash text-muted ms-2"></i>
+                          </a>
+                        </div>
+
+                        <div *ngIf="emojisVisibleMap[msg.id]" 
+                        [ngClass]="{'emoji-container1': true, 'right': msg.senderId != senderId}">
+                     <div class="hstack align-items-center gap-2 px-2 fs-25">
+                       <a (click)="ReactMessage(msg.id, '👍')" 
+                          [ngClass]="{'selected-reaction': isReactionSelected(msg.id, '👍')}">👍</a>
+                       <a (click)="ReactMessage(msg.id, '💛')" 
+                          [ngClass]="{'selected-reaction': isReactionSelected(msg.id, '💛')}">💛</a>
+                       <a (click)="ReactMessage(msg.id, '🤣')" 
+                          [ngClass]="{'selected-reaction': isReactionSelected(msg.id, '🤣')}">🤣</a>
+                       <a (click)="ReactMessage(msg.id, '😜')" 
+                          [ngClass]="{'selected-reaction': isReactionSelected(msg.id, '😜')}">😜</a>
+                       <a (click)="ReactMessage(msg.id, '😘')" 
+                          [ngClass]="{'selected-reaction': isReactionSelected(msg.id, '😘')}">😘</a>
+                       <a (click)="ReactMessage(msg.id, '😍')" 
+                          [ngClass]="{'selected-reaction': isReactionSelected(msg.id, '😍')}">😍</a>
+                     </div>
+                   </div>
+                   
+                        </span>
+                        
                         </li>
                         
                       </ul>                              
@@ -337,55 +506,78 @@ Votre navigateur ne supporte pas la lecture de vidéos.
               
                     
 
-                        <div *ngIf="showEmojiPicker" class="css-1oknx5t1" tabindex="-1" style="opacity: 1; transform: none; transition: opacity 228ms cubic-bezier(0.4, 0, 0.2, 1), transform 152ms cubic-bezier(0.4, 0, 0.2, 1); ; transform-origin: 360px 0px;">
-                          <span class="arrow css-98b6tas">
-                      
-                          </span>
-                          <div class="css-3sojac" >
-                            <div class="css-i9gxme">
-                              <div class="emoji-container">
-                                <div class="emoji-row">
-                                  <span *ngFor="let emoji of emojis" 
-                                        (click)="addEmoji(emoji)" 
-                                        class="emoji" 
-                                        title="Click to add">{{ emoji }}</span>
-                                </div>
-                              </div>
-                              
+                  <div *ngIf="showEmojiPicker" class="css-1oknx5t1" tabindex="-1" style="opacity: 1; transform: none; transition: opacity 228ms cubic-bezier(0.4, 0, 0.2, 1), transform 152ms cubic-bezier(0.4, 0, 0.2, 1); ; transform-origin: 360px 0px;">
+                    <span class="arrow css-98b6tas">
+                
+                    </span>               
                     
-                             
-                            </div>
+                                  
+                    <div class="css-3sojac">
+                   
+                      <div class="css-i9gxme">
+                        
+                        <div class="emoji-container">
+                          <div class="button-group">
+                            <button (click)="showType('emoji')" [class.active]="currentType === 'emoji'">
+                              Liste des Émojis
+                            </button>
+                            <button (click)="showType('gif')" [class.active]="currentType === 'gif'">
+                              Liste des GIFs
+                            </button>
                           </div>
                           
+                            <div *ngIf="currentType === 'emoji'" class="emoji-row">
+                            <span *ngFor="let emoji of emojis" 
+                                  (click)="addEmoji(emoji)" 
+                                  class="emoji" 
+                                  [title]="emoji">
+                              {{ emoji }}
+                            </span>
+                          </div>
+                  
+                          <div *ngIf="currentType === 'gif'" class="emoji-row">
+                            <span *ngFor="let gif of gifs" class="emoji">
+                              <img (click)="send(gif)" class="gif-emoji" [src]="gif" alt="GIF" />
+                            </span>
+                          </div>
                         </div>
+                      </div>
+                    </div>
+                  </div>
+                  
+      
                         <div class="input-group">
                           <div class="input-group-prepend">
                             <span (click)="send()" class="input-group-text text1"><mat-icon class="send">send</mat-icon>
                             </span>
                         </div>
                         <label class="btn btn-outline-primary">
-                          <i class="fa fa-paperclip"> 
-                            <input type="file" (change)="onFileSelected($event)" (input)="send()" style="display: none;" />
+                          <i class="fa fa-paperclip">
+                            <input 
+                              type="file" 
+                              accept=".png, .jpg, .gif, .mp4, .mpeg, .avi, .pdf, .docx, .mp3 ,.wav" 
+                              (change)="onFileSelected($event)" 
+                              (input)="send()" 
+                              style="display: none;" 
+                            />
                           </i>
-                        </label>  
+                        </label>                         
 <label class="btn btn-outline-primary" (click)="toggleRecording()">
   <i class="fa fa-microphone" [class.recording]="isRecording"></i>
   <span *ngIf="isRecording">{{ recordingTime }}s</span>
 </label>                      
-                          <input type="text" (keydown.enter)="send()" [(ngModel)]="message" placeholder="Entrez le texte ici..." class="form-control" />
-
-                          
-                          <button type="button" class="btn btn-light" (click)="toggleEmojiPicker()">😀</button>
-                        </div>
-                        
-                        
-                        
-                     
-                  </div>
-                </div>
-            </div>
-           
-        </div>
+<input type="text" 
+       (keydown.enter)="send()" 
+       [(ngModel)]="message" 
+       placeholder="Entrez le texte ici..." 
+       class="form-control" 
+      />
+      <button type="button" class="btn btn-light" (click)="toggleEmojiPicker()">😀</button>
+   </div>
+ </div>
+   </div>
+   </div>  
+     </div>
     </div>
 </div>
 </div>

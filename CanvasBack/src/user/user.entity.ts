@@ -3,6 +3,7 @@ import { commentaire } from "src/commentaires/commentaire.entity";
 import { invite } from "src/invite/invite.entity";
 import { message } from "src/Message/message.entity";
 import { projet } from "src/projet/projet.entity";
+import { reaction } from "src/reactionMessage/reaction.entity";
 import { Token } from "src/Token/token";
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 
@@ -82,5 +83,9 @@ export class user {
 
     @OneToMany(() => commentaire, (commentaire) => commentaire.user)
     commentaires: commentaire[];
+
+    @OneToMany(() => reaction, (reaction) => reaction.user)
+    reactions: reaction[];
+    
 
 }
