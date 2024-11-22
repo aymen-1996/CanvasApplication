@@ -125,16 +125,28 @@ export class ProfilComponent {
     this.userService.updateUser(this.users.user.idUser, updateUserDto).subscribe(
       updatedUser => {
         console.log('Profil utilisateur mis à jour avec succès :', updatedUser);
-        this.getUserDetails()
-        this.getUserProgress()
+  
+        const currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
+        
+        if (currentUser && currentUser.user) {
+          currentUser.user.nomUser = updatedUser.nomUser || currentUser.user.nomUser;
+          currentUser.user.prenomUser = updatedUser.prenomUser || currentUser.user.prenomUser;
+          
+          localStorage.setItem('currentUser', JSON.stringify(currentUser));
+        }
+  
+        this.getUserDetails();
+        this.getUserProgress();
+  
         this.showSuccessMessage('Profil utilisateur mis à jour avec succès.');
-
       },
       error => {
         console.error('Une erreur s\'est produite lors de la mise à jour du profil utilisateur :', error);
       }
     );
   }
+  
+  
   
   onFileChange(event: any): void {
     this.cvFile = event.target.files[0];

@@ -156,7 +156,7 @@ formattedTimeMap: { [key: number]: string } = {};
       });
   
     });
-    
+
     this.chatService.listenToDeleteMessage().subscribe(({ messageId, userId }) => {
       this.deleteMessageFromList(messageId);
     
@@ -534,7 +534,6 @@ isReactionSelected(idMessage: number, reaction: string): boolean {
   const userId = currentUser?.user?.idUser;
 
   if (!userId) {
-    console.log('لا يوجد معرف مستخدم');
     return false; 
   }
 
@@ -1012,6 +1011,7 @@ updateMessage(messageId: number): void {
     console.error('Message content cannot be empty.');
   }
 }
+
 updateMessageInList(updatedMessage: any): void {
   if (!updatedMessage || typeof updatedMessage.messageId === 'undefined') {
     return;
