@@ -43,7 +43,7 @@ export class ProjectComponent implements OnInit{
   showFirst: boolean = true;
 
   showPopup =false;
-  projects!:project[];
+  projects:project[] = [];
 userId!:number
 userproject!:User 
   imageUrl: any;
@@ -66,6 +66,8 @@ showDropdown: boolean = false;
 private socket!: Socket;
 selectedFile: File | null = null;
 user:any
+searchQuery:  any;
+isSearchVisible: boolean = false; 
   constructor(private activatedRoute:ActivatedRoute ,private chatService:ChatService , private notifService:NotifService ,private dialogue: MatDialog ,private http: HttpClient,private sanitilzer: DomSanitizer,private userService:UserService ,private router: Router,private fb:FormBuilder ,
     private projectService: ProjetService ,private authService:AuthService){}
    ngOnInit(): void {
@@ -269,29 +271,50 @@ closeDeletePopup() {
   this.showPopupdelte = false;
 }
 
-getAllProjectByUser() {
+getAllProjectByUser(): void {
   const userIdObject = this.authService.getStoredUserId();
-  
+
   if (!userIdObject || !userIdObject.idUser) {
     console.info('User is not logged in. Skipping project load.');
     return;
   }
 
   this.userId = userIdObject.idUser;
-  this.projectService.getallProjectByUser(this.userId).subscribe((response: any[]) => {
-    this.projects = response;
+  this.projectService.getallProjectByUser(this.userId, this.searchQuery).subscribe(
+    (response: any[]) => {
+      this.projects = response || [];  
 
-    const selectedProjectId = localStorage.getItem('selectedProjectId');
-    if (selectedProjectId === null && this.projects.length > 0) {
-      this.saveProjectId(this.projects[0].idProjet);
+      const selectedProjectId = localStorage.getItem('selectedProjectId');
+      if (selectedProjectId === null && this.projects.length > 0) {
+        this.saveProjectId(this.projects[0].idProjet);
+      }
+
+
+      this.projects.forEach((project) => {
+        this.loadImage(project.idProjet);
+        this.getInvitesByUserId(project.idProjet);
+      });
+    },
+    (error) => {
+      console.error('Error loading projects:', error);
+      this.projects = []; 
     }
-
-    this.projects.forEach(project => {
-      this.loadImage(project.idProjet);
-      this.getInvitesByUserId(project.idProjet);
-    });
-  });
+  );
 }
+
+// visibilité de la saisie de recherche
+toggleSearchVisibility(): void {
+  this.isSearchVisible = !this.isSearchVisible;
+  if (!this.isSearchVisible) {
+    this.searchQuery = ''; 
+    this.getAllProjectByUser();
+  }
+}
+
+onSearchChange(): void {
+  this.getAllProjectByUser();
+}
+
 
 
 getInvitesByUserId(projId: number): void {

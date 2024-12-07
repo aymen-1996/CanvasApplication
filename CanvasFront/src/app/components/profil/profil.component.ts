@@ -15,6 +15,7 @@ import { Notification } from 'src/app/models/notification';
 import { AuthService } from 'src/app/services/auth.service';
 import { CommentaireService } from 'src/app/services/commentaire.service';
 import * as alertify from 'alertifyjs';
+import { ChatService } from 'src/app/services/chat.service';
 
 interface City {
   name: string
@@ -53,7 +54,9 @@ export class ProfilComponent {
   cvFile: File | null = null;
   cvFileName: string = '';
   isCvVisible: boolean = true;
-  constructor(private formBuilder: FormBuilder,private sanitizer: DomSanitizer,private authService:AuthService,private notifService :NotifService ,private activatedRoute :ActivatedRoute,private dialogue: MatDialog ,private http: HttpClient,private sanitilzer: DomSanitizer,private userService:UserService ,private router: Router,private projectService: ProjetService , private commentaireService:CommentaireService){
+  messageCount: number = 0;
+
+  constructor(private formBuilder: FormBuilder,private chatService:ChatService ,private sanitizer: DomSanitizer,private authService:AuthService,private notifService :NotifService ,private activatedRoute :ActivatedRoute,private dialogue: MatDialog ,private http: HttpClient,private sanitilzer: DomSanitizer,private userService:UserService ,private router: Router,private projectService: ProjetService , private commentaireService:CommentaireService){
     alertify.set('notifier', 'position', 'top-right'); 
 
 
@@ -87,6 +90,10 @@ export class ProfilComponent {
 
     this.users = JSON.parse(localStorage.getItem('currentUser') as string);
     this.socket = io('http://localhost:3000');
+
+    this.socket.on('message', () => {
+      this.getMessageCount();
+    });
 
     this.getUserPhoto()
     this.getPendingInvites();
@@ -216,6 +223,19 @@ extractFileName(fileName: string): string {
       },
       (error) => {
         console.error('Erreur lors de la récupération de la progression:', error);
+      }
+    );
+  }
+
+  //nombre msg
+  getMessageCount() {
+    this.chatService.getMessagesCountByRecipientId(this.users.user.idUser).subscribe(
+      (count: number) => {
+        this.messageCount = count;
+        console.log("count" , this.messageCount)
+      },
+      (error) => {
+        console.error('Error fetching message count', error);
       }
     );
   }

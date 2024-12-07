@@ -2,7 +2,7 @@
 import { BadRequestException, Injectable, NotFoundException, UploadedFile } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { projet } from './projet.entity';
-import { DeepPartial, FindOneOptions, Repository } from 'typeorm';
+import { DeepPartial, FindOneOptions, Like, Repository } from 'typeorm';
 import { canvas } from 'src/canvas/canvas.entity';
 import { block } from 'src/block/block.entity';
 import { invite } from 'src/invite/invite.entity';
@@ -192,12 +192,15 @@ Un segment est une population homogène de consommateurs représentant une ou pl
     }
 
     //List projet selon Invite
-    async getProjectsByUserId(userId: number): Promise<invite[]> {
-        return this.inviteRepository.find({
-            where: { user: { idUser: userId } },
-            relations: ['projet' , 'projet.user'], 
-        });
-    }
+    async getProjectsByUserId(userId: number, search: string = ''): Promise<invite[]> {
+      return this.inviteRepository.find({
+          where: {
+              user: { idUser: userId },
+              projet: { nomProjet: Like(`%${search}%`) }
+          },
+          relations: ['projet', 'projet.user'],
+      });
+  }
 
     async getPendingInvitesByUserId(userId: number) {
       try {

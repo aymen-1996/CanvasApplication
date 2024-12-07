@@ -37,15 +37,53 @@
                 </ng-option>
                     </ng-select>
                   </div>
-                  <div>
-                  <input  type="password" name="password" placeholder="Saisir votre mot de passe " formControlName="passwordUser" [class.invalid-input]="signUpForm.get('passwordUser')!.invalid && signUpForm.get('passwordUser')!.touched">
-                    <span class="input-group_error" *ngIf="signUpForm.get('passwordUser')!.invalid && signUpForm.get('passwordUser')!.touched" >** Mot de passe est requis</span>
-                  </div>
-                  <div>
-                  <input  type="password" name="password" placeholder="Confirmer votre mot de passe " formControlName="passwordUserconfirmed" [class.invalid-input]="signUpForm.get('passwordUserconfirmed')!.invalid && signUpForm.get('passwordUserconfirmed')!.touched">
-           
-                    <span class="input-group_error" *ngIf="signUpForm.get('passwordUserconfirmed')!.invalid && signUpForm.get('passwordUserconfirmed')!.dirty" >** Confirmation de mot de passe est requise</span>
-                  </div>
+                 <!-- Champ Mot de passe -->
+<div class="input-group">
+  <input
+    [type]="passwordVisible ? 'text' : 'password'"
+    name="password"
+    placeholder="Saisir votre mot de passe"
+    formControlName="passwordUser"
+    [class.invalid-input]="signUpForm.get('passwordUser')!.invalid && signUpForm.get('passwordUser')!.touched"
+  />
+  <mat-icon
+    class="eye-icon"
+    (click)="passwordVisible = !passwordVisible"
+    aria-label="Toggle password visibility"
+  >
+    {{ passwordVisible ? 'visibility' : 'visibility_off' }}
+  </mat-icon>
+</div>
+<span
+  class="input-group_error"
+  *ngIf="signUpForm.get('passwordUser')!.invalid && signUpForm.get('passwordUser')!.touched"
+>
+  ** Mot de passe est requis
+</span>
+
+<div class="input-group">
+  <input
+    [type]="passwordConfirmedVisible ? 'text' : 'password'"
+    name="password"
+    placeholder="Confirmer votre mot de passe"
+    formControlName="passwordUserconfirmed"
+    [class.invalid-input]="signUpForm.get('passwordUserconfirmed')!.invalid && signUpForm.get('passwordUserconfirmed')!.touched"
+  />
+  <mat-icon
+    class="eye-icon"
+    (click)="passwordConfirmedVisible = !passwordConfirmedVisible"
+    aria-label="Toggle confirmation password visibility"
+  >
+    {{ passwordConfirmedVisible ? 'visibility' : 'visibility_off' }}
+  </mat-icon>
+</div>
+<span
+  class="input-group_error"
+  *ngIf="signUpForm.get('passwordUserconfirmed')!.invalid && signUpForm.get('passwordUserconfirmed')!.dirty"
+>
+  ** Confirmation de mot de passe est requise
+</span>
+
                   </div>
                 <button  type="submit" class="signup-btn"> S'inscrire </button>
             </form>

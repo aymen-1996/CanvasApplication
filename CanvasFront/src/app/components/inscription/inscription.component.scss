@@ -41,7 +41,14 @@
   font-family: "Public Sans", sans-serif;
   transition: border 150ms cubic-bezier(0.4, 0, 0.2, 1);
 }
-
+.eye-icon {
+  position: absolute;
+  right: 10px;
+  top: 30%;
+  cursor: pointer;
+  font-size: 25px; 
+  z-index: 1; 
+}
 
 img {
     display: block;

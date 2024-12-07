@@ -1562,3 +1562,49 @@ img {
   word-spacing: -0.1em;  
 }
 
+
+
+
+.search-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.search-input {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+input {
+  padding: 5px;
+  font-size: 16px;
+  width: 200px;
+}
+.search-input input::placeholder {
+  color: #aaa;
+  font-style: italic;
+}
+
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.1);
+    opacity: 0.9;
+  }
+  100% {
+    transform: scale(1); 
+    opacity: 1;
+  }
+}
+
+.search-icon {
+  animation: pulse 1.5s infinite;
+  cursor: pointer;
+}
+

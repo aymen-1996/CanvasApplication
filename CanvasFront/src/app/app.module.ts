@@ -41,6 +41,7 @@ import { MatBadgeModule } from '@angular/material/badge';
 import { MatMenuModule } from '@angular/material/menu';
 import { FileDialogComponent } from './components/popup/file-dialog/file-dialog.component';
 import { SocketService } from './services/socket.service';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 
 @NgModule({
@@ -83,6 +84,7 @@ import { SocketService } from './services/socket.service';
     BrowserAnimationsModule,
     MatIconModule,
     MatProgressBarModule,
+    MatProgressSpinnerModule,
     ButtonModule,
     RippleModule,
     DialogModule,

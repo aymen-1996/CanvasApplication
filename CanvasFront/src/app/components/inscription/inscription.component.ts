@@ -16,6 +16,8 @@ export class InscriptionComponent implements OnInit{
   showFirst: boolean = false;
   showFirst2: boolean = true;
   signUpForm:any;
+  passwordVisible: boolean = false;
+passwordConfirmedVisible: boolean = false;
  constructor( private formBuilder: FormBuilder, private userService: UserService , private activatedRoute:ActivatedRoute){
   this.governorates = [
     { name: 'Tunis' },

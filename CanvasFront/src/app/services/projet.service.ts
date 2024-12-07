@@ -22,11 +22,12 @@ export class ProjetService {
    }
 
 
-  getallProjectByUser(id:number):Observable<project[]>{
-    return this.http.get<{ projects: project[] }>(`${environment.backendHost}/projet/${id}`).pipe(
-      map(response => response.projects) // Extract projects array from response object
+   getallProjectByUser(id: number, search: string = ''): Observable<project[]> {
+    return this.http.get<{ projects: project[] }>(`${environment.backendHost}/projet/${id}?search=${search}`).pipe(
+      map(response => response.projects)  
     );
   }
+  
 
  
   loadImageForProject(projectId: number): Observable<{ imageUrl: string }> {

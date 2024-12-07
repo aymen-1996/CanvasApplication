@@ -21,6 +21,6 @@ export interface User {
     enLigne:boolean;
     lastLogout:Date;
     filePath?: string | null;
-
+    unreadMessagesCount:any
   }
   

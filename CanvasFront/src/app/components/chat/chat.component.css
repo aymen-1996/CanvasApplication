@@ -955,7 +955,7 @@ img {
     box-shadow: 0 1px 2px 0 rgb(0 0 0 / 10%);
 }
 .chat-app .people-list {
-    width: 280px;
+    width: 340px;
     position: absolute;
     left: 0;
     top: 0;
@@ -965,7 +965,7 @@ img {
 }
 
 .chat-app .chat {
-    margin-left: 280px;
+    margin-left: 340px;
     border-left: 1px solid #eaeaea
 }
 
@@ -1427,7 +1427,7 @@ img {
 
 .css-1oknx5t1 {
   top: -280px; 
-  left: 430px;
+  left: 375px;
   background-color: rgb(255, 255, 255);
   color: rgb(33, 43, 54);
   box-shadow: rgba(145, 158, 171, 0.2) 0px 5px 5px -3px,
@@ -2038,4 +2038,46 @@ small, .small {
   font-weight: normal;
 }
 
+.image-popup {
+  position: fixed;
+  top: 10%; 
+  left: 10%;
+  width: 85%;
+  height: 100%;
+  background-color: rgba(241, 238, 227, 0.8);
+  display: flex;
+  justify-content: center;
+  align-items: flex-start; 
+  z-index: 1000;
+}
 
+.popup-content {
+  position: relative;
+  max-width: 60%; 
+  max-height: 60%;
+}
+
+.full-image {
+  width: 80%; 
+  height: auto;
+  border-radius: 8px;
+}
+
+.close-icon {
+  position: absolute;
+  top: 20px; 
+  right: -20px;
+  color: white;
+  font-size: 24px;
+  cursor: pointer;
+  background: rgba(0, 0, 0, 0.6);
+  border-radius: 50%;
+  padding: 5px;
+}
+
+.unread-count {
+  font-size: 14px;
+  color: red;
+  font-weight: bold;
+  margin-left: 40px;
+}

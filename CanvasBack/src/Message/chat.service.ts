@@ -108,10 +108,22 @@ async deleteMessage(id: number, userId: number): Promise<void> {
     console.error('Error deleting message:', error.message);
     throw new Error(`Error deleting message with ID ${id}: ${error.message}`);
   }
+
 }
 
 
 
+
+async countUnreadMessagesBetweenUsers(senderId: number, recipientId: number): Promise<number> {
+  const result = await this.messageRepository
+    .createQueryBuilder('message')
+    .select('COUNT(*)', 'count')
+    .where('message.senderId = :senderId', { senderId })
+    .andWhere('message.recipientId = :recipientId', { recipientId })
+    .andWhere('message.etat = :etat', { etat: false })
+    .getRawOne();
+  return result ? parseInt(result.count, 10) : 0;
+}
 
 
 

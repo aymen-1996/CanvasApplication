@@ -1,4 +1,4 @@
-import { BadRequestException, Body, Controller, Delete, Get, Header, NotFoundException, Param, ParseIntPipe, Patch, Post, Put, Res, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common';
+import { BadRequestException, Body, Controller, Delete, Get, Header, NotFoundException, Param, ParseIntPipe, Patch, Post, Put, Query, Res, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common';
 import { ProjetService } from './projet.service';
 import { FileInterceptor } from '@nestjs/platform-express';
 import * as path from 'path';
@@ -29,9 +29,12 @@ async createProjectWithImage(
 }
 
 @Get(':userId')
-async getProjectsByUserId(@Param('userId') userId: number) {
+async getProjectsByUserId(
+  @Param('userId') userId: number, 
+  @Query('search') search: string = ''
+) {
     try {
-        const invites = await this.projetService.getProjectsByUserId(userId);
+        const invites = await this.projetService.getProjectsByUserId(userId, search);
 
         const uniqueProjectIds = new Set();
         const uniqueProjects = [];
@@ -50,6 +53,7 @@ async getProjectsByUserId(@Param('userId') userId: number) {
         return { success: false, error: error.message };
     }
 }
+
 
 //liste canvas par id projet et id user selon class invite 
 @Get(':userId/:projetId')

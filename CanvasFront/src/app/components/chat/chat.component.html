@@ -234,11 +234,21 @@
                         <i *ngIf="user.enLigne" class="fa fa-circle online"></i>
                         <i *ngIf="!user.enLigne" class="fa fa-circle offline"></i>
                         {{ user.nomUser }}
+
+                        <span *ngIf="user.unreadMessagesCount > 0" class="unread-count">
+                          {{ user.unreadMessagesCount }}
+                        </span>
+                        
                       </div>
-                    
-                      <div *ngIf="!isGif(user.lastMessage)" class="status" [ngStyle]="{ 'font-weight': user?.etat === false ? 'bold' : 'normal' }">
-                        {{ user.lastMessage?.slice(0, 10) }}
-                      </div>
+
+                
+                      
+
+                      <div *ngIf="!isGif(user.lastMessage)" class="status" 
+                      [ngStyle]="{ 'font-weight': user?.etat === false ? 'bold' : 'normal' }">
+                      {{ user.lastMessage?.length > 23 ? (user.lastMessage | slice:0:23) + '...' : user.lastMessage }}
+                       </div>
+
                     
                       <div *ngIf="user.lastMessage && isGif(user.lastMessage)">
                         <img [src]="user.lastMessage" alt="GIF" class="gif-thumbnail"/>
@@ -335,8 +345,22 @@
                            
                             
                                                                            
-                            <img *ngIf="msg.imageUrl && !(msg.imageUrl.endsWith('.pdf') || msg.imageUrl.endsWith('.docx')) && !(msg.imageUrl.endsWith('.mp3') || msg.imageUrl.endsWith('.wav')) && !(msg.imageUrl.endsWith('.mp4') || msg.imageUrl.endsWith('.mpeg') || msg.imageUrl.endsWith('.webm') || msg.imageUrl.endsWith('.avi'))" 
-                                 [src]="msg.imageUrl" alt="Image message" style="width: 210px; height: 250px;" loading="lazy"/>
+                            <div>
+                              <img *ngIf="msg.imageUrl && !(msg.imageUrl.endsWith('.pdf') || msg.imageUrl.endsWith('.docx')) && !(msg.imageUrl.endsWith('.mp3') || msg.imageUrl.endsWith('.wav')) && !(msg.imageUrl.endsWith('.mp4') || msg.imageUrl.endsWith('.mpeg') || msg.imageUrl.endsWith('.webm') || msg.imageUrl.endsWith('.avi'))"
+                                   [src]="msg.imageUrl" 
+                                   alt="Image message" 
+                                   style="width: 210px; height: 250px; cursor: pointer;" 
+                                   (click)="openImage(msg.imageUrl)" 
+                                   loading="lazy" />
+                            
+                              <div *ngIf="isImageOpen" class="image-popup">
+                                <div class="popup-content">
+                                  <span class="close-icon" (click)="closeImage()">&#x2715;</span>
+                                  <img [src]="selectedImageUrl" alt="Full image" class="full-image" />
+                                </div>
+                              </div>
+                            </div>
+                            
                             
                             <p *ngIf="msg.imageUrl && (msg.imageUrl.endsWith('.pdf') || msg.imageUrl.endsWith('.docx'))" class="file-container">
                               <i class="fa" [ngClass]="{
@@ -356,6 +380,8 @@
                               <source [src]="msg.imageUrl" type="video/avi" />
                               Votre navigateur ne supporte pas la lecture de vidéos.
                             </video>
+                      
+                            
 
     <div *ngIf="msg.imageUrl && (msg.imageUrl.endsWith('.mp3') || msg.imageUrl.endsWith('.wav'))" 
      class="audio-bubble" 
@@ -451,13 +477,14 @@
                             Copy <i class="bx bx-copy text-muted ms-2"></i>
                           </a>
                         
-                          <a   (click)="editMessage(msg)"
-
-                          *ngIf="msg.senderId == senderId && msg.message "
+                          <a  
+                          (click)="editMessage(msg)"
+                          *ngIf="msg.senderId == senderId && msg.message && !msg.message.endsWith('.gif')"
                           class="dropdown-item d-flex align-items-center justify-content-between delete-item"
                         >
                           Modifier <i class="bx bx-edit text-muted ms-2"></i>
                         </a>
+                        
                         
                           <a (click)="deleteMessage(msg.id)"
                             *ngIf="msg.senderId == senderId" 
@@ -488,7 +515,11 @@
                         </span>
                         
                         </li>
-                        
+                              
+                        <div *ngIf="isUploading" class="loading">
+                          <p>En cours d'envoi...</p>
+                          <mat-spinner *ngIf="isUploading" diameter="30"></mat-spinner>
+                        </div>
                       </ul>                              
                   
                     </ul>

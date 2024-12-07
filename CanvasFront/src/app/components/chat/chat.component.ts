@@ -67,6 +67,8 @@ currentType: string = 'emoji';
 newReaction: string = ''; 
 reactionListe:any
 isSocketCall: boolean = false;
+isImageOpen: boolean = false;
+selectedImageUrl: string | null = null;
 
 gifs: string[] = [
 'assets/emojigif/Tunisia.gif','assets/emojigif/Palestine.gif','assets/emojigif/joy.gif','assets/emojigif/smile.gif','assets/emojigif/grin.gif','assets/emojigif/grin-sweat.gif','assets/emojigif/rofl.gif','assets/emojigif/wink.gif',
@@ -95,6 +97,7 @@ recordingTime: number = 0;
 recordingInterval: any;
 projectImages: { [key: number]: string } = {}; 
 reactions: any = {}; 
+unreadMessagesCount: number = 0;
 
 @ViewChild('audioPlayer') audioPlayerRef!: ElementRef<HTMLAudioElement>;
   
@@ -256,27 +259,36 @@ formattedTimeMap: { [key: number]: string } = {};
   }
   
 //liste user selon invitation
+
 getUsersByInvitations(): void {
   this.userService.getUsersByInvitations(this.userId.user.idUser, this.searchTerm).subscribe(
     (data: User[]) => {
       this.users = data;
+
       const messageRequests = this.users.map(user =>
-        this.chatService.getLastMessage(user.idUser, this.userId.user.idUser),
+        forkJoin([
+          this.chatService.getUnreadMessagesCount(user.idUser, this.userId.user.idUser),
+          this.chatService.getLastMessage(user.idUser, this.userId.user.idUser)  
+        ]).pipe(
+          map(([unreadMessagesCountResponse, lastMessageResponse]) => {
+            user.unreadMessagesCount = unreadMessagesCountResponse.count;
+            user.lastMessage = lastMessageResponse ? lastMessageResponse.content : '';
+            user.filePath = lastMessageResponse ? lastMessageResponse.filePath : null;
+            user.etat = lastMessageResponse ? lastMessageResponse.etat : 'true'; 
+            this.getUserPhoto2(user.idUser);
+            this.getLastMessage(user.idUser, this.userId.user.idUser);
+
+            return user;
+          })
+        )
       );
 
       forkJoin(messageRequests).subscribe(
-        (messages: any[]) => {
-          this.users.forEach((user, index) => {
-            user.lastMessage = messages[index] ? messages[index].content : '';
-            user.filePath = messages[index] ? messages[index].filePath : null;
-            console.log("file user" ,  user.filePath)
-            user.etat = messages[index] ? messages[index].etat : 'true';
-            this.getUserPhoto2(user.idUser);
-            this.getLastMessage(user.idUser, this.userId.user.idUser);
-          });
+        (updatedUsers: User[]) => {
+          this.users = updatedUsers;
         },
         (error) => {
-          console.error('Error fetching last messages:', error);
+          console.error('Error fetching messages:', error);
         }
       );
     },
@@ -286,6 +298,15 @@ getUsersByInvitations(): void {
   );
 }
 
+  openImage(imageUrl: string): void {
+    this.isImageOpen = true;
+    this.selectedImageUrl = imageUrl;
+  }
+
+  closeImage(): void {
+    this.isImageOpen = false;
+    this.selectedImageUrl = null;
+  }
 
 //update etat msg
 onMarkAllAsRead(userId: number) {
@@ -333,6 +354,20 @@ getLastMessage(senderId:any ,recipientId:any ): void {
   );
 }
 
+countMessageFalse(senderId:any ,recipientId:any){
+  this.chatService.getUnreadMessagesCount(senderId, recipientId).subscribe(
+    response => {
+      this.unreadMessagesCount = response.count;
+      console.log("countmsgfalse" , this.unreadMessagesCount)
+    },
+    error => {
+      console.error('Error fetching unread messages count', error);
+    }
+  );
+
+}
+
+
 getById(userid: number): void {
   this.userService.getUser(userid).subscribe(
     (data) => {
@@ -343,6 +378,7 @@ getById(userid: number): void {
     }
   );
 }
+isUploading = false;
 
 send(item?: string | Blob): void {
   const senderId = this.userId.user.idUser;
@@ -363,6 +399,12 @@ send(item?: string | Blob): void {
       this.message = ''; 
 
     } else if (this.selectedImage) {
+      const allowedTypes = ['video/mp4', 'video/mpeg', 'video/webm', 'video/avi'];
+
+      if (allowedTypes.includes(this.selectedImage.type)) {
+        this.isUploading = true;
+      }
+    
       const formData = new FormData();
       formData.append('file', this.selectedImage);
       formData.append('username', username);
@@ -371,6 +413,7 @@ send(item?: string | Blob): void {
 
       this.userService.uploadImage(formData).subscribe(response => {
         this.selectedImage = null; 
+        this.isUploading = false;
       });
 
     } else if (item instanceof Blob) {

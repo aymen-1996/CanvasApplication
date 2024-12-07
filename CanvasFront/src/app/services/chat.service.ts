@@ -84,4 +84,9 @@ export class ChatService {
   getReactionsByMessageId(idMessage: number): Observable<any> {
     return this.http.get<any>(`${environment.backendHost}/reactions/${idMessage}`);
   }
+
+
+  getUnreadMessagesCount(senderId: number, recipientId: number): Observable<{ count: number }> {
+    return this.http.get<{ count: number }>(`${environment.backendHost}/chat/unread-messages/count/${senderId}/${recipientId}`);
+  }
 }

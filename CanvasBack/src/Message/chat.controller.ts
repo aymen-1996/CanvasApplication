@@ -1,4 +1,4 @@
-import { Controller, Get, Put, Param, Delete, Body, NotFoundException } from '@nestjs/common';
+import { Controller, Get, Put, Param, Delete, Body, NotFoundException, Query } from '@nestjs/common';
 import { ChatService } from './chat.service';
 import { message } from './message.entity';
 import { UnifiedGateway } from 'src/Gateway/UnifiedGateway';
@@ -35,6 +35,17 @@ export class ChatController {
       return this.chatService.getMessagesBetweenUsers(senderId, recipientId);
     }
 
+    @Get('unread-messages/count/:senderId/:recipientId')
+    async getUnreadMessagesCount(
+      @Param('senderId') senderId: number,
+      @Param('recipientId') recipientId: number
+    ): Promise<{ count: number }> {
+      const count = await this.chatService.countUnreadMessagesBetweenUsers(senderId, recipientId);
+      return { count };
+    }
+    
+    
+    
     //delete msg
     @Delete(':messageId/:userId')
   async deleteMessage(

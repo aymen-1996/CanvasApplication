@@ -220,7 +220,17 @@
         </div>
 
              <div class="css-1byr0tz">
-    
+              <div class="search-container">
+                <mat-icon *ngIf="projects.length > 1 && !isSearchVisible" class="search-icon" (click)="toggleSearchVisibility()">search</mat-icon>
+                
+                <div *ngIf="isSearchVisible" class="search-input">
+                  <input [(ngModel)]="searchQuery" (input)="onSearchChange()" placeholder="Rechercher un projet" />
+                  <mat-icon (click)="toggleSearchVisibility()">close</mat-icon>
+                </div>
+              </div>
+              
+                          
+
       <div class="MuiBox-root css-0">
           <div class="MuiContainer-root MuiContainer-maxWidthLg css-1qsxih2">
               <h4 class="MuiTypography-root MuiTypography-h4 css-sko12q">Mes Projets</h4>

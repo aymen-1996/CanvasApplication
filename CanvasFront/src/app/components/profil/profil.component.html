@@ -17,6 +17,16 @@
         </svg>
           <span class=" css-w0pj6f"></span></button>  
 
+          <mat-icon 
+          routerLink="/chat" 
+          class="maticon1" 
+          matBadge="{{ messageCount }}" 
+          matBadgeColor="warn" 
+          matBadgePosition="above after" 
+          [matBadgeHidden]="messageCount === 0"> 
+          chat
+        </mat-icon>
+        
         <div class="dropdown-container">
 
           <button class="css-tfolz5" tabindex="0" type="button" (click)="togglePendingInvitesDropdown()">
