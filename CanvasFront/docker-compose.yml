@@ -1,8 +1,11 @@
-version: '3.8'
+version: "3.8"
+
 services:
-  frontend:
+  angular-app:
     build:
       context: .
-      dockerfile: Dockerfile
+    image: front-app
+    container_name: angular-app-container
     ports:
-      - "4200:4200" # Assurez-vous que ce port est mappé
+      - "5001:80"
+    restart: always
