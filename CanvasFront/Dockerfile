@@ -3,6 +3,9 @@ FROM node:18 AS build
 
 WORKDIR /usr/src/app
 
+ARG backendHost
+ENV backendHost=${backendHost}
+
 # Copier les fichiers package.json
 COPY package.json ./
 
