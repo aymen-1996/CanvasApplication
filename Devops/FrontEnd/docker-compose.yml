@@ -1,8 +1,6 @@
-version: "3.8"
-
 services:
-  image: chouaibiaymen/front-app
   angular-app:
+    image: chouaibiaymen/front-app
     container_name: angular-app-container
     ports:
       - "5001:80"
