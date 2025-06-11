@@ -7,7 +7,7 @@ ARG backendHost
 ENV backendHost=${backendHost}
 
 # Copier les fichiers package.json
-COPY package.json ./
+COPY package.json package-lock.json ./
 
 # Installer Angular CLI globalement
 RUN npm install -g @angular/cli --force
