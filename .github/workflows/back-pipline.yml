@@ -44,7 +44,7 @@ jobs:
       - name: connect via ssh and execute commands
         uses: appleboy/ssh-action@v1
         with:
-          host: ${{ secrets.HOST }}
+          host: 51.178.31.158
           username: ubuntu
           password: ${{ secrets.PASSWORD }}
           port: ${{ secrets.PORT }}
