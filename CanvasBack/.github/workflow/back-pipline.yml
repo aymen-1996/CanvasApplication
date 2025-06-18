@@ -19,5 +19,5 @@ jobs:
      - name: checkout
        uses: actions/checkout@v4 
 
-     - name: build docker image chouaibiaymen/canvasbackend .
-       run: docker build -t
+     - name: build docker image 
+       run: docker build -t chouaibiaymen/canvasbackend .
