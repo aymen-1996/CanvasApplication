@@ -11,7 +11,7 @@ RUN npm install -g node-pre-gyp
 COPY package*.json ./
 
 # Installer les dépendances en mode production
-RUN npm install --production
+RUN npm install --force
 
 # Copier le reste des fichiers de l'application
 COPY . .
