@@ -47,7 +47,7 @@ jobs:
           host: ${{ secrets.HOST }}
           username: ubuntu
           password: ${{ secrets.PASSWORD }}
-          port: 49152
+          port: ${{ secrets.PORT }}
           script: |
                cd ~/CanvasApplication/Devops/BackEnd
                sudo docker compose pull
