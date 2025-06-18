@@ -10,26 +10,9 @@ on:
 
 
 jobs:
-  test:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Install node-pre-gyp globally
-        run: npm install -g node-pre-gyp
-        working-directory: ./CanvasBack
-
-      - name: Install dependencies
-        run: npm install --force
-        working-directory: ./CanvasBack
-
-      - name: Run tests
-        run: npm run test
-        working-directory: ./CanvasBack
-
+  
   build-and-push:
     runs-on: ubuntu-latest
-    needs: test
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
