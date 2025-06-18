@@ -1,0 +1,23 @@
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+     - name: checkout
+       uses: actions/checkout@v4
+
+     - name: install dependencies
+       run: npm i --force
+
+     - name: npm run test  
+       run: npm run test
+
+
+  build-and-push:
+    runs-on: ubuntu-latest
+    needs: test
+    steps:
+     - name: checkout
+       uses: actions/checkout@v4 
+
+     - name: build docker image chouaibiaymen/canvasbackend .
+       run: docker build -t

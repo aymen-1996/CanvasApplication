@@ -22,7 +22,7 @@ RUN npm run build
 FROM nginx:alpine
 
 # Copier le build de Angular
-COPY --from=build /usr/src/app/dist/* /usr/share/nginx/html
+COPY --from=build /usr/src/app/dist/canvas-front /usr/share/nginx/html
 
 # Exposer le port 80
 EXPOSE 80
