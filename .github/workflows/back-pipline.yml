@@ -10,7 +10,7 @@ on:
 
 
 jobs:
-  
+
   build-and-push:
     runs-on: ubuntu-latest
     steps:
@@ -20,3 +20,18 @@ jobs:
       - name: Build Docker image
         working-directory: ./CanvasBack
         run: docker build -t chouaibiaymen/canvasbackend:latest .
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ vars.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: push image docker
+        run: docker push chouaibiaymen/canvasbackend:latest
+
+      - name: tag image with version number
+        run: docker tag chouaibiaymen/canvasbackend chouaibiaymen/canvasbackend:${{github.run_number}}
+              
+      - name: push image with version number
+        run: docker push chouaibiaymen/canvasbackend:${{github.run_number}}
