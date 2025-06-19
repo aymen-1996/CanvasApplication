@@ -26,7 +26,7 @@ jobs:
         run: npm i --force
 
       - name: Run tests filtered by user.controller
-        run: npm run test -- -t 'user.controller'
+        run: npm run test user.controller
 
   build-and-push:
     runs-on: ubuntu-latest
