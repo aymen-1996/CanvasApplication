@@ -76,8 +76,7 @@ isSearchVisible: boolean = false;
 
     this.GetNotif()
     this.getUserById()
-    this.socket = io('http://localhost:3000');
-    
+this.socket = io('https://api.chouaibi.shop');    
     this.socket.on('message', () => {
       this.getMessageCount();
     });

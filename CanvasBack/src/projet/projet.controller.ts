@@ -104,7 +104,7 @@ async serveImage(@Param('projetId') projetId: number): Promise<{ imageUrl: strin
 
   if (user && user.imageProjet) {
     const filename = user.imageProjet;
-    const imageUrl = `http://localhost:3000/upload/image/${filename}`;
+    const imageUrl = `https://api.chouaibi.shop/upload/image/${filename}`;
 
     return { imageUrl }; 
   } else {
