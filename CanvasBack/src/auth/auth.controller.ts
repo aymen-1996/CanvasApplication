@@ -66,12 +66,12 @@ async login(
 
     const token = await this.generateResetToken(user);
 
-    const resetLink = `http://localhost:4200/reset-password/${token}`;
+    const resetLink = `https://canvas.chouaibi.shop/reset-password/${token}`;
 
      this.emailService.sendEmail(
       email,
       'Réinitialisation de mot de passe',
-      `Pour réinitialiser votre mot de passe, cliquez sur le lien suivant : http://localhost:4200/reset-password/${token}. Le lien expire dans 10 minutes.`,
+      `Pour réinitialiser votre mot de passe, cliquez sur le lien suivant : https://canvas.chouaibi.shop/reset-password/${token}. Le lien expire dans 10 minutes.`,
       );
 
     return { message: 'Email envoyé pour la réinitialisation du mot de passe'};
@@ -103,7 +103,7 @@ async login(
         this.emailService.sendEmail(
             user.emailUser,
             'Réinitialisation de mot de passe',
-            `Pour réinitialiser votre mot de passe, cliquez sur le lien suivant : http://localhost:4200/reset-password/${newToken}. Le lien expire dans 10 minutes.`,
+            `Pour réinitialiser votre mot de passe, cliquez sur le lien suivant : https://canvas.chouaibi.shop/reset-password/${newToken}. Le lien expire dans 10 minutes.`,
           );
             
           return { message: 'Email envoyé pour la réinitialisation du mot de passe' };          
