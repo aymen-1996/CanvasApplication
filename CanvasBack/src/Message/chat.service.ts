@@ -1,10 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
-import { message } from 'src/Message/message.entity';
+import { message } from '../Message/message.entity';
 import * as fs from 'fs';
 import * as path from 'path';
-import { reaction } from 'src/reactionMessage/reaction.entity';
+import { reaction } from '../reactionMessage/reaction.entity';
 
 @Injectable()
 export class ChatService {

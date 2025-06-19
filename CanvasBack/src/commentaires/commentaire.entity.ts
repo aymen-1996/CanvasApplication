@@ -1,6 +1,6 @@
 import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, JoinColumn } from "typeorm";
-import { user } from "src/user/user.entity";
-import { canvas } from "src/canvas/canvas.entity";
+import { user } from "../user/user.entity";
+import { canvas } from "../canvas/canvas.entity";
 
 @Entity({ name: 'commentaire' })
 export class commentaire {

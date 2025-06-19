@@ -4,11 +4,11 @@ import { InviteService } from './invite.service';
 import { InviteController } from './invite.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { invite } from './invite.entity';
-import { user } from 'src/user/user.entity';
-import { canvas } from 'src/canvas/canvas.entity';
-import { projet } from 'src/projet/projet.entity';
-import { UnifiedGateway } from 'src/Gateway/UnifiedGateway';
-import { Notification } from 'src/notif/notif.entity';
+import { user } from '../user/user.entity';
+import { canvas } from '../canvas/canvas.entity';
+import { projet } from '../projet/projet.entity';
+import { UnifiedGateway } from '../Gateway/UnifiedGateway';
+import { Notification } from '../notif/notif.entity';
 
 
 @Module({

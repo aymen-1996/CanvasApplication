@@ -3,9 +3,9 @@ import { ProjetService } from './projet.service';
 import { FileInterceptor } from '@nestjs/platform-express';
 import * as path from 'path';
 import {Response, Request} from 'express';
-import { invite } from 'src/invite/invite.entity';
+import { invite } from '../invite/invite.entity';
 import { projet } from './projet.entity';
-import { user } from 'src/user/user.entity';
+import { user } from '../user/user.entity';
 
 @Controller('projet')
 export class ProjetController { constructor(private readonly projetService: ProjetService

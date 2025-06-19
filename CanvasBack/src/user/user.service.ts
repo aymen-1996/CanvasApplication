@@ -1,17 +1,17 @@
 /* eslint-disable prettier/prettier */
 import { BadRequestException, Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { user } from 'src/user/user.entity';
+ import { user } from './user.entity';
 import { In, LessThan, Like, MoreThan, Not, Repository } from 'typeorm';
 import * as bcrypt from 'bcryptjs';
 import { EmailService } from './email/email.service';
 import * as crypto from 'crypto';
-import { Token } from 'src/Token/token';
+import { Token } from '../Token/token';
 import { updateUserDto } from './DTO/updateUser.dto';
 import { Cron } from '@nestjs/schedule';
-import { message } from 'src/Message/message.entity';
-import { projet } from 'src/projet/projet.entity';
-import { invite } from 'src/invite/invite.entity';
+import { message } from '../Message/message.entity';
+import { projet } from '../projet/projet.entity';
+import { invite } from '../invite/invite.entity';
 import * as path from 'path';
 
 import * as fs from 'fs/promises'
@@ -27,7 +27,7 @@ interface ConfirmEmailResponse {
 export class UserService {
     constructor(
         @InjectRepository(Token)
-        private tokenRepository: Repository<Token >,
+        private tokenRepository: Repository<Token>,
         @InjectRepository(user)
         private readonly userRep: Repository<user>,
         @InjectRepository(message) private readonly messageRepository: Repository<message>,
@@ -43,16 +43,17 @@ export class UserService {
             return undefined;
         }
     }
-    async findOne(data: any
-    ):Promise<user | undefined>{
-        try{
-            const user=this.userRep.findOneById(data);
-            return user
-        }catch(e){
-            return undefined;
-        }
 
+  async findOne(data: any): Promise<user | undefined> {
+    try {
+        const user = this.userRep.findOneById(data);
+        return user;
+    } catch (e) {
+        return undefined;
     }
+}
+
+
     async findOneById(idUser: number): Promise<user | undefined> {
         return await this.userRep.findOneBy({ idUser });
     }

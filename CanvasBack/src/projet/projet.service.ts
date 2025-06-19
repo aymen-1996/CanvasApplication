@@ -3,16 +3,16 @@ import { BadRequestException, Injectable, NotFoundException, UploadedFile } from
 import { InjectRepository } from '@nestjs/typeorm';
 import { projet } from './projet.entity';
 import { DeepPartial, FindOneOptions, Like, Repository } from 'typeorm';
-import { canvas } from 'src/canvas/canvas.entity';
-import { block } from 'src/block/block.entity';
-import { invite } from 'src/invite/invite.entity';
+import { canvas } from '../canvas/canvas.entity';
+import { block } from '../block/block.entity';
+import { invite } from '../invite/invite.entity';
 import { Multer } from 'multer';
 import * as path from 'path';
 
 import * as fs from 'fs/promises';
-import { donnees } from 'src/donnees/donnees.entity';
-import { user } from 'src/user/user.entity';
-import { NotificationService } from 'src/notif/notif.service';
+import { donnees } from '../donnees/donnees.entity';
+import { user } from '../user/user.entity';
+import { NotificationService } from '../notif/notif.service';
 
 @Injectable()
 export class ProjetService {

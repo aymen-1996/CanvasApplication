@@ -1,8 +1,8 @@
 /* eslint-disable prettier/prettier */
-import { block } from "src/block/block.entity";
-import { commentaire } from "src/commentaires/commentaire.entity";
-import { invite } from "src/invite/invite.entity";
-import { projet } from "src/projet/projet.entity";
+import { block } from "../block/block.entity";
+import { commentaire } from "../commentaires/commentaire.entity";
+import { invite } from "../invite/invite.entity";
+import { projet } from "../projet/projet.entity";
 import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity({name: 'canvas'})

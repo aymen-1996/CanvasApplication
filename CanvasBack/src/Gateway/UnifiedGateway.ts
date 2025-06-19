@@ -2,8 +2,8 @@ import { WebSocketGateway, WebSocketServer, SubscribeMessage, OnGatewayInit, OnG
 import { Server, Socket } from 'socket.io';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Notification } from 'src/notif/notif.entity';
-import { InviteService } from 'src/invite/invite.service';
+import { Notification } from '../notif/notif.entity';
+import { InviteService } from '../invite/invite.service';
 
 @WebSocketGateway()
 export class UnifiedGateway implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {

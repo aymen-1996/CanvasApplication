@@ -1,7 +1,7 @@
 import { Body, Controller, Delete, Get, NotFoundException, Param, ParseIntPipe, Post, Query, Res } from '@nestjs/common';
 import { InviteService } from './invite.service';
 import { Response } from 'express'; 
-import { UnifiedGateway } from 'src/Gateway/UnifiedGateway';
+import { UnifiedGateway } from '../Gateway/UnifiedGateway';
 
 @Controller('invite')
 export class InviteController {

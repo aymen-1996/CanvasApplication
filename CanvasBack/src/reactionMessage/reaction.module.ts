@@ -3,9 +3,9 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ReactionController } from './reaction.controller';
 import { ReactionService } from './reaction.service';
 import { reaction } from './reaction.entity';
-import { message } from 'src/Message/message.entity';
-import { user } from 'src/user/user.entity';
-import { ReactionGateway } from 'src/Gateway/reaction.Gateways';
+import { message } from '../Message/message.entity';
+import { user } from '../user/user.entity';
+import { ReactionGateway } from '../Gateway/reaction.Gateways';
 
 @Module({
   imports: [

@@ -4,9 +4,9 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { invite } from './invite.entity';
-import { projet } from 'src/projet/projet.entity';
-import { user } from 'src/user/user.entity';
-import { canvas } from 'src/canvas/canvas.entity';
+import { projet } from '../projet/projet.entity';
+import { user } from '../user/user.entity';
+import { canvas } from '../canvas/canvas.entity';
 
 @Injectable()
 export class InviteService {

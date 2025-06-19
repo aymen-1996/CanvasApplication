@@ -3,7 +3,7 @@ import { CanvasService } from './canvas.service';
 import { CanvasController } from './canvas.controller';
 import { canvas } from './canvas.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { invite } from 'src/invite/invite.entity';
+import { invite } from '../invite/invite.entity';
 
 @Module({
   imports: [TypeOrmModule.forFeature([canvas , invite])],

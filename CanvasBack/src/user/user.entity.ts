@@ -1,10 +1,10 @@
 /* eslint-disable prettier/prettier */
-import { commentaire } from "src/commentaires/commentaire.entity";
-import { invite } from "src/invite/invite.entity";
-import { message } from "src/Message/message.entity";
-import { projet } from "src/projet/projet.entity";
-import { reaction } from "src/reactionMessage/reaction.entity";
-import { Token } from "src/Token/token";
+import { commentaire } from "../commentaires/commentaire.entity";
+import { invite } from "../invite/invite.entity";
+import { message } from "../Message/message.entity";
+import { projet } from "../projet/projet.entity";
+import { reaction } from "../reactionMessage/reaction.entity";
+import { Token } from "../Token/token";
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity({ name: 'user' })

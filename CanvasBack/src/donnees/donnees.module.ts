@@ -3,8 +3,8 @@ import { DonneesService } from './donnees.service';
 import { DonneesController } from './donnees.controller';
 import { donnees } from './donnees.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { block } from 'src/block/block.entity';
-import { BlockService } from 'src/block/block.service';
+import { block } from '../block/block.entity';
+import { BlockService } from '../block/block.service';
 
 @Module({
   imports: [TypeOrmModule.forFeature([donnees , block])],

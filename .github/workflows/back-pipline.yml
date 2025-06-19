@@ -8,18 +8,33 @@ on:
     branches:
       - main
 
-
+env:
+  IMAGE_NAME: chouaibiaymen/canvasbackend
 jobs:
+  test:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./CanvasBack
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: npm i --force
+
+      - name: Run tests filtered by user.controller
+        run: npm run test -- -t 'user.controller'
 
   build-and-push:
     runs-on: ubuntu-latest
+    needs: test
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
       - name: Build Docker image
         working-directory: ./CanvasBack
-        run: docker build -t chouaibiaymen/canvasbackend:latest .
+        run: docker build -t ${{env.IMAGE_NAME}}:latest .
 
       - name: Login to Docker Hub
         uses: docker/login-action@v3
@@ -29,13 +44,13 @@ jobs:
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - name: push image docker
-        run: docker push chouaibiaymen/canvasbackend:latest
+        run: docker push ${{env.IMAGE_NAME}}:latest
 
       - name: tag image with version number
-        run: docker tag chouaibiaymen/canvasbackend chouaibiaymen/canvasbackend:${{github.run_number}}
+        run: docker tag ${{env.IMAGE_NAME}} ${{env.IMAGE_NAME}}:${{github.run_number}}
       
       - name: push image with version number
-        run: docker push chouaibiaymen/canvasbackend:${{github.run_number}}
+        run: docker push ${{env.IMAGE_NAME}}:${{github.run_number}}
 
   deployement:
     runs-on: ubuntu-latest

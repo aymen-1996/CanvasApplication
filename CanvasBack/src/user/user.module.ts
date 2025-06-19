@@ -5,9 +5,9 @@ import { UserController } from './user.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { user } from './user.entity';
 import { EmailService } from './email/email.service';
-import { Token } from 'src/Token/token';
-import { message } from 'src/Message/message.entity';
-import { invite } from 'src/invite/invite.entity';
+import { Token } from '../Token/token';
+import { message } from '../Message/message.entity';
+import { invite } from '../invite/invite.entity';
 
 @Module({
   imports: [JwtModule.register({

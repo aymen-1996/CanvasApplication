@@ -1,7 +1,7 @@
 import { Controller, Get, Put, Param, Delete, Body, NotFoundException, Query } from '@nestjs/common';
 import { ChatService } from './chat.service';
 import { message } from './message.entity';
-import { UnifiedGateway } from 'src/Gateway/UnifiedGateway';
+import { UnifiedGateway } from '../Gateway/UnifiedGateway';
 
 @Controller('chat')
 export class ChatController {

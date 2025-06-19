@@ -1,6 +1,6 @@
 import { Controller, Get, Param } from '@nestjs/common';
 import { CanvasService } from './canvas.service';
-import { canvas } from 'src/canvas/canvas.entity';
+import { canvas } from '../canvas/canvas.entity';
 @Controller('canvas')
 export class CanvasController {
 

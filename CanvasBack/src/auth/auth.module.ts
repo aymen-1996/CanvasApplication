@@ -3,12 +3,12 @@ import { AuthService } from './auth.service';
 import { AuthController } from './auth.controller';
 import { JwtModule, JwtService } from '@nestjs/jwt';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { user } from 'src/user/user.entity';
-import { UserService } from 'src/user/user.service';
-import { EmailService } from 'src/user/email/email.service';
-import { Token } from 'src/Token/token';
-import { message } from 'src/Message/message.entity';
-import { invite } from 'src/invite/invite.entity';
+import { user } from '../user/user.entity';
+import { UserService } from '../user/user.service';
+import { EmailService } from '../user/email/email.service';
+import { Token } from '../Token/token';
+import { message } from '../Message/message.entity';
+import { invite } from '../invite/invite.entity';
 
 @Module({
   imports: [JwtModule.register({

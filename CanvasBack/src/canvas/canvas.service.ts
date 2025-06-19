@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { canvas } from 'src/canvas/canvas.entity';
-import { invite } from 'src/invite/invite.entity';
+import { canvas } from '../canvas/canvas.entity';
+import { invite } from '../invite/invite.entity';
 @Injectable()
 export class CanvasService {
 

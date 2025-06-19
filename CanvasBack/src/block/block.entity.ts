@@ -1,6 +1,6 @@
 /* eslint-disable prettier/prettier */
-import { canvas } from "src/canvas/canvas.entity";
-import { donnees } from "src/donnees/donnees.entity";
+import { canvas } from "../canvas/canvas.entity";
+import { donnees } from "../donnees/donnees.entity";
 import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity({name: 'block'})

@@ -6,7 +6,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import * as fs from 'fs';
 import * as path from 'path';
-import { message } from 'src/Message/message.entity';
+import { message } from '../Message/message.entity';
 
 @WebSocketGateway({ cors: true })
 export class ChatGateway implements OnGatewayInit {

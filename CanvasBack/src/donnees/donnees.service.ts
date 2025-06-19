@@ -5,7 +5,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateDonneesDto } from './DTO/CreateDonnees.dto';
 import { UpdateDonneesDto } from './DTO/UpdateDonnees.dto';
-import { BlockService } from 'src/block/block.service';
+import { BlockService } from '../block/block.service';
 
 @Injectable()
 export class DonneesService {

@@ -1,7 +1,7 @@
 /* eslint-disable prettier/prettier */
-import { canvas } from "src/canvas/canvas.entity";
-import { invite } from "src/invite/invite.entity";
-import { user } from "src/user/user.entity";
+import { canvas } from "../canvas/canvas.entity";
+import { invite } from "../invite/invite.entity";
+import { user } from "../user/user.entity";
 import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity({name: 'projet'})

@@ -1,6 +1,6 @@
 import { Entity, Column, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
-import { user } from 'src/user/user.entity';
-import { message } from 'src/Message/message.entity';
+import { user } from '../user/user.entity';
+import { message } from '../Message/message.entity';
 
 @Entity('reaction')
 export class reaction {

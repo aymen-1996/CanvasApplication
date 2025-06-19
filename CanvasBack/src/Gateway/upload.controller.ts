@@ -5,7 +5,7 @@ import { v4 as uuidv4 } from 'uuid';
 import * as path from 'path';
 import { Response } from 'express';
 import { ChatService } from '../Message/chat.service';
-import { message } from 'src/Message/message.entity';
+import { message } from '../Message/message.entity';
 import { ChatGateway } from './chatGateway';
 
 @Controller('upload')

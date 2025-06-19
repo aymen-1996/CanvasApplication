@@ -1,4 +1,4 @@
-import { reaction } from 'src/reactionMessage/reaction.entity';
+import { reaction } from '../reactionMessage/reaction.entity';
 import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
 
 @Entity('message')

@@ -1,6 +1,6 @@
 import { Controller, Post, Body, Param, Get } from '@nestjs/common';
 import { ReactionService } from './reaction.service';
-import { ReactionGateway } from 'src/Gateway/reaction.Gateways';
+import { ReactionGateway } from '../Gateway/reaction.Gateways';
 
 @Controller('reactions')
 export class ReactionController {

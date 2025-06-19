@@ -2,11 +2,11 @@
 import { Controller, Get, Post, Body, Param, Delete, BadRequestException, Res, NotFoundException, Req } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { JwtService } from '@nestjs/jwt';
-import { UserService } from 'src/user/user.service';
+import { UserService } from '../user/user.service';
 import * as bcrypt from 'bcryptjs';
 import { Response } from 'express';
-import { user } from 'src/user/user.entity';
-import { EmailService } from 'src/user/email/email.service';
+import { user } from '../user/user.entity';
+import { EmailService } from '../user/email/email.service';
 import { Repository } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
 import { InjectRepository } from '@nestjs/typeorm';
