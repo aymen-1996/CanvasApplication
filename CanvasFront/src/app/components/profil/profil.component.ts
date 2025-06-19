@@ -89,7 +89,7 @@ export class ProfilComponent {
     });
 
     this.users = JSON.parse(localStorage.getItem('currentUser') as string);
-    this.socket = io('http://localhost:3000');
+    this.socket = io('https://api.chouaibi.shop');
 
     this.socket.on('message', () => {
       this.getMessageCount();

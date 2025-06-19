@@ -111,7 +111,7 @@ formattedTimeMap: { [key: number]: string } = {};
     this.GetNotif()
     this.username = this.userId.user.prenomUser;
     this.senderId = this.userId.user.idUser; 
-    this.socket = io('http://localhost:3000');
+    this.socket = io('https://api.chouaibi.shop');
     this.activatedRoute.data.subscribe((data: any) => {
       const title = data.title || 'Titre par défaut';
       document.title = `Canvas | ${title}`;
@@ -146,7 +146,7 @@ formattedTimeMap: { [key: number]: string } = {};
           messageType: data.filePath ? 'image' : 'text',
           senderId: senderId,
           recipientId: data.recipientId,
-          imageUrl: data.filePath ? `http://localhost:3000/upload/image/${data.filePath}` : null,
+          imageUrl: data.filePath ? `https://api.chouaibi.shop/upload/image/${data.filePath}` : null,
           timestamp: data.sentAt,
           reactions:data.reactions
         };
@@ -544,7 +544,7 @@ loadMessages(senderId: any, recipientId: any, shouldScroll: boolean = true): voi
               message: msg.content,
               username: recipientName, 
               messageType: messageType,
-              imageUrl: msg.filePath ? `http://localhost:3000/upload/image/${msg.filePath}` : null,
+              imageUrl: msg.filePath ? `https://api.chouaibi.shop/upload/image/${msg.filePath}` : null,
               timestamp: new Date(msg.sentAt).toLocaleString(),
               reactions: reactions 
             };

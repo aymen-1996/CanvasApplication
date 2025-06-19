@@ -59,7 +59,7 @@ idBlock:any
     this.users = JSON.parse(localStorage.getItem('currentUser') as string);
     this.selectedProject =  localStorage.getItem('selectedProjectId');
     this.GetNotif()
-    this.socket = io('http://localhost:3000');
+    this.socket = io('https://api.chouaibi.shop');
 
     this.getMessageCount()
 

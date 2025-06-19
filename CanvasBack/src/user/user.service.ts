@@ -108,7 +108,7 @@ export class UserService {
           return { message: 'Erreur lors de l\'enregistrement du token' };
       }
 
-      const confirmationUrl = `http://localhost:3000/user/confirm/${token}`;
+      const confirmationUrl = `https://api.chouaibi.shop/user/confirm/${token}`;
       this.emailService.sendConfirmationEmail(userToSave.emailUser, userToSave.nomUser, confirmationUrl);
 
       delete savedUser.passwordUser; 
@@ -137,7 +137,7 @@ export class UserService {
 
         if (validTokens.length > 0) {
             const validToken = validTokens[0]; 
-            const confirmationUrl = `http://localhost:3000/user/confirm/${validToken.token}`;
+            const confirmationUrl = `https://api.chouaibi.shop/user/confirm/${validToken.token}`;
              this.emailService.sendConfirmationEmail(user.emailUser, user.nomUser, confirmationUrl);
 
             return {
@@ -157,7 +157,7 @@ export class UserService {
                 user: { idUser: user.idUser },
             });
 
-            const confirmationUrl = `http://localhost:3000/user/confirm/${newToken}`;
+            const confirmationUrl = `https://api.chouaibi.shop/user/confirm/${newToken}`;
              this.emailService.sendConfirmationEmail(user.emailUser, user.nomUser, confirmationUrl);
 
             return {

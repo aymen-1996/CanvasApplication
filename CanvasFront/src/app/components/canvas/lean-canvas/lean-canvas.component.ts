@@ -89,7 +89,7 @@ private socket!: Socket;
   ngOnInit(): void {
     this.users = JSON.parse(localStorage.getItem('currentUser') as string);
     this.GetNotif()
-    this.socket = io('http://localhost:3000');
+    this.socket = io('https://api.chouaibi.shop');
     this.selectProject =  localStorage.getItem('selectedProjectId');
     this.activatedRoute.data.subscribe((data: any) => {
       const title = data.title || 'Titre par défaut';

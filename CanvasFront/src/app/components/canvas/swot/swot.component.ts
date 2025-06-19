@@ -91,7 +91,7 @@ private socket!: Socket;
 
     this.selectProject =  localStorage.getItem('selectedProjectId');
     this.GetNotif()
-    this.socket = io('http://localhost:3000');
+    this.socket = io('https://api.chouaibi.shop');
 
     this.activatedRoute.data.subscribe((data: any) => {
       const title = data.title || 'Titre par défaut';

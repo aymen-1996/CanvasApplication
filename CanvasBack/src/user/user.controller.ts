@@ -119,7 +119,7 @@ export class UserController {
                 </head>
                 <body>
                     <div class="message">account confirmed successfully!</div>
-                    <a href="http://localhost:4200/login" class="button">Return to Login</a>
+                    <a href="https://canvas.chouaibi.shop/login" class="button">Return to Login</a>
                 </body>
             </html>
         `);

@@ -13,7 +13,7 @@ export class ChatService {
   public messageCount$ = this.messageCountSubject.asObservable();
 
   constructor(private http: HttpClient) {
-    this.socket = io('http://localhost:3000');
+    this.socket = io('https://api.chouaibi.shop');
 
        this.listenToUpdatedMessage();
   }

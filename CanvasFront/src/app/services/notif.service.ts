@@ -10,7 +10,7 @@ import { environment } from 'src/environments/environment';
 })
 export class NotifService {
   private socket: any;
-  private apiUrl = 'http://localhost:3000';
+  private apiUrl = 'https://api.chouaibi.shop';
 
   constructor( private http:HttpClient) {
    
