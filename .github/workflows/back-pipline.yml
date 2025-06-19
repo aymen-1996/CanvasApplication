@@ -19,6 +19,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Install node-pre-gyp globally
+        run: npm install -g node-pre-gyp
+
       - name: Install dependencies
         run: npm i --force
 
