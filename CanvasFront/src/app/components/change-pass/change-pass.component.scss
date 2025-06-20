@@ -269,13 +269,14 @@ img {
 
 .circle-img {
    display: none;
-  width: 140px;        /* taille fixe ou responsive */
-  height: 140px;       /* même taille largeur/hauteur */
-  border-radius: 50%;  /* rend l'image circulaire */
-  object-fit: cover;   /* pour que l'image couvre bien le cercle */
-  display: block;      /* pour éviter les espaces blancs sous l'image */
-  margin: 0 auto;      /* centrer horizontalement */
-    margin-top: 20px; /* ajoute un espace de 20px en haut */
+  width: 140px;        
+  height: 140px;       
+  border-radius: 50%;  
+  object-fit: cover;  
+  display: block;    
+  margin: 0 auto;    
+    margin-top: 20px;
+    display: none;
 
 }
 
