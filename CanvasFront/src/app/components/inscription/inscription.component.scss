@@ -250,4 +250,95 @@ img {
   color: rgb(33, 150, 243);
 }
 
+.logo-mobile {
+  display: none;
+  font-size: 1rem;
+  font-weight: bold;
+  color: #111111;
+  text-decoration: none;
+  position: absolute; 
+  top:-20px;  
+  left: 10px;          
+  font-family: "Public Sans", sans-serif;
+  cursor: pointer;      
+  z-index: 1000;       
+}
+
+/*--------------------------------------*/
+
+
+@media (max-width: 768px) {
+  .container {
+    padding: 20px;
+    height: auto;
+  }
+
+  .content {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .banner {
+    display: none;
+  }
+
+  .form-content {
+    margin-left: 0;
+    width: 100%;
+    padding: 0 10px;
+  }
+
+  
+  .logo-mobile {
+    display: block;
+  }
+
+  .title {
+    text-align: center;
+    margin-right: 0 !important;
+    margin-left: 0 !important;
+    font-size: 1.5rem;
+  }
+
+  .intro,
+  h6,
+  .intro2 {
+    text-align: center;
+    padding: 0;
+    margin: 10px 0;
+  }
+
+  .inputs,
+  input,
+  select,
+  .signup-btn {
+    width: 100%;
+    font-size: 1rem;
+  }
+
+  .input-container {
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .input-group,
+  .input-group_error {
+    width: 100%;
+    text-align: left;
+  }
+
+  .eye-icon {
+    top: 45%;
+    font-size: 22px;
+  }
+
+  .ng-select {
+    width: 100%;
+  }
+
+  .signup-btn {
+    margin-top: 20px;
+    padding: 12px;
+  }
+}
 
