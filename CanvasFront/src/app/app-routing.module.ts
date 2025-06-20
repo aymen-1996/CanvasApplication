@@ -17,106 +17,95 @@ import { PersonaComponent } from './components/canvas/persona/persona.component'
 import { VpCanvasComponent } from './components/canvas/vp-canvas/vp-canvas.component';
 import { LeanCanvasComponent } from './components/canvas/lean-canvas/lean-canvas.component';
 import { ChatComponent } from './components/chat/chat.component';
+import {  PreloadAllModules } from '@angular/router';
 
 
 const routes: Routes = [
-
   {
     path: 'login',
-    component: LoginComponent,
+    loadChildren: () => import('./components/login/login.module').then(m => m.LoginModule),
     data: { title: 'Login' }
   },
   {
     path: 'chat',
-    component: ChatComponent,
+    loadChildren: () => import('./components/chat/chat.module').then(m => m.ChatModule),
     canActivate: [AuthGuard],
     data: { title: 'Chat' }
   },
   {
     path: 'projects',
-    component: ProjectComponent,
+    loadChildren: () => import('./components/project/project.module').then(m => m.ProjectModule),
     canActivate: [AuthGuard],
     data: { title: 'Projets' }
   },
- 
   {
     path: 'register',
-    component: InscriptionComponent,
+    loadChildren: () => import('./components/inscription/inscription.module').then(m => m.InscriptionModule),
     data: { title: 'Register' }
   },
-
   {
     path: 'profil',
-    component: ProfilComponent,
+    loadChildren: () => import('./components/profil/profil.module').then(m => m.ProfilModule),
     canActivate: [AuthGuard],
     data: { title: 'Profil' }
-
   },
   {
     path: 'new-project',
     component: AddProjectComponent,
     canActivate: [AuthGuard]
-
   },
   {
     path: 'canvas',
-    component: CanvasComponent,
+    loadChildren: () => import('./components/canvas/canvas.module').then(m => m.CanvasModule),
     canActivate: [AuthGuard],
     data: { title: 'Mes Canvas' }
-
   },
   {
     path: 'bmc',
-    component: BmcComponent,
+    loadChildren: () => import('./components/canvas/bmc/bmc.module').then(m => m.BmcModule),
     canActivate: [AuthGuard],
     data: { title: 'BMC' }
   },
   {
     path: 'lean',
-    component: LeanCanvasComponent,
+    loadChildren: () => import('./components/canvas/lean-canvas/lean-canvas.module').then(m => m.LeanModule),
     canActivate: [AuthGuard],
     data: { title: 'LEAN' }
-
   },
   {
     path: 'persona',
-    component: PersonaComponent,
+    loadChildren: () => import('./components/canvas/persona/persona.module').then(m => m.PersonaModule),
     canActivate: [AuthGuard],
     data: { title: 'Persona' }
-
   },
   {
     path: 'vp',
-    component: VpCanvasComponent,
+    loadChildren: () => import('./components/canvas/vp-canvas/vp-canvas.module').then(m => m.VpModule),
     canActivate: [AuthGuard],
     data: { title: 'VP Canvas' }
-
   },
   {
     path: 'reinitialiser-mot-de-passe',
-    component: ForgetPasswordComponent,
-    data: { title: 'Reinitialisation Mot de Passe' }
+    loadChildren: () => import('./components/forget-password/forget.module').then(m => m.ForgetPasswordModule),
+    data: { title: 'Réinitialisation Mot de Passe' }
   },
-
   {
     path: 'swot',
-    component: SwotComponent,
+    loadChildren: () => import('./components/canvas/swot/swot.module').then(m => m.SwotModule),
     canActivate: [AuthGuard],
     data: { title: 'SWOT' }
-
   },
   {
     path: 'empathie',
-    component: EmpathieComponent,
+    loadChildren: () => import('./components/canvas/empathie/empathie.module').then(m => m.EmpathieModule),
     canActivate: [AuthGuard],
     data: { title: 'Empathie' }
-
   },
-  { path: 'reset-password/:resetToken', 
-  component: ChangePassComponent ,
-  data: { title: 'Nouveau Mot de Passe' }
-}, 
-  
+  {
+    path: 'reset-password/:resetToken',
+    loadChildren: () => import('./components/change-pass/changePass.module').then(m => m.ChangePasswordModule),
+    data: { title: 'Nouveau Mot de Passe' }
+  },
   {
     path: '**',
     redirectTo: '/login'
@@ -124,7 +113,11 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes)],
+   imports: [
+    RouterModule.forRoot(routes, {
+      preloadingStrategy: PreloadAllModules
+    })
+  ],
   exports: [RouterModule]
 })
 export class AppRoutingModule { }
