@@ -276,8 +276,6 @@ img {
   display: block;    
   margin: 0 auto;    
     margin-top: 20px;
-    display: none;
-
 }
 
 
@@ -337,5 +335,7 @@ img {
   .circle-img {
     width: 160px;
     height: 160px;
+   display: block;   
+
   }
 }
