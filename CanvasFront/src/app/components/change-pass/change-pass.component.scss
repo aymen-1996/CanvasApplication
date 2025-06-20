@@ -267,6 +267,18 @@ img {
   z-index: 1000;       
 }
 
+.circle-img {
+   display: none;
+  width: 140px;        /* taille fixe ou responsive */
+  height: 140px;       /* même taille largeur/hauteur */
+  border-radius: 50%;  /* rend l'image circulaire */
+  object-fit: cover;   /* pour que l'image couvre bien le cercle */
+  display: block;      /* pour éviter les espaces blancs sous l'image */
+  margin: 0 auto;      /* centrer horizontalement */
+    margin-top: 20px; /* ajoute un espace de 20px en haut */
+
+}
+
 
 /*----------mobile-------------------*/
 
@@ -319,5 +331,10 @@ img {
 
   button {
     width: 100% !important;
+  }
+
+  .circle-img {
+    width: 160px;
+    height: 160px;
   }
 }

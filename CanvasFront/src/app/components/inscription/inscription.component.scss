@@ -263,7 +263,9 @@ img {
   cursor: pointer;      
   z-index: 1000;       
 }
-
+.inscription-img-mobile {
+  display: none;
+}
 /*--------------------------------------*/
 
 
@@ -292,6 +294,29 @@ img {
   .logo-mobile {
     display: block;
   }
+
+.circle-wrapper {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  overflow: hidden;
+  margin: 20px auto;
+  position: relative;
+  top: 10px;
+  background-color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.circle-img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+}
+
+
 
   .title {
     text-align: center;
