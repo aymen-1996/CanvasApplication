@@ -1194,5 +1194,28 @@ background: #555;
     padding: 0 12px !important;
   }
 
+
+
+@media (max-width: 500px) {
+  mat-form-field.custom-select {
+    width: 140px !important;
+    min-width: 120px !important;
+  }
+
+  .css-1x4nai{
+    transform: translateX(-43px);
+  }
+
+svg {
+  width: 20px !important;
+  height: 20px !important;
+}
+
+.css-1ciwozm{
+  width: 25px;
+  height: 25px;
+}
+}
+
 }
 
