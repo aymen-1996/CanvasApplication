@@ -32,6 +32,7 @@ export class ForgetPasswordComponent {
         (response) => {
           console.log(response);
 
+          this.form.controls['emailUser'].reset();
           this.successMessage=response.message
           this.errorMessage=""
         },

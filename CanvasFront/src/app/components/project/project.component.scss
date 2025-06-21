@@ -1608,3 +1608,101 @@ input {
   cursor: pointer;
 }
 
+
+
+
+
+
+/*-----------*/
+
+@media (max-width: 600px) {
+  .css-1oknx5t {
+    position: fixed !important;
+    top: 60px !important;
+    right: 10px !important;
+    margin-left: 0 !important;
+    width: 90vw !important;
+    max-width: 320px !important;
+    max-height: 60vh !important;
+    overflow-y: auto;
+    background-color: rgba(255, 255, 255, 0.95);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    border-radius: 8px;
+    padding: 12px;
+    z-index: 1300;
+    transform-origin: top right !important;
+  }
+
+  .arrow.css-98b6ta {
+    display: none;
+  }
+
+  .css-3sojac {
+    padding: 8px 12px;
+  }
+
+  .css-k9tjo5 {
+    font-size: 1.1rem;
+  }
+
+  .notification-list {
+    max-height: 50vh;
+    overflow-y: auto;
+    padding-right: 8px;
+  }
+
+  .dropdown-item {
+    padding: 12px 10px;
+    font-size: 0.9rem;
+  }
+
+  .dropdown-item.unread {
+    background-color: #c8dafc;
+    color: #000;
+  }
+
+  .badge, .custom-badge {
+    top: -3px;
+    right: 8px;
+    padding: 3px 6px;
+    font-size: 11px;
+  }
+
+  .mat-icon, .css-tfolz5, .css-tfolz51 {
+    width: 25px;
+    height: 30px;
+    font-size: 1.2rem;
+    padding: 4px;
+  }
+
+  .circular-image {
+    width: 32px;
+    height: 32px;
+  }
+
+  .circular-image img {
+    width: 100%;
+    height: 100%;
+  }
+
+  
+}
+
+
+
+@media (max-width: 1100px) {
+
+    .navbar, .css-1t1eosl {
+      transition: height 0.3s ease;
+    height: 56px !important;
+    padding: 0 12px !important;
+  }
+    .css-1byr0tz {
+    width: 100vw !important;
+    justify-content: space-between !important;
+    box-sizing: border-box;
+    overflow: hidden !important;
+  }
+}
+
+

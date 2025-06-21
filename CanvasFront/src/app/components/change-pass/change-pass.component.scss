@@ -268,16 +268,14 @@ img {
 }
 
 .circle-img {
-   display: none;
+  display: none;
   width: 140px;        
   height: 140px;       
   border-radius: 50%;  
   object-fit: cover;  
-  display: block;    
   margin: 0 auto;    
-    margin-top: 20px;
+  margin-top: 20px;
 }
-
 
 /*----------mobile-------------------*/
 
@@ -333,9 +331,8 @@ img {
   }
 
   .circle-img {
+    display: block !important;   
     width: 160px;
     height: 160px;
-   display: block;   
-
   }
 }
