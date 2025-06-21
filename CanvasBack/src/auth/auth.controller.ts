@@ -71,25 +71,27 @@ async login(
      this.emailService.sendEmail(
       email,
       'Réinitialisation de mot de passe',
-      `Pour réinitialiser votre mot de passe, cliquez sur le lien suivant : https://canvas.chouaibi.shop/reset-password/${token}. Le lien expire dans 10 minutes.`,
+      `Pour réinitialiser votre mot de passe, cliquez sur le lien suivant : https://canvas.chouaibi.shop/reset-password/${token}. Le lien expire dans 24 heures.`,
       );
 
     return { message: 'Email envoyé pour la réinitialisation du mot de passe'};
   }
 
   //Generate token and save in class user 
-  async generateResetToken(user: user): Promise<string> {
-    const token = uuidv4();
-    const expirationDate = new Date();
-    expirationDate.setMinutes(expirationDate.getMinutes() + 10);
+async generateResetToken(user: user): Promise<string> {
+  const token = uuidv4();
+  const expirationDate = new Date();
+  
+  expirationDate.setHours(expirationDate.getHours() + 24);
 
-    user.resetToken = token;
-    user.resetTokenExpiration = expirationDate;
+  user.resetToken = token;
+  user.resetTokenExpiration = expirationDate;
 
-    await this.userRep.save(user);
+  await this.userRep.save(user);
 
-    return token;
-  }
+  return token;
+}
+
 
  
   // Pour que si resttoken n est pas valide ,nouveau lien envoyer a user
@@ -103,7 +105,7 @@ async login(
         this.emailService.sendEmail(
             user.emailUser,
             'Réinitialisation de mot de passe',
-            `Pour réinitialiser votre mot de passe, cliquez sur le lien suivant : https://canvas.chouaibi.shop/reset-password/${newToken}. Le lien expire dans 10 minutes.`,
+            `Pour réinitialiser votre mot de passe, cliquez sur le lien suivant : https://canvas.chouaibi.shop/reset-password/${newToken}. Le lien expire dans 24 heures.`,
           );
             
           return { message: 'Email envoyé pour la réinitialisation du mot de passe' };          
