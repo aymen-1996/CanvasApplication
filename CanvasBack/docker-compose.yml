@@ -35,3 +35,8 @@ services:
 networks:
   mynetwork:
     driver: bridge
+
+volumes:
+  mysql_data:
+    driver: local
+
