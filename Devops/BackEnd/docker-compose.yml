@@ -5,7 +5,8 @@ services:
       - '3000:3000'
     container_name: canvasBack_Container
     volumes:
-      - uploads_volume:/app/uploads
+      - ./uploads:/app/uploads
+
     depends_on:
       - db
     environment:
@@ -36,7 +37,3 @@ networks:
 volumes:
   mysql_data:
     driver: local
-
-  uploads_volume:
-    driver: local
-
