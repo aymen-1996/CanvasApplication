@@ -2251,3 +2251,12 @@ body {
   word-spacing: -0.1em;  
 }
 
+@media (max-width: 1100px) {
+
+    .navbar, .css-1t1eosl {
+      transition: height 0.3s ease;
+    height: 56px !important;
+    padding: 0 12px !important;
+  }
+}
+
