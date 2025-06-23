@@ -19,6 +19,7 @@ services:
     networks:
       - mynetwork
 
+
   db:
     image: mysql
     restart: always
