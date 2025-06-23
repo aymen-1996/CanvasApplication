@@ -5,7 +5,7 @@ services:
       - '3000:3000'
     container_name: canvasBack_Container
     volumes:
-      - ./uploads:/canvasback/uploads  
+      - ./uploads:/app/uploads  
     depends_on:
       - db
     environment:
