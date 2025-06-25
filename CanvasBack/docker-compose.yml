@@ -7,8 +7,6 @@ services:
     ports:
       - '3000:3000'
     container_name: canvasBack_Container
-    volumes:
-      - ./uploads:/app/uploads  
     depends_on:
       - db
     environment:
@@ -36,8 +34,4 @@ services:
 networks:
   mynetwork:
     driver: bridge
-
-volumes:
-  mysql_data:
-    driver: local
 

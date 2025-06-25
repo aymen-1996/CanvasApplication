@@ -1669,7 +1669,7 @@ input {
   }
 
   .mat-icon, .css-tfolz5, .css-tfolz51 {
-    width: 25px;
+    width: 28px;
     height: 30px;
     font-size: 1.2rem;
     padding: 4px;
@@ -1703,6 +1703,29 @@ input {
     box-sizing: border-box;
     overflow: hidden !important;
   }
+
+@media (max-width: 600px) {
+  ::ng-deep .badge-mobile-small .mat-badge-content {
+    font-size: 10px;
+    height: 15px !important;
+    width: 15px !important;
+    line-height: 16px;
+    transform: translate(-5px, 5px) !important; 
+  }
+
+ .badge {
+    top: -6px;       /* رفع للأعلى */
+    right: -4px;     /* تحريك يمين */
+    width: 14px;     /* تصغير العرض */
+    height: 14px;    /* تصغير الارتفاع */
+    font-size: 10px; /* تصغير الخط */
+    padding: 2px 4px; /* تقليل الحشو */
+  }
+
+  .custom-badge {
+    right: 50px;
+  }
+}
 }
 
 
