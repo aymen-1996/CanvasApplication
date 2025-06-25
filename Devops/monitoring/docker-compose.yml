@@ -1,0 +1,43 @@
+services:
+  prometheus:
+    depends_on: [ node_exporter, cadvisor ]
+    image: prom/prometheus
+    container_name: prometheus
+    volumes:
+      - ./:/etc/prometheus/
+      - prometheus_data:/prometheus
+
+  node_exporter:
+    image: prom/node-exporter:latest
+    container_name: node_exporter
+    restart: unless-stopped
+    volumes:
+      - '/:/host:ro,rslave'
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: monitoring_grafana
+    restart: unless-stopped
+    ports:
+      - "3006:3000"                                         
+    links:
+      - prometheus:prometheus                             
+    volumes:
+      - grafana_data:/var/lib/grafana                   
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=admin             
+      - GF_USERS_ALLOW_SIGN_UP=false    
+
+  cadvisor:
+    image: gcr.io/cadvisor/cadvisor:latest
+    container_name: monitoring_cadvisor
+    restart: unless-stopped
+    volumes:
+      - /:/rootfs:ro
+      - /var/run:/var/run:rw
+      - /sys:/sys:ro
+      - /var/lib/docker/:/var/lib/docker:ro                   
+
+volumes:
+  prometheus_data:
+  grafana_data:
