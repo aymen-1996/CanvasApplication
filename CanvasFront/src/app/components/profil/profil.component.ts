@@ -91,12 +91,13 @@ export class ProfilComponent {
     this.users = JSON.parse(localStorage.getItem('currentUser') as string);
     this.socket = io('https://api.chouaibi.shop');
 
-    this.socket.on('message', () => {
+   this.socket.on('message', () => {
       this.getMessageCount();
     });
 
     this.getUserPhoto()
     this.getPendingInvites();
+    this.getMessageCount();
     this.listenForNewInvites();
     this.getUserProgress();
     this.GetNotif()
