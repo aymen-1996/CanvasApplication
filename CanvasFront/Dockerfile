@@ -18,8 +18,8 @@ COPY . .
 # Construire l'application pour la production
 RUN npm run build
 
-# Étape 2 : Image Nginx
-FROM nginx:alpine
+# Supprimer la config Nginx par défaut
+RUN rm -rf /usr/share/nginx/html/*
 
 # Copier le build de Angular
 COPY --from=build /usr/src/app/dist/canvas-front /usr/share/nginx/html
