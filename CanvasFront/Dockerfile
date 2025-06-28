@@ -4,7 +4,7 @@ FROM node:18 AS build
 WORKDIR /usr/src/app
 
 # Copier les fichiers package.json
-COPY package*.json ./
+COPY package.json ./
 
 # Installer Angular CLI globalement
 RUN npm install -g @angular/cli --force
@@ -17,6 +17,12 @@ COPY . .
 
 # Construire l'application pour la production
 RUN npm run build
+
+# Étape 2 : Image Nginx
+FROM nginx:alpine
+
+
+RUN rm -rf /usr/share/nginx/html/*
 
 # Copier le build de Angular
 COPY --from=build /usr/src/app/dist/canvas-front /usr/share/nginx/html
