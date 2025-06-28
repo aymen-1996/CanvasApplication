@@ -6,8 +6,7 @@ WORKDIR /usr/src/app
 # Copier les fichiers package.json
 COPY package.json ./
 
-RUN npm install -g npm-force-resolutions && \
-    npx npm-force-resolutions
+RUN npm install -g npm-force-resolutions
 
 # Installer Angular CLI globalement
 RUN npm install -g @angular/cli --force
