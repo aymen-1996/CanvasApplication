@@ -14,6 +14,8 @@ services:
       DB_NAME: canvasDataBase
     networks:
       - mynetwork
+    volumes:
+      - app_data:/app/uploads
 
   db:
     image: mysql
@@ -35,4 +37,5 @@ networks:
 
 volumes:
   mysql_data:
-    driver: local
+  app_data:
+   
