@@ -41,33 +41,32 @@
             ],
             "scripts": []
           },
-        "configurations": {
-  "production": {
-    "budgets": [
-      {
-        "type": "initial",
-        "maximumWarning": "20MB",
-        "maximumError": "21MB"
-      },
-      {
-        "type": "anyComponentStyle",
-        "maximumWarning": "30MB",
-        "maximumError": "21MB"
-      }
-    ],
-    "outputHashing": "all",
-    "inlineCriticalCss": false
-  },
-  "development": {
-    "buildOptimizer": false,
-    "optimization": false,
-    "vendorChunk": true,
-    "extractLicenses": false,
-    "sourceMap": true,
-    "namedChunks": true
-  }
-},
-"defaultConfiguration": "production"
+          "configurations": {
+            "production": {
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "10MB",
+                  "maximumError": "11MB"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "10MB",
+                  "maximumError": "11MB"
+                }
+              ],
+              "outputHashing": "all"
+            },
+            "development": {
+              "buildOptimizer": false,
+              "optimization": false,
+              "vendorChunk": true,
+              "extractLicenses": false,
+              "sourceMap": true,
+              "namedChunks": true
+            }
+          },
+          "defaultConfiguration": "production"
         },
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",

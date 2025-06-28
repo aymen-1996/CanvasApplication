@@ -3,29 +3,32 @@ FROM node:20 AS build
 
 WORKDIR /usr/src/app
 
-# Copier les fichiers package.json
-COPY package.json ./
+# Copier package.json et package-lock.json pour installer les dépendances
+COPY package*.json ./
 
-# Installer Angular CLI globalement
+# Nettoyer cache npm
+RUN npm cache clean --force
+
+# Installer Angular CLI globalement (avec --force si besoin)
 RUN npm install -g @angular/cli --force
 
 # Installer les dépendances
 RUN npm install --force
 
-# Copier le reste de l'application
+# Copier tout le reste du code source
 COPY . .
 
-# Construire l'application pour la production
-RUN npm run build
+# Construire l'application Angular pour la production
+RUN npm run build -- --configuration production
 
-# Étape 2 : Image Nginx
+# Étape 2 : Image Nginx pour servir l'application
 FROM nginx:alpine
 
-# Copier le build de Angular
+# Copier les fichiers build Angular dans le dossier nginx
 COPY --from=build /usr/src/app/dist/canvas-front /usr/share/nginx/html
 
 # Exposer le port 80
 EXPOSE 80
 
-# Démarrer Nginx
+# Démarrer nginx en mode "daemon off" pour Docker
 CMD ["nginx", "-g", "daemon off;"]
