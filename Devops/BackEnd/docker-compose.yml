@@ -16,6 +16,8 @@ services:
       - mynetwork
     volumes:
       - app_data:/app/uploads
+      - app_photos:/app/upload-photos
+
 
   db:
     image: mysql
@@ -38,4 +40,5 @@ networks:
 volumes:
   mysql_data:
   app_data:
+  app_photos:
    

@@ -66,9 +66,11 @@ jobs:
           username: ubuntu
           password: ${{ secrets.PASSWORD }}
           port: ${{ secrets.PORT }}
-          
+
           script: |
                cd ~/CanvasApplication/Devops/BackEnd
+               sudo git stash
                sudo git pull
+               sudo git stash pop
                sudo docker compose pull
                sudo docker compose up -d --force-recreate --remove-orphans
