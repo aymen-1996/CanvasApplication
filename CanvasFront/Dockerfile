@@ -6,6 +6,9 @@ WORKDIR /usr/src/app
 # Copier les fichiers package.json
 COPY package.json ./
 
+RUN npm install -g npm-force-resolutions && \
+    npx npm-force-resolutions
+
 # Installer Angular CLI globalement
 RUN npm install -g @angular/cli --force
 
@@ -20,9 +23,6 @@ RUN npm run build
 
 # Étape 2 : Image Nginx
 FROM nginx:alpine
-
-
-RUN rm -rf /usr/share/nginx/html/*
 
 # Copier le build de Angular
 COPY --from=build /usr/src/app/dist/canvas-front /usr/share/nginx/html
