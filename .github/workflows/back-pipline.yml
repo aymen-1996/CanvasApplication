@@ -68,6 +68,6 @@ jobs:
           port: ${{ secrets.PORT }}
           script: |
                cd ~/CanvasApplication/Devops/BackEnd
-               git pull
+               sudo git pull
                sudo docker compose pull
                sudo docker compose up -d --force-recreate --remove-orphans
