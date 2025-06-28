@@ -19,7 +19,7 @@ RUN npm install --force
 COPY . .
 
 # Construire l'application Angular pour la production
-RUN npm run build -- --configuration production
+RUN npm run build
 
 # Étape 2 : Image Nginx pour servir l'application
 FROM nginx:alpine
