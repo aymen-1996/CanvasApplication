@@ -141,6 +141,13 @@
   .canvas-list h4 {
     padding-left: 40px !important;
   }
+    .canvas-list .canvas-items .canvas-item {
+    width: 320px !important;
+  }
+
+    .canvas-list .canvas-items {
+    min-width: unset;
+  }
 }
 
 @media (max-width: 480px) {

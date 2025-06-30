@@ -103,6 +103,7 @@ unreadMessagesCount: number = 0;
   
 isPlayingMap: { [key: number]: boolean } = {};
 formattedTimeMap: { [key: number]: string } = {};
+isMobileView = false;
 
   constructor(private projectService: ProjetService ,private cdRef: ChangeDetectorRef,private notifService :NotifService,private authService:AuthService,private router: Router,private activatedRoute:ActivatedRoute ,private dialogue: MatDialog ,private http: HttpClient,private sanitizer: DomSanitizer, private userService: UserService, private chatService: ChatService) {}
 
@@ -120,6 +121,8 @@ formattedTimeMap: { [key: number]: string } = {};
     this.getUsersByInvitations()
     this.getPendingInvites()
     this.listenForNewInvites();
+
+     this.checkMobile();
 
    
     this.socket.on('message', (data: { 
@@ -198,6 +201,15 @@ formattedTimeMap: { [key: number]: string } = {};
 
   }
 
+   @HostListener('window:resize', ['$event'])
+  onResize(event: Event) {
+    this.checkMobile();
+  }
+
+  checkMobile() {
+  this.isMobileView = window.innerWidth < 768;
+  this.showEmojiPicker = this.isMobileView;
+}
   calculateMarginTop(reactionsCount: number, reactionsLength: number): string {
     if (reactionsLength === 2 && reactionsCount === null) {
       return '-135px';
@@ -258,8 +270,6 @@ formattedTimeMap: { [key: number]: string } = {};
     });
   }
   
-//liste user selon invitation
-
 getUsersByInvitations(): void {
   this.userService.getUsersByInvitations(this.userId.user.idUser, this.searchTerm).subscribe(
     (data: User[]) => {
@@ -944,7 +954,9 @@ delete(idInvite: number,userId: number): void {
 }
 
 toggleEmojiPicker() {
+  console.log('toggleEmojiPicker déclenché — état actuel:', this.showEmojiPicker);
   this.showEmojiPicker = !this.showEmojiPicker;
+  console.log('Nouvel état de showEmojiPicker:', this.showEmojiPicker);
 }
 
 addEmoji(emoji: string) {

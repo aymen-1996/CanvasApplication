@@ -58,9 +58,9 @@ idBlock:any
   ngOnInit(): void {
     this.users = JSON.parse(localStorage.getItem('currentUser') as string);
     this.selectedProject =  localStorage.getItem('selectedProjectId');
-    this.GetNotif()
     this.socket = io('https://api.chouaibi.shop');
 
+    this.GetNotif()
     this.getMessageCount()
 
     this.socket.on('message', () => {
@@ -91,19 +91,27 @@ idBlock:any
 GetNotif() {
   this.notifService.getLiveNotifications(this.users.user.idUser)
     .subscribe((newNotifications: Notification[]) => {
+      let newCount = 0;
+
       newNotifications.forEach((notification) => {
         const exists = this.notifications.some(existingNotification => existingNotification.id === notification.id);
         
         if (!exists) {
           this.notifications.push(notification);
+          newCount++;
         }
       });
-      
+
+      console.log(`${newCount} nouvelle(s) notification(s) ajoutée(s)`);
+
       this.notifications.sort((a, b) => +new Date(b.createdAt) - +new Date(a.createdAt));
 
       this.unreadNotificationCount = this.notifications.filter(notification => !notification.isRead).length;
+
+      console.log(`Nombre total de notifications non lues : ${this.unreadNotificationCount}`);
     });
 }
+
 
 markNotificationsAsRead(): void {
   this.notifService.markAsRead(this.users.user.idUser).subscribe(() => {

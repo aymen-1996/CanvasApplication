@@ -1178,12 +1178,42 @@ background: #555;
   }
 
   .custom-badge, .badge {
-    font-size: 11px !important;
-    padding: 3px 6px !important;
-    top: -5px !important;
-    right: 10px !important;
+  font-size: 10px !important;
+  padding: 2px 5px !important;
+  top: -10px !important;
+  right: 3px !important;
+  width: 15px !important;
+  height: 15px !important;
+  line-height: 16px !important;
+  border-radius: 50% !important;
+  text-align: center;
   }
+
+ .notification-wrapper {
+ position: relative;
+  display: inline-block;
+  }
+
+.custom-badge-mobile {
+  background-color: #ff4081;
+  color: white;
+  font-size: 10px !important;
+  width: 15px !important;
+  height: 15px !important;
+  line-height: 15px !important;
+  text-align: center;
+  border-radius: 50% !important;
+  position: absolute; 
+  top: -10px !important; 
+  right: 3px !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
+
+
+}
+
 
 
 @media (max-width: 1100px) {
@@ -1203,7 +1233,7 @@ background: #555;
   }
 
   .css-1x4nai{
-    transform: translateX(-43px);
+    transform: translateX(-10px);
   }
 
 svg {
@@ -1215,6 +1245,18 @@ svg {
   width: 25px;
   height: 25px;
 }
+
+::ng-deep .maticon1 .mat-badge-content {
+  font-size: 10px;
+  height: 15px;
+  width: 15px;
+  line-height: 15px;
+  border-radius: 50%;
+  padding: 0;
+  transform: translateX(-4px);
+
+}
+
 }
 
 }

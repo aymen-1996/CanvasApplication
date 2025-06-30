@@ -99,6 +99,8 @@
           </div>
         
         <div>
+          <div class="notification-wrapper">
+
   <button class="css-tfolz51" tabindex="0" type="button"  (click)="toggleDropdown1()"><span class=" css-1rzb3uu">
     <svg 
     [ngStyle]="{'fill': isDropdownVisible ? 'rgb(33, 150, 243)' : 'currentColor'}" 
@@ -127,9 +129,10 @@
 
     </span>
   </button>
-  <span *ngIf="unreadNotificationCount > 0" class="custom-badge">
+  <span *ngIf="unreadNotificationCount > 0" class="custom-badge custom-badge-mobile">
     {{ unreadNotificationCount }}
-  </span>     
+  </span>   
+  </div>  
    <div *ngIf="isDropdownVisible" class="css-1oknx5t" tabindex="-1" style="opacity: 1; transform: none; transition: opacity 228ms cubic-bezier(0.4, 0, 0.2, 1), transform 152ms cubic-bezier(0.4, 0, 0.2, 1); top: 50px; margin-left: -315px !important; transform-origin: 360px 0px;">
     <span class="arrow css-98b6ta">
 

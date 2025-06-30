@@ -208,7 +208,7 @@
 <div class="container">
 <div class="row clearfix">
     <div class="col-lg-12">
-        <div class="card chat-app">
+        <div class="card chat-app" [ngClass]="{ 'chat-open': userselect && isMobileView }">
             <div id="plist" class="people-list">
               <div class="input-group">
                 <div class="input-group-prepend">
@@ -281,8 +281,13 @@
             <div class="chat"  >
               
               <div class="chat-header clearfix">
+
                 <div class="row"  >
-                        <div class="col-lg-6" >
+                  
+                        <div class="col-lg-6 position-relative"  >
+ <span *ngIf="isMobileView" (click)="userselect = null" class="back-arrow">
+  ←
+</span>
                             <a data-toggle="modal" data-target="#view_info" >
                                 <img  *ngIf="userselect" [src]="userPhotoUrl" alt="avatar">
                             </a>
@@ -543,37 +548,33 @@
                     </span>               
                     
                                   
-                    <div class="css-3sojac">
-                   
-                      <div class="css-i9gxme">
-                        
-                        <div class="emoji-container">
-                          <div class="button-group">
-                            <button (click)="showType('emoji')" [class.active]="currentType === 'emoji'">
-                              Liste des Émojis
-                            </button>
-                            <button (click)="showType('gif')" [class.active]="currentType === 'gif'">
-                              Liste des GIFs
-                            </button>
-                          </div>
-                          
-                            <div *ngIf="currentType === 'emoji'" class="emoji-row">
-                            <span *ngFor="let emoji of emojis" 
-                                  (click)="addEmoji(emoji)" 
-                                  class="emoji" 
-                                  [title]="emoji">
-                              {{ emoji }}
-                            </span>
-                          </div>
-                  
-                          <div *ngIf="currentType === 'gif'" class="emoji-row">
-                            <span *ngFor="let gif of gifs" class="emoji">
-                              <img (click)="send(gif)" class="gif-emoji" [src]="gif" alt="GIF" />
-                            </span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
+                 <div  class="css-3sojac">
+  <div class="css-i9gxme">
+    <div class="emoji-container">
+      <div class="button-group">
+        <button (click)="showType('emoji')" [class.active]="currentType === 'emoji'">
+          Liste des Émojis
+        </button>
+        <button (click)="showType('gif')" [class.active]="currentType === 'gif'">
+          Liste des GIFs
+        </button>
+      </div>
+
+      <div *ngIf="currentType === 'emoji'" class="emoji-row">
+        <span *ngFor="let emoji of emojis" (click)="addEmoji(emoji)" class="emoji" [title]="emoji">
+          {{ emoji }}
+        </span>
+      </div>
+
+      <div *ngIf="currentType === 'gif'" class="emoji-row">
+        <span *ngFor="let gif of gifs" class="emoji">
+          <img (click)="send(gif)" class="gif-emoji" [src]="gif" alt="GIF" />
+        </span>
+      </div>
+    </div>
+  </div>
+</div>
+
                   </div>
                   
       
@@ -604,6 +605,7 @@
        class="form-control" 
       />
       <button type="button" class="btn btn-light" (click)="toggleEmojiPicker()">😀</button>
+      
    </div>
  </div>
    </div>

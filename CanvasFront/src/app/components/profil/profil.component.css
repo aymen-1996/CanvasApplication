@@ -1343,6 +1343,12 @@ img {
 
   .custom-badge {
     right: 50px;
+    top: 2px;
+
+  }
+
+  .css-1ir47a1 {
+    padding-top: 5px;
   }
 }
 }
