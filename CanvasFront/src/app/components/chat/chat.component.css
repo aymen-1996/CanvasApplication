@@ -2236,5 +2236,35 @@ small, .small {
   color: #000;  
 }
 
+.clearfix{
+  display: block !important;
+}
+
+  .chat-history {
+  display: block !important;
+  min-height: 100px;
+  overflow-y: auto;
+}
+
+.message{
+display: block !important;
+
+}
+
+.message-left{
+  display: block !important;
+
+}
+
+.message-right{
+  display: block !important;
+
+}
+
+.audio-bubble{
+    display: block !important;
+
+}
+
   }
 }
