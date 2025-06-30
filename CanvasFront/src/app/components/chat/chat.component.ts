@@ -208,7 +208,6 @@ isMobileView = false;
 
   checkMobile() {
   this.isMobileView = window.innerWidth < 768;
-  this.showEmojiPicker = this.isMobileView;
 }
   calculateMarginTop(reactionsCount: number, reactionsLength: number): string {
     if (reactionsLength === 2 && reactionsCount === null) {

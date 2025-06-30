@@ -1798,6 +1798,12 @@ audio:hover::-webkit-media-controls-volume-slider {
     width: 100%;
   }
 
+  .chat-history {
+  display: block !important;
+  min-height: 100px;
+  overflow-y: auto;
+}
+
   .chat-app .people-list {
     display: block;
     width: 100%;
@@ -1807,11 +1813,10 @@ audio:hover::-webkit-media-controls-volume-slider {
     display: none;
   }
 
-  .chat-app .chat {
-    display: none;
-    width: 100%;
-  }
-
+.chat-app .chat {
+  display: none;
+  width: 100%;
+}
   .chat-app.chat-open .chat {
     display: block;
     width: 100%;
@@ -2023,6 +2028,54 @@ small, .small {
 
 
 
+@media (max-width: 600px) {
+  .css-1oknx5t {
+    position: fixed !important;
+    top: 60px !important;
+    right: 10px !important;
+    margin-left: 0 !important;
+    width: 90vw !important;
+    max-width: 320px !important;
+    max-height: 60vh !important;
+    overflow-y: auto;
+    background-color: rgba(255, 255, 255, 0.95);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    border-radius: 8px;
+    padding: 12px;
+    z-index: 1300;
+    transform-origin: top right !important;
+  }
+
+  .arrow.css-98b6ta {
+    display: none;
+  }
+
+  .css-3sojac {
+    padding: 8px 12px;
+  }
+
+  .css-k9tjo5 {
+    font-size: 1.1rem;
+  }
+
+  .notification-list {
+    max-height: 50vh;
+    overflow-y: auto;
+    padding-right: 8px;
+  }
+
+  .dropdown-item {
+    padding: 12px 10px;
+    font-size: 0.9rem;
+  }
+
+  .dropdown-item.unread {
+    background-color: #c8dafc;
+    color: #000;
+  }
+  
+}
+
 /*--------------------partie audio bubble -----------------------------*/
 
 .audio-bubble {
@@ -2166,5 +2219,22 @@ small, .small {
       transition: height 0.3s ease;
     height: 56px !important;
     padding: 0 12px !important;
+  }
+
+
+  @media (max-width: 500px) {
+
+  .back-arrow {
+  position: absolute;
+  top: -30px; 
+  left: -8px;    
+  font-size: 24px;
+  cursor: pointer;
+  background-color: transparent;
+  user-select: none;
+  z-index: 10;  
+  color: #000;  
+}
+
   }
 }
